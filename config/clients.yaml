@@ -10,8 +10,8 @@
    postal  : 48046
    country: Australia
   contact:
-   name: Christopher Beck
-   email: christopher@mediadynamics.com.au
+   name: Moon Walker
+   email: test2@test.com
   alias: MD
   rate: 30
   invoice_directory: /Applications/MAMP/htdocs/LIHT/test/
@@ -26,8 +26,8 @@
    postal  : 4552
    country: Australia
  contact:
-  name: Rafaela Giebler
-  email: rafi@australaqua.com.au
+  name: Sky Walker
+  email: test@test.com
  alias: TTS
  rate: 35
  invoice_directory: /Applications/MAMP/htdocs/LIHT/test/

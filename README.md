@@ -1,6 +1,6 @@
-LIHT
+LEWT
 ====
-*Lazy Invoicing for Hackers without Time*
+*Lazy Enterprise for hackers Without Time*
 
 LIHT is a command line program that lets you parse your .ical files and extract time based work data from them, then output that information to invoices, reports, or whatever else you like. This allows you to define the hours you worked in a graphical calendar application (of your choice) and setup some general rules for different clients to greatly expediate your invoicing & accounting workflow.
 
