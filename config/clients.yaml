@@ -1,0 +1,34 @@
+-
+  name: Media Dynamics
+  business_number: 123456
+  address:
+   lines: |
+      458 Walkman Dr.
+      Suite #292
+   city    : Royal Oak
+   state   : MI
+   postal  : 48046
+   country: Australia
+  contact:
+   name: Christopher Beck
+   email: christopher@mediadynamics.com.au
+  alias: MD
+  rate: 30
+  invoice_directory: /Applications/MAMP/htdocs/LIHT/test/
+-
+ name: Tiptop Select
+ business_number: 654321
+ address:
+   lines: |
+      2 Witham Road
+   city    : Maleny
+   state   : QLD
+   postal  : 4552
+   country: Australia
+ contact:
+  name: Rafaela Giebler
+  email: rafi@australaqua.com.au
+ alias: TTS
+ rate: 35
+ invoice_directory: /Applications/MAMP/htdocs/LIHT/test/
+
