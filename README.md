@@ -10,6 +10,16 @@ This new project is currently under active development and can be considered ALP
 
 More to follow soon.
 
+## Usage
+
+```
+# example. date period can be whatever you want.
+./lewt 01-01-2014 07-01-2014
+
+```
+
+See ```config/clients.yaml``` to configure your business settings, example usage is shown inside the file.
+
 
 
 

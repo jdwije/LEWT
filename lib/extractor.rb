@@ -1,46 +1,71 @@
-#
-# EXTRACTOR Class
-# 
-# Extracts targeted data from iCal files
-require 'icalender'
+#!/usr/bin/ruby
+
+# The Extractor class helps us extract data from iCal sources and converted it into a workable data structure.
+# The Data Structure is defined in eds.rb or 'EventDataStructure' for short.
+
+require 'icalendar'
+load 'eds.rb'
+
 
 class Extractor
-  @@clientBillStore = Hash.new
-  @@filepath
-  
 
-  def initialize( calenderPath, dateStart, dateFrom ) 
-    @@filepath = calenderPath
-    
+  # inits the object and bubbles the result of extractCalenderData()
+  def initialize( calendarPath, dateStart, dateEnd, matchingQueries ) 
+    @extractionStore = Array.new
+    @calendarPath = calendarPath
+    @dateStart  = dateStart 
+    @dateEnd = dateEnd
+    @matchingQueries = matchingQueries
+    return self.extractCalendarData()
   end
-
-
- # the routine
-  def run
-    cals = Icalendar.parse( File.open( @@filepath ) )
-    cals.each do |cal|
-      cal.events.each do |event|
-        eStart =  event.dtstart
-        eEnd = event.dtend
-        eDescription = event.description
-        eCustomer = self.isBillableEvent( event )
-        if  self.isTargetDate(eStart) == true && eCustomer != false
-          evtHoursBillable = ( eEnd.to_time - eStart.to_time ) / 60 / 60
-          bill = {
-            "client" => eCustomer,
-            "hours" => evtHoursBillable,
-            "cost" => evtHoursBillable * eCustomer["rate"],
-            "eStart" => eStart,
-            "eEnd" => eEnd,
-            "eDescription" => eDescription
-          }
-          @@clientBillStore[ eCustomer["name"] ].push( bill )
+  
+  # returns the extracted calendar data
+  def extractCalendarData
+    calendars = Icalendar.parse( File.open( @calendarPath ) )
+    calendars.each do |calendar|
+      calendar.events.each do |e|
+        if  self.isTargetDate(e.dtstart) == true && self.isTargetEvent( e ) != false
+          @extractionStore.push( EventDataStructure.new( e.summary, e.dtstart, e.dtend, e.description ) )
         end
       end
     end
-    self.outputBills()
+    return @extractionStore
+  end
+  
+  # references the event title against clients for matching
+  # billable events
+  def isTargetEvent ( evt )
+    eTitle = evt.summary
+    match = false
+    @matchingQueries.each do |query|
+      if query == eTitle
+        match = query
+      end
+    end
+    return match
+  end
+  
+  # checks whether event date is within target range
+  def isTargetDate ( date ) 
+    d = date.to_date
+    check = false
+    if d >= @dateStart.to_date && d <= @dateEnd.to_date
+      check = true
+    end
+    return check
   end
 
+end
 
 
+
+
+# little bit of script to allow usage from a command line
+filepath = ARGV[0]
+to = ARGV[1]
+from = ARGV[2]
+query = ARGV[3]
+
+if to != nil and from != nil
+  run = Extractor.new( filepath, DateTime.parse(to), DateTime.parse(from), query.split(",") )
 end

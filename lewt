@@ -6,13 +6,13 @@ require 'icalendar'
 
 
 
-class LIHT
+class LEWT
   @@dateStart
   @@dateEnd
   @@calFile
   @@clients = YAML.load_file('config/clients.yaml')
   @@clientBillStore = Hash.new
-
+  
   def initialize( dateStart = DateTime.now , dateEnd = DateTime.now, file =  "/users/jwijeswww/documents/development.ics" )
     @@dateStart = dateStart
     @@dateEnd = dateEnd
@@ -138,8 +138,8 @@ to = ARGV[0]
 from = ARGV[1]
 
 if to != nil and from != nil
-  run = LIHT.new( DateTime.parse(to), DateTime.parse(from) )
+  run = LEWT.new( DateTime.parse(to), DateTime.parse(from) )
 elsif
-  run = LIHT.new
+  run LEWT.new
 end
 
