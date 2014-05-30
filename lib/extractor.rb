@@ -11,12 +11,16 @@ class Extractor
 
   # inits the object and bubbles the result of extractCalenderData()
   def initialize( calendarPath, dateStart, dateEnd, matchingQueries ) 
-    @extractionStore = Array.new
+    @data = Array.new
     @calendarPath = calendarPath
     @dateStart  = dateStart 
     @dateEnd = dateEnd
     @matchingQueries = matchingQueries
-    return self.extractCalendarData()
+    self.extractCalendarData
+  end
+  
+  def data
+    return @data
   end
   
   # returns the extracted calendar data
@@ -25,11 +29,10 @@ class Extractor
     calendars.each do |calendar|
       calendar.events.each do |e|
         if  self.isTargetDate(e.dtstart) == true && self.isTargetEvent( e ) != false
-          @extractionStore.push( EventDataStructure.new( e.summary, e.dtstart, e.dtend, e.description ) )
+          @data.push( EventDataStructure.new( e.summary, e.dtstart, e.dtend, e.description ) )
         end
       end
     end
-    return @extractionStore
   end
   
   # references the event title against clients for matching
@@ -67,5 +70,6 @@ from = ARGV[2]
 query = ARGV[3]
 
 if to != nil and from != nil
-  run = Extractor.new( filepath, DateTime.parse(to), DateTime.parse(from), query.split(",") )
+  cli_mode = Extractor.new( filepath, DateTime.parse(to), DateTime.parse(from), query.split(",") )
+  puts "completed"
 end

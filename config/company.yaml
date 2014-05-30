@@ -1,0 +1,16 @@
+name: JWIJE'S WWW
+business_number: 123456
+address:
+ lines: |
+    13 Brighton Road
+ city    : Highgate Hill
+ state   : QLD
+ postal  : 4101
+ country: Australia
+contact:
+ name: Jason Wijegooneratne
+ email: admin@jwije.com
+alias: JDW
+rate: 40
+invoice-tax: 0.10
+invoice_directory: /Applications/MAMP/htdocs/LEWT/test/

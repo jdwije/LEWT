@@ -14,7 +14,7 @@
    email: test2@test.com
   alias: MD
   rate: 30
-  invoice_directory: /Applications/MAMP/htdocs/LIHT/test/
+  invoice_directory: /Applications/MAMP/htdocs/LEWT/test/
 -
  name: Tiptop Select
  business_number: 654321
@@ -30,5 +30,5 @@
   email: test@test.com
  alias: TTS
  rate: 35
- invoice_directory: /Applications/MAMP/htdocs/LIHT/test/
+ invoice_directory: /Applications/MAMP/htdocs/LEWT/test/
 

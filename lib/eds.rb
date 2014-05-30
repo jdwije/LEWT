@@ -8,7 +8,7 @@ class EventDataStructure
     @summary = eSummary
     @start = eStart
     @end = eEnd
-    @description = eDescription
+    @description = eDescription == "" ? "none" : eDescription
     @duration = ( eEnd.to_time - eStart.to_time ) / 60 / 60
     self.freeze
   end
@@ -34,3 +34,6 @@ class EventDataStructure
   end
 
 end
+
+
+
