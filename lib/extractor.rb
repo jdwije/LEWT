@@ -4,7 +4,7 @@
 # The Data Structure is defined in eds.rb or 'EventDataStructure' for short.
 
 require 'icalendar'
-load 'eds.rb'
+load './lib/eds.rb'
 
 
 class Extractor
@@ -64,12 +64,12 @@ end
 
 
 # little bit of script to allow usage from a command line
-filepath = ARGV[0]
-to = ARGV[1]
-from = ARGV[2]
-query = ARGV[3]
+#filepath = ARGV[0]
+#to = ARGV[1]
+#from = ARGV[2]
+#query = ARGV[3]
 
-if to != nil and from != nil
-  cli_mode = Extractor.new( filepath, DateTime.parse(to), DateTime.parse(from), query.split(",") )
-  puts "completed"
-end
+#if to != nil and from != nil
+ # cli_mode = Extractor.new( filepath, DateTime.parse(to), DateTime.parse(from), query.split(",") )
+  #puts "completed"
+#end

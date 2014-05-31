@@ -6,14 +6,15 @@
 # 'recipientClient' which you can configure in ./config/clients.yaml. The resulting invoice
 # is structured YAML, it can be converted and prettified to MARKDOWN.
 require "yaml"
-load "extractor.rb"
+
+load "./lib/extractor.rb"
 
 class Billing
   
   def initialize ( eventData, target = nil )
     @events = eventData
-    @clients = YAML.load_file('../config/clients.yaml')
-    @company = YAML.load_file('../config/company.yaml')
+    @clients = YAML.load_file('./config/clients.yaml')
+    @company = YAML.load_file('./config/company.yaml')
     @target = target
     return self.doInvoicing
   end
@@ -22,7 +23,7 @@ class Billing
   def doInvoicing
     @clients.each do |client|
       # only operate on specified 'target' client but default to all if none given on init
-      if @target == nil || @target.include( client["name"] )
+      if @target == nil || @target.include?( client["name"] ) || @target.include?(client["alias"])
         bill = self.generateBill(client)
         puts bill.to_yaml
       end
@@ -64,9 +65,9 @@ end
 
 
 
-evts = Extractor.new( "/users/jwijeswww/documents/development.ics", DateTime.parse("01-05-2014"), DateTime.parse("28-05-2014"), ["TTS","MD", "Media Dynamics"] )
+#evts = Extractor.new( "/users/jwijeswww/documents/development.ics", DateTime.parse("01-05-2014"), DateTime.parse("28-05-2014"), ["TTS","MD", "Media Dynamics"] )
 
-run = Billing.new( evts.data )
+#run = Billing.new( evts.data )
 
 
 
