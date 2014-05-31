@@ -1,34 +1,31 @@
 -
   name: Media Dynamics
-  business_number: 123456
+  business_number: 51 123 24 123
   address:
    lines: |
-      458 Walkman Dr.
+      52 Walkman Dr.
       Suite #292
-   city    : Royal Oak
-   state   : MI
-   postal  : 48046
+   city    : West End
+   state   : QLD
+   postal  : 4101
    country: Australia
   contact:
-   name: Moon Walker
-   email: test2@test.com
+   name: C Brown
+   email: c.brown@test.com
   alias: MD
   rate: 30
-  invoice_directory: /Applications/MAMP/htdocs/LEWT/test/
 -
- name: Tiptop Select
- business_number: 654321
+ name: TipTop Select
+ business_number: 45 443 23 123
  address:
    lines: |
-      2 Witham Road
+      2 Roger Road
    city    : Maleny
    state   : QLD
    postal  : 4552
    country: Australia
  contact:
-  name: Sky Walker
-  email: test@test.com
+  name: R Germaign
+  email: r.germaign@test.com
  alias: TTS
  rate: 35
- invoice_directory: /Applications/MAMP/htdocs/LEWT/test/
-

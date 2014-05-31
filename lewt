@@ -24,8 +24,8 @@ class LEWT
       puts "no command given"
     elsif command == "invoice"
          matchData = self.loadClientMatchData(ARGV[1])
-         dStart =  DateTime.parse( ARGV[2] ) != false ? DateTime.parse(ARGV[2]) : DateTime.now - (60*60*24*7)
-         dEnd = DateTime.parse( ARGV[3] ) != false ? DateTime.parse(ARGV[3]) : DateTime.now
+         dStart =  ARGV[2] != nil ? DateTime.parse(ARGV[2]) : DateTime.now - 7
+         dEnd = ARGV[3] != nil ? DateTime.parse(ARGV[3]) : DateTime.now
       rawEvents = Extractor.new( @settings["ical_filepath"], dStart, dEnd, matchData )
       bills = Billing.new( rawEvents.data )
     end
