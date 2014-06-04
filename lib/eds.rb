@@ -9,7 +9,8 @@ class EventDataStructure
     @start = eStart
     @end = eEnd
     @description = eDescription == "" ? "none" : eDescription
-    @duration = ( eEnd.to_time - eStart.to_time ) / 60 / 60
+    diff = eEnd - eStart
+    @duration = diff.to_i / 60 / 60
     self.freeze
   end
 

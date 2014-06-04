@@ -7,11 +7,30 @@ require 'icalendar'
 load './lib/eds.rb'
 
 
+class LEWTCal < Array
+
+  def initialize ( dateBegin, dateEnd )
+    super()
+    @dateBegin = dateBegin
+    @dateEnd = dateEnd
+  end
+
+  def dateBegin 
+    @dateBegin
+  end
+
+  def dateEnd
+    @dateEnd
+  end
+
+end
+
+
 class Extractor
 
   # inits the object and bubbles the result of extractCalenderData()
   def initialize( calendarPath, dateStart, dateEnd, matchingQueries ) 
-    @data = Array.new
+    @data = LEWTCal.new( dateStart, dateEnd )
     @calendarPath = calendarPath
     @dateStart  = dateStart 
     @dateEnd = dateEnd
@@ -59,6 +78,8 @@ class Extractor
   end
 
 end
+
+
 
 
 

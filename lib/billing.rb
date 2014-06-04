@@ -32,7 +32,9 @@ class Billing
 
   def generateBill(client)
     bill = {
-      "date" => DateTime.now.strftime("%d/%m/%y"),
+      "date_created" => DateTime.now.strftime("%d/%m/%y"),
+      "date_begin"=> @events.dateBegin.strftime("%d/%m/%y"),
+      "date_end"=> @events.dateEnd.strftime("%d/%m/%y"),
       "recipient" => client["contact"],
       "billed_to" => client["address"],
       "billed_from" => @company["address"],

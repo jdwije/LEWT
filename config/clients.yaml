@@ -3,15 +3,15 @@
   business_number: 51 123 24 123
   address:
    lines: |
-      52 Walkman Dr.
-      Suite #292
-   city    : West End
+      Unit 4,
+      178 Albion Rd
+   city    : Windsor
    state   : QLD
-   postal  : 4101
+   postal  : 4030
    country: Australia
   contact:
-   name: C Brown
-   email: c.brown@test.com
+   name: Christopher Beck
+   email: test@jwije.com
   alias: MD
   rate: 30
 -
@@ -19,13 +19,13 @@
  business_number: 45 443 23 123
  address:
    lines: |
-      2 Roger Road
+      2 Witham Road
    city    : Maleny
    state   : QLD
    postal  : 4552
    country: Australia
  contact:
-  name: R Germaign
-  email: r.germaign@test.com
+  name: Rafaela Giebler
+  email: test@jwije.com
  alias: TTS
  rate: 35

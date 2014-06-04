@@ -3,8 +3,10 @@ require 'rubygems'
 require 'date'
 require 'yaml'
 require 'icalendar'
+require 'optparse'
 
 load "lib/extractor.rb"
+load "lib/gcal_extractor.rb"
 load "lib/billing.rb"
 
 class LEWT
@@ -17,17 +19,50 @@ class LEWT
   end
   
   def parseCommands
-    # evts = Extractor.new( "/users/jwijeswww/documents/development.ics", DateTime.parse("01-05-2014"), DateTime.parse("28-05-2014"), ["TTS","MD", "Media Dynamics"] )
-    # run = Billing.new( evts.data )
+
+    options = {}
+    OptionParser.new do |opts|
+      opts.banner = "Usage: example.rb [options]"
+
+      opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+        options["verbose"] = v
+      end
+
+      opts.on("-t", "--target [STRING]", String, "Execute on target client") do |t|
+        options["target"] = t
+      end
+
+      opts.on("-s", "--date-start [DATE]", String, "Start date of billing period") do |sD|
+        options["start"] = sD
+      end
+
+      opts.on("-e", "--date-end [DATE]", String, "End date of billing period") do |eD|
+        options["end"] = eD 
+      end
+
+
+      opts.on("-m", "--method [STRING]", String, "End date of billing periodWhat extractor to use") do |m|
+        options["method"] = m
+      end
+
+    end.parse!
+    
     command = ARGV[0]
+    target = options["target"]
+    
     if command == nil || command == "all"
-      puts "no command given"
+      puts "no command given to lewt. invoke with <cmd> eg: lewt invoice 'client_alias'"
     elsif command == "invoice"
-         matchData = self.loadClientMatchData(ARGV[1])
-         dStart =  ARGV[2] != nil ? DateTime.parse(ARGV[2]) : DateTime.now - 7
-         dEnd = ARGV[3] != nil ? DateTime.parse(ARGV[3]) : DateTime.now
-      rawEvents = Extractor.new( @settings["ical_filepath"], dStart, dEnd, matchData )
-      bills = Billing.new( rawEvents.data )
+      matchData = self.loadClientMatchData(target)
+      dStart =  options["start"] != nil ? DateTime.parse(options["start"]) : DateTime.now - 7
+      dEnd = options["end"] != nil ? DateTime.parse(options["end"]) : DateTime.now
+
+      if options["method"] == nil || options["method"] == "iCal"
+        rawEvents = Extractor.new( @settings["ical_filepath"], dStart, dEnd, matchData )
+      elsif  options["method"] == "gCal"
+        rawEvents = GCalExtractor.new( dStart, dEnd, matchData )
+      end
+      bills = Billing.new( rawEvents.data, target )
     end
   end
 
