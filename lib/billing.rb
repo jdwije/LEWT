@@ -8,6 +8,7 @@
 require "yaml"
 
 load "./lib/extractor.rb"
+load "./lib/formatter.rb"
 
 class Billing
   
@@ -25,7 +26,7 @@ class Billing
       # only operate on specified 'target' client but default to all if none given on init
       if @target == nil || @target.include?( client["name"] ) || @target.include?(client["alias"])
         bill = self.generateBill(client)
-        puts bill.to_yaml
+        form = RenderInvoice.new( bill )
       end
     end
   end
@@ -35,9 +36,8 @@ class Billing
       "date_created" => DateTime.now.strftime("%d/%m/%y"),
       "date_begin"=> @events.dateBegin.strftime("%d/%m/%y"),
       "date_end"=> @events.dateEnd.strftime("%d/%m/%y"),
-      "recipient" => client["contact"],
-      "billed_to" => client["address"],
-      "billed_from" => @company["address"],
+      "billed_to" => client,
+      "billed_from" => @company,
       "items" => [
         # eg: { description, duration, rate, total
       ],
@@ -52,7 +52,9 @@ class Billing
           "description" => e.description.to_s,
           "duration" => e.duration,
           "rate" => client["rate"],
-          "total" => e.duration * client["rate"]
+          "total" => e.duration * client["rate"],
+          "start" => e.start.strftime("%d/%m/%y %l:%M%P"),
+          "end" => e.end.strftime("%d/%m/%y %l:%M%P")
         }
         bill["items"].push( item );
         bill["sub-total"] += item["total"]

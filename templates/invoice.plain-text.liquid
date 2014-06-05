@@ -1,0 +1,42 @@
+
+Dear {{ billed_to.contact.name.first }} {{ billed_to.contact.name.last }},
+
+You have recived a new invoice from Jason Wijegooneratne
+
+---
+
+Date Created: {{ date_created }}
+Billing Period: {{ date_begin }} till {{ date_end }}
+
+
+INVOICED TO:
+{{ billed_to.name }},
+{{ billed_to.address.lines }},
+{{ billed_to.address.postal }}, {{ billed_to.address.state }},
+{{ billed_to.address.country }},
+abn: {{ billed_to.business_number }}.
+
+
+INVOICED FROM:
+{{ billed_from.name }},
+{{ billed_from.address.lines }},
+{{ billed_from.address.postal }}, {{ billed_from.address.state }},
+{{ billed_from.address.country }},
+abn {{ billed_to.business_number }}.
+
+
+ITEMS:
+{% for item in items %}--
+ {{ item.start }} >>> {{ item.end }}
+ ${{ item.rate }} * {{ item.duration }} hrs = ${{ item.total }}
+ {{ item.description }}
+{% endfor %}
+
+---------------------------
+SUB-TOTAL: {{ sub-total }}
+TAX[gst]: {{ tax }}
+---------------------------
+TOTAL: {{ total }}
+
+****
+Generated with LEWT: http://github.com/jdwije/lewt

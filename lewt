@@ -8,6 +8,7 @@ require 'optparse'
 load "lib/extractor.rb"
 load "lib/gcal_extractor.rb"
 load "lib/billing.rb"
+load "lib/formatter.rb"
 
 class LEWT
 

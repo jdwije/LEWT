@@ -10,7 +10,9 @@
    postal  : 4030
    country: Australia
   contact:
-   name: Christopher Beck
+   name: 
+    first: Christopher
+    last: Beck
    email: test@jwije.com
   alias: MD
   rate: 30
@@ -18,14 +20,15 @@
  name: TipTop Select
  business_number: 45 443 23 123
  address:
-   lines: |
-      2 Witham Road
+   lines: 2 Witham Road
    city    : Maleny
    state   : QLD
    postal  : 4552
    country: Australia
  contact:
-  name: Rafaela Giebler
+  name: 
+   first: Rafaela
+   last: Giebler
   email: test@jwije.com
  alias: TTS
  rate: 35

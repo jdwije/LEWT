@@ -1,8 +1,7 @@
 name: JWIJE'S WWW
 business_number: 123456
 address:
- lines: |
-    13 Brighton Road
+ lines:	13 Brighton Road
  city    : Highgate Hill
  state   : QLD
  postal  : 4101

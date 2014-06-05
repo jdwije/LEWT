@@ -43,7 +43,7 @@ class GCalExtractor < Extractor
                                           e.title, 
                                           eStart,
                                           eEnd,
-                                          e.content 
+                                          e.content
                                           ) 
                    )
       end
