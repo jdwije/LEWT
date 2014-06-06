@@ -1,5 +1,7 @@
 #!/usr/bin/ruby
 
+
+
 # The Extractor class helps us extract data from iCal sources and converted it into a workable data structure.
 # The Data Structure is defined in eds.rb or 'EventDataStructure' for short.
 
@@ -60,6 +62,11 @@ class Extractor
     eTitle = evt.summary
     match = false
     @matchingQueries.each do |query|
+
+      re = /\A#{Regexp.escape(str)}\z/i # Match exactly this string, no substrings
+      all = array.grep(re)              # Find all matching strings…
+      any = array.any?{ |s| s =~ re }   #  …or see if any matching string is present
+
       if query == eTitle
         match = query
       end

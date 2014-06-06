@@ -21,32 +21,36 @@ class GCalExtractor < Extractor
  # references the event title against clients for matching
   # billable events
   def isTargetEvent ( evt )
-    eTitle = evt.title
-    match = false
-    @matchingQueries.each do |query|
-      if query == eTitle
-        match = query
-      end
-    end
-    return match
+    regex = Regexp.new( @matchingQueries.join("|"), Regexp::IGNORECASE )
+    return regex.match(evt.title) != nil ? true : false;
   end
    
   # returns the extracted calendar data
   def extractCalendarData
-
-    @calendarPath.find_events_in_range(@dateStart, @dateEnd, { :max_results => 2500, :order_by => 'startTime' }).each do |e|
-      eStart = Time.parse( e.start_time )
-      eEnd = Time.parse( e.end_time )
-      if  self.isTargetDate( eStart ) == true && self.isTargetEvent( e ) != false
-        @data.push( 
-                   EventDataStructure.new( 
-                                          e.title, 
-                                          eStart,
-                                          eEnd,
-                                          e.content
-                                          ) 
-                   )
+    begin
+      gConf = { 
+        :max_results => 2500, 
+        :order_by => 'starttime',
+        :single_events => true
+      }
+      
+      @calendarPath.find_events_in_range(@dateStart, @dateEnd + 1, gConf).each do |e|
+        eStart = Time.parse( e.start_time )
+        eEnd = Time.parse( e.end_time )
+        if  self.isTargetDate( eStart ) == true && self.isTargetEvent( e ) != false
+          @data.push( 
+                     EventDataStructure.new( 
+                                            e.title, 
+                                            eStart,
+                                            eEnd,
+                                            e.content
+                                            ) 
+                     )
+        end
       end
+    rescue
+      puts  "failed to extract data from Google Calander check your dates..."
+      exit
     end
   end
 

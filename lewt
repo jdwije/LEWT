@@ -22,6 +22,11 @@ class LEWT
   def parseCommands
 
     options = {}
+    options["start"] = DateTime.now - 7
+    options["end"] = DateTime.now
+    options["method"] = "gCal"
+    
+
     OptionParser.new do |opts|
       opts.banner = "Usage: example.rb [options]"
 
@@ -34,11 +39,11 @@ class LEWT
       end
 
       opts.on("-s", "--date-start [DATE]", String, "Start date of billing period") do |sD|
-        options["start"] = sD
+        options["start"] = DateTime.parse(sD)
       end
 
       opts.on("-e", "--date-end [DATE]", String, "End date of billing period") do |eD|
-        options["end"] = eD 
+        options["end"] = DateTime.parse(eD)
       end
 
 
@@ -56,16 +61,28 @@ class LEWT
       puts "no command given to lewt. invoke with <cmd> eg: lewt invoice 'client_alias'"
     elsif command == "invoice"
       matchData = self.loadClientMatchData(target)
-      dStart =  options["start"] != nil ? DateTime.parse(options["start"]) : DateTime.now - 7
-      dEnd = options["end"] != nil ? DateTime.parse(options["end"]) : DateTime.now
+      dStart =  options["start"]
+      dEnd = options["end"]
 
       if options["method"] == nil || options["method"] == "iCal"
         rawEvents = Extractor.new( @settings["ical_filepath"], dStart, dEnd, matchData )
       elsif  options["method"] == "gCal"
         rawEvents = GCalExtractor.new( dStart, dEnd, matchData )
       end
-      bills = Billing.new( rawEvents.data, target )
+      bills = Billing.new( rawEvents.data, self.getClient(target)  )
     end
+  end
+
+  def getClient( query ) 
+    client = nil
+    @clients.each do |c|
+      buildQ = [ c["name"], c["alias"] ].join("|")
+      regex = Regexp.new(buildQ, Regexp::IGNORECASE)
+      if regex.match( query ) != nil
+        client = c
+      end
+    end
+    return client
   end
 
   def loadClientMatchData( query )

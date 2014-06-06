@@ -12,23 +12,18 @@ load "./lib/formatter.rb"
 
 class Billing
   
-  def initialize ( eventData, target = nil )
+  def initialize ( eventData, client = nil )
     @events = eventData
     @clients = YAML.load_file('./config/clients.yaml')
     @company = YAML.load_file('./config/company.yaml')
-    @target = target
+    @client = client
     return self.doInvoicing
   end
 
   # handles the invoicing workflow for you!
   def doInvoicing
-    @clients.each do |client|
-      # only operate on specified 'target' client but default to all if none given on init
-      if @target == nil || @target.include?( client["name"] ) || @target.include?(client["alias"])
-        bill = self.generateBill(client)
-        form = RenderInvoice.new( bill )
-      end
-    end
+    bill = self.generateBill(@client)
+    form = RenderInvoice.new( bill )
   end
 
   def generateBill(client)
@@ -47,21 +42,20 @@ class Billing
     }    
     # loop events and filter for requested matched
     @events.each do |e|
-      if [ client["name"], client["alias"] ].include?(e.summary)
-        item = {
-          "description" => e.description.to_s,
-          "duration" => e.duration,
-          "rate" => client["rate"],
-          "total" => e.duration * client["rate"],
-          "start" => e.start.strftime("%d/%m/%y %l:%M%P"),
-          "end" => e.end.strftime("%d/%m/%y %l:%M%P")
-        }
-        bill["items"].push( item );
-        bill["sub-total"] += item["total"]
-      end
+      item = {
+        "description" => e.description.to_s,
+        "duration" => e.duration,
+        "rate" => client["rate"],
+        "total" => e.duration * client["rate"],
+        "start" => e.start.strftime("%d/%m/%y %l:%M%P"),
+        "end" => e.end.strftime("%d/%m/%y %l:%M%P")
+      }
+      bill["items"].push( item );
+      bill["sub-total"] += item["total"]
     end     
     bill["tax"] = bill["sub-total"] * @company["invoice-tax"]
     bill["total"] = bill["sub-total"] + bill["tax"]
+    
     return bill;
   end
 
