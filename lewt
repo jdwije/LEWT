@@ -45,6 +45,7 @@ class LEWT
       opts.on("-m", "--method [STRING]", String, "End date of billing periodWhat extractor to use") do |m|
         options["method"] = m
       end
+      
 
     end.parse!
     

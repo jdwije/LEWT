@@ -33,8 +33,8 @@ class GCalExtractor < Extractor
    
   # returns the extracted calendar data
   def extractCalendarData
-    
-    @calendarPath.events.each do |e|
+
+    @calendarPath.find_events_in_range(@dateStart, @dateEnd, { :max_results => 2500, :order_by => 'startTime' }).each do |e|
       eStart = Time.parse( e.start_time )
       eEnd = Time.parse( e.end_time )
       if  self.isTargetDate( eStart ) == true && self.isTargetEvent( e ) != false
