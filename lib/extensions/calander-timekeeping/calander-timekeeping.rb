@@ -1,32 +1,26 @@
-#!/usr/bin/env ruby
-require 'rubygems'
-require 'date'
-require 'yaml'
-require 'icalendar'
-require 'optparse'
+load File.expand_path('../eventDataStructure.rb', __FILE__)
+load File.expand_path('../extractor.rb', __FILE__)
+load File.expand_path('../gcal_extractor.rb', __FILE__)
 
-load "lib/extractor.rb"
-load "lib/gcal_extractor.rb"
-load "lib/billing.rb"
-load "lib/formatter.rb"
 
-class LEWT
+class CalanderTimekeeping
 
-  def initialize( )
-    @clients = YAML.load_file('./config/clients.yaml')
-    @company = YAML.load_file('./config/company.yaml')
-    @settings = YAML.load_file('./config/settings.yaml')
-    self.parseCommands
+  def initialize
+    @clients = YAML.load_file( File.expand_path('../../../clients.yaml', __FILE__) )
   end
-  
-  def parseCommands
 
+  def self.registerHandlers
+    return {
+      "extract" => method(:doExtract)
+    }
+  end
+
+ def self.doExtract(args)
     options = {}
     options["start"] = DateTime.now - 7
     options["end"] = DateTime.now
     options["method"] = "gCal"
     
-
     OptionParser.new do |opts|
       opts.banner = "Usage: example.rb [options]"
 
@@ -46,17 +40,15 @@ class LEWT
         options["end"] = DateTime.parse(eD)
       end
 
-
       opts.on("-m", "--method [STRING]", String, "End date of billing periodWhat extractor to use") do |m|
         options["method"] = m
-      end
-      
-
-    end.parse!
+      end      
+    end.parse(args)
     
-    command = ARGV[0]
-    target = options["target"]
-    
+   command = args[0]
+   target = options["target"]
+   @clients = YAML.load_file( File.expand_path('../../../config/clients.yaml', __FILE__) )
+   
     if command == nil || command == "all"
       puts "no command given to lewt. invoke with <cmd> eg: lewt invoice 'client_alias'"
     elsif command == "invoice"
@@ -69,11 +61,13 @@ class LEWT
       elsif  options["method"] == "gCal"
         rawEvents = GCalExtractor.new( dStart, dEnd, matchData )
       end
-      bills = Billing.new( rawEvents.data, self.getClient(target)  )
+      # bills = Billing.new( rawEvents.data, self.getClient(target)  )
     end
-  end
+   return rawEvents.data
+ end
 
-  def getClient( query ) 
+
+  def self.getClient( query ) 
     client = nil
     @clients.each do |c|
       buildQ = [ c["name"], c["alias"] ].join("|")
@@ -85,7 +79,7 @@ class LEWT
     return client
   end
 
-  def loadClientMatchData( query )
+  def self.loadClientMatchData( query )
     requestedClients = Array.new
     if query == nil
       @clients.each do |client|
@@ -107,18 +101,3 @@ class LEWT
   end
 
 end
-
-
-
-LEWT.new
-
-# cmd line args default check and init
-#to = ARGV[0]
-#from = ARGV[1]
-
-#if to != nil and from != nil
-  #run = LEWT.new( DateTime.parse(to), DateTime.parse(from) )
-#elsif
- # run LEWT.new
-#end
-

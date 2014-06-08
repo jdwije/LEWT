@@ -14,7 +14,7 @@ class EventDataStructure
     self.freeze
   end
 
-  def summary
+  def self.summary
     return @summary
   end
 

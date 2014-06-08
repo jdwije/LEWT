@@ -6,7 +6,7 @@
 # The Data Structure is defined in eds.rb or 'EventDataStructure' for short.
 
 require 'icalendar'
-load './lib/eds.rb'
+# load './lib/eds.rb'
 
 
 class LEWTCal < Array

@@ -2,8 +2,8 @@
 
 # This is a handler for extracting calDAV data from a server and converting it into the locally understood data structure.
 
-load "./lib/eds.rb"
-load "./lib/extractor.rb"
+# load "./lib/eds.rb"
+# load "./lib/extractor.rb"
 
 require 'rubygems'
 require 'google_calendar'
