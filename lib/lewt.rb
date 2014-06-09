@@ -34,15 +34,45 @@ class LEWT
     # next load extensions THEN parse commands and fire init event hook.
     loadExtensions
 
-    # parseCommands
-    init = fireEventHooks("initialize", ARGV)
-    extract = fireEventHooks("extract", ARGV)
-    process = extract != nil ? fireEventHooks("process", ARGV, extract ) : nil
-    render = process != nil ? fireEventHooks("render", process ) : nil
-    puts process
+    # parseCommands and fire init hook
+    options = {}
+    
+    OptionParser.new do |opts|
+
+      init = fireInitEventHook(ARGV, opts, options)
+      
+      opts = init["options"]
+
+      options = init["defaults"]
+
+      # set LEWT core options after extensions to avoid over-riding them.
+      opts.banner = "Usage: example.rb [options]"
+
+      opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+        options["verbose"] = v
+      end
+
+    end.parse(ARGV)
+
+    extract = fireEventHooks("extract", ARGV, options)
+    process = fireEventHooks("process", ARGV, extract, options )
+    render = fireEventHooks("render", process, options )
+    end
+  
+  def fireInitEventHook ( args, opts, defaults )
+    @eventHandlers["initialize"].each do |handler|
+      @opts = opts
+      @defaults = defaults
+      response = handler.call(args, @opts, @defaults)
+      @opts = response["options"]
+      @defaults = response["defauts"]
+    end
+    return {
+      "options" => opts,
+      "defaults" => defaults
+    }
   end
-  
-  
+
   def fireEventHooks( event, *data )
     algamation = nil
     if data then

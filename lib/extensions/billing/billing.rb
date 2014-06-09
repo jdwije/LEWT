@@ -7,7 +7,7 @@
 # is structured YAML, it can be converted and prettified to MARKDOWN.
 require "yaml"
 
-load File.expand_path('../render-invoice.rb', __FILE__)
+# load File.expand_path('../render-invoice.rb', __FILE__)
 
 class Billing
   
@@ -18,23 +18,24 @@ class Billing
 
   def self.registerHandlers
     return {
-      "process" => method(:doInvoicing)
+      "process" => method(:doInvoicing),
+      "initialize" => method(:setOptions)
     }
   end
   
-  
+  def self.setOptions(args, opts, defaults)
+    opts.on("-t", "--target [STRING]", String, "Execute on target client") do |t|
+      defaults["target"] = t
+    end
+    response = {
+      "options" => opts,
+      "defaults" => defaults
+    }
+    return response
+  end
 
   # handles the invoicing workflow for you!
-  def self.doInvoicing( args, events )
-    options = {}
-
-    OptionParser.new do |opts|
-      opts.banner = "Usage: example.rb [options]"
-
-      opts.on("-t", "--target [STRING]", String, "Execute on target client") do |t|
-        options["target"] = t
-      end
-    end.parse(args)
+  def self.doInvoicing( args, events, options )
     command = ARGV[0]
     target = options["target"]
     @clients = YAML.load_file( File.expand_path('../../../config/clients.yaml', __FILE__) )
@@ -42,8 +43,7 @@ class Billing
     @events = events
     @client = self.getClient(options["target"])
     bill = self.generateBill(@client)
-    form = InvoiceRenderer.new( bill )
-    return form.markup
+    return bill
   end
 
   def self.getClient( query ) 
@@ -109,7 +109,7 @@ class Billing
     bill["tax"] = bill["sub-total"] * @company["invoice-tax"]
     bill["total"] = bill["sub-total"] + bill["tax"]
     
-    return bill;
+    return Array.new << bill;
   end
 
 end

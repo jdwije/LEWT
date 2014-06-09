@@ -11,44 +11,45 @@ class CalanderTimekeeping
 
   def self.registerHandlers
     return {
-      "extract" => method(:doExtract)
+      "extract" => method(:doExtract),
+      "initialize" => method(:setOptions)
     }
   end
 
- def self.doExtract(args)
-    options = {}
-    options["start"] = DateTime.now - 7
+  def self.setOptions(args, opts, options)
+    # set default command line options if required
+    options["start"] = DateTime.now - 8
     options["end"] = DateTime.now
     options["method"] = "gCal"
     
-    OptionParser.new do |opts|
-      opts.banner = "Usage: example.rb [options]"
+    # register command line options with the parser
+    opts.on("-t", "--target [STRING]", String, "Execute on target client") do |t|
+      options["target"] = t
+    end
 
-      opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
-        options["verbose"] = v
-      end
+    opts.on("-s", "--date-start [DATE]", String, "Start date of billing period") do |sD|
+      options["start"] = DateTime.parse(sD)
+    end
 
-      opts.on("-t", "--target [STRING]", String, "Execute on target client") do |t|
-        options["target"] = t
-      end
+    opts.on("-e", "--date-end [DATE]", String, "End date of billing period") do |eD|
+      options["end"] = DateTime.parse(eD)
+    end
 
-      opts.on("-s", "--date-start [DATE]", String, "Start date of billing period") do |sD|
-        options["start"] = DateTime.parse(sD)
-      end
+    opts.on("-x", "--extractor [STRING]", String, "What extractor to use") do |m|
+      options["method"] = m
+    end      
 
-      opts.on("-e", "--date-end [DATE]", String, "End date of billing period") do |eD|
-        options["end"] = DateTime.parse(eD)
-      end
-
-      opts.on("-m", "--method [STRING]", String, "End date of billing periodWhat extractor to use") do |m|
-        options["method"] = m
-      end      
-    end.parse(args)
     
+    return {
+      "options" => opts,
+      "defaults" => options
+    }
+  end
+
+ def self.doExtract(args, options)
    command = args[0]
    target = options["target"]
    @clients = YAML.load_file( File.expand_path('../../../config/clients.yaml', __FILE__) )
-   
     if command == nil || command == "all"
       puts "no command given to lewt. invoke with <cmd> eg: lewt invoice 'client_alias'"
     elsif command == "invoice"
