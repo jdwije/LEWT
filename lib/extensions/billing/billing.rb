@@ -23,10 +23,14 @@ class Billing
     }
   end
   
-  def self.setOptions(args, opts, defaults)
+  def self.setOptions(cmd, arg, opts, defaults)
     opts.on("-t", "--target [STRING]", String, "Execute on target client") do |t|
       defaults["target"] = t
     end
+
+    @cmd = cmd
+    @arg = arg
+
     response = {
       "options" => opts,
       "defaults" => defaults
@@ -35,13 +39,11 @@ class Billing
   end
 
   # handles the invoicing workflow for you!
-  def self.doInvoicing( args, events, options )
-    command = ARGV[0]
-    target = options["target"]
+  def self.doInvoicing( events, options )
     @clients = YAML.load_file( File.expand_path('../../../config/clients.yaml', __FILE__) )
     @company = YAML.load_file( File.expand_path('../../../config/company.yaml', __FILE__) )
     @events = events
-    @client = self.getClient(options["target"])
+    @client = self.getClient(@arg)
     bill = self.generateBill(@client)
     return bill
   end

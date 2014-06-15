@@ -2,22 +2,14 @@
 require 'rubygems'
 require 'date'
 require 'yaml'
-require 'icalendar'
 require 'optparse'
 
-#load "lib/extractor.rb"
-#load "lib/gcal_extractor.rb"
-#load "lib/billing.rb"
-#load "lib/formatter.rb"
-
 class LEWT
-
-  def initialize( )
+  def initialize()
     # Start by loading the local config files
     @clients = YAML.load_file('./config/clients.yaml')
     @company = YAML.load_file('./config/company.yaml')
     @settings = YAML.load_file('./config/settings.yaml')
-    
     # These are the available events in LEWT to which extensions can respond to
     # They are populated with HASH objects containing callback mappings that the
     # various extensions are requesting on init.
@@ -28,18 +20,20 @@ class LEWT
       "render" => Array.new,
       "end" => Array.new
     }
-    
     @extensions = Array.new
-    
     # next load extensions THEN parse commands and fire init event hook.
     loadExtensions
 
     # parseCommands and fire init hook
     options = {}
+    # comand passed to lewt from CL
+    cmd = ARGV[0]
+    # argument supplied for `cmd' (if any). ignore option flags ie args that start with the `-' symbol
+    arg = ARGV[1].match(/\-/i) ? nil : ARGV[1]
     
     OptionParser.new do |opts|
-
-      init = fireInitEventHook(ARGV, opts, options)
+      
+      init = fireInitEventHook( cmd, arg, opts, options )
       
       opts = init["options"]
 
@@ -48,22 +42,18 @@ class LEWT
       # set LEWT core options after extensions to avoid over-riding them.
       opts.banner = "Usage: example.rb [options]"
 
-      opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
-        options["verbose"] = v
-      end
-
     end.parse(ARGV)
 
-    extract = fireEventHooks("extract", ARGV, options)
-    process = fireEventHooks("process", ARGV, extract, options )
+    extract = fireEventHooks("extract", options)
+    process = fireEventHooks("process", extract, options )
     render = fireEventHooks("render", process, options )
-    end
+  end
   
-  def fireInitEventHook ( args, opts, defaults )
+  def fireInitEventHook ( cmd, arg, opts, defaults )
     @eventHandlers["initialize"].each do |handler|
       @opts = opts
       @defaults = defaults
-      response = handler.call(args, @opts, @defaults)
+      response = handler.call(cmd, arg, @opts, @defaults)
       @opts = response["options"]
       @defaults = response["defauts"]
     end
@@ -158,7 +148,6 @@ class LEWT
     end
     return requestedClients
   end
-
 end
 
 LEWT.new

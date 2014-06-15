@@ -36,8 +36,10 @@ class LiquidRenderer
     return output
   end
 
-  def self.setOptions( args, opts, defaults )
+  def self.setOptions( cmd, arg, opts, defaults )
     defaults["output_method"] = "text"
+    @cmd = cmd
+    @arg = arg
 
     opts.on("-m", "--output-method [STRING]", String, "Define output method id 'html','text'") do |output_method|
       defaults["output_method"] = output_method

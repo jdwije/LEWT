@@ -16,12 +16,16 @@ class CalanderTimekeeping
     }
   end
 
-  def self.setOptions(args, opts, options)
+  def self.setOptions(cmd, arg, opts, options)
     # set default command line options if required
     options["start"] = DateTime.now - 8
     options["end"] = DateTime.now
     options["method"] = "gCal"
     
+    # set instance command & argument values
+    @cmd = cmd
+    @arg = arg
+
     # register command line options with the parser
     opts.on("-t", "--target [STRING]", String, "Execute on target client") do |t|
       options["target"] = t
@@ -46,23 +50,19 @@ class CalanderTimekeeping
     }
   end
 
- def self.doExtract(args, options)
-   command = args[0]
-   target = options["target"]
+ def self.doExtract(options)
    @clients = YAML.load_file( File.expand_path('../../../config/clients.yaml', __FILE__) )
-    if command == nil || command == "all"
+    if @cmd == nil || @cmd == "all"
       puts "no command given to lewt. invoke with <cmd> eg: lewt invoice 'client_alias'"
-    elsif command == "invoice"
-      matchData = self.loadClientMatchData(target)
+    elsif @cmd == "invoice"
+      matchData = self.loadClientMatchData(@arg)
       dStart =  options["start"]
       dEnd = options["end"]
-
       if options["method"] == nil || options["method"] == "iCal"
         rawEvents = Extractor.new( @settings["ical_filepath"], dStart, dEnd, matchData )
       elsif  options["method"] == "gCal"
         rawEvents = GCalExtractor.new( dStart, dEnd, matchData )
       end
-      # bills = Billing.new( rawEvents.data, self.getClient(target)  )
     end
    return rawEvents.data
  end

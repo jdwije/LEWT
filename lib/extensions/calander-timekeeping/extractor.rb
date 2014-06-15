@@ -1,7 +1,5 @@
 #!/usr/bin/ruby
 
-
-
 # The Extractor class helps us extract data from iCal sources and converted it into a workable data structure.
 # The Data Structure is defined in eds.rb or 'EventDataStructure' for short.
 
