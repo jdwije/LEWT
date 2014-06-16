@@ -24,10 +24,6 @@ class Billing
   end
   
   def self.setOptions(cmd, arg, opts, defaults)
-    opts.on("-t", "--target [STRING]", String, "Execute on target client") do |t|
-      defaults["target"] = t
-    end
-
     @cmd = cmd
     @arg = arg
 
@@ -116,11 +112,6 @@ class Billing
 
 end
 
-
-
-#evts = Extractor.new( "/users/jwijeswww/documents/development.ics", DateTime.parse("01-05-2014"), DateTime.parse("28-05-2014"), ["TTS","MD", "Media Dynamics"] )
-
-#run = Billing.new( evts.data )
 
 
 

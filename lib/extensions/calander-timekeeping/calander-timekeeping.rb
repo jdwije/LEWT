@@ -26,11 +26,6 @@ class CalanderTimekeeping
     @cmd = cmd
     @arg = arg
 
-    # register command line options with the parser
-    opts.on("-t", "--target [STRING]", String, "Execute on target client") do |t|
-      options["target"] = t
-    end
-
     opts.on("-s", "--date-start [DATE]", String, "Start date of billing period") do |sD|
       options["start"] = DateTime.parse(sD)
     end
