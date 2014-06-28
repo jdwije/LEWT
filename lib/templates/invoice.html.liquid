@@ -1,0 +1,52 @@
+
+<hr />
+
+<p>
+  <b>Date Created:</b> {{ date_created }} <br />
+  <b>Billing Period:</b> {{ date_begin }} till {{ date_end }}
+</p>
+
+
+<h2>INVOICED TO:</h2>
+<ul>
+  <li>{{ billed_to.name }},</li>
+  <li>
+    {{ billed_to.address.lines }} <br />
+    {{ billed_to.address.postal }}, {{ billed_to.address.state }}, <br />
+    {{ billed_to.address.country }},
+  </li>
+  <li>abn: {{ billed_to.business_number }}.</li>
+</ul>
+
+<h2>INVOICED FROM:</h2>
+<ul>
+  <li>{{ billed_from.name }},</li>
+  <li>
+    {{ billed_from.address.lines }},<br />
+    {{ billed_from.address.postal }}, {{ billed_from.address.state }}, <br />
+    {{ billed_from.address.country }},
+  </li>
+  <li>abn {{ billed_to.business_number }}.</li>
+</ul>
+
+<h2>ITEMS:</h2>
+
+<!-- <th>Start</th> <th>End</th> <th>Rate</th> <th>Duration</th> <th>Total</th> -->
+<ul>
+  {% for item in items %}
+   <li>
+     <span>{{ item.start }}</span> <span>{{ item.end }}</span> <span>${{ item.rate }}</span> <span>{{ item.duration }}</span> <span>${{ item.total }}</span>
+     <p>{{ item.description }}</p>
+   </li>
+  {% endfor %}
+</ul>
+
+<p>
+  <b>SUB-TOTAL:</b> {{ sub-total }}<br />
+  <b>TAX [gst]:</b> {{ tax }}
+</p>
+
+<h3>TOTAL: <span>{{ total }}</span></h3>
+
+<hr />
+

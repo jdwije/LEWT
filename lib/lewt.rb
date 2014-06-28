@@ -3,13 +3,19 @@ require 'rubygems'
 require 'date'
 require 'yaml'
 require 'optparse'
+load 'extension.rb'
 
 class Lewt
+  
   def initialize()
+    core_settings = YAML.load_file( File.expand_path( '../config/settings.yml', __FILE__) )
+    @stash_path = core_settings['stash_path'] || File.expand_path('../', __FILE__)
+    @settings = YAML.load_file( @stash_path + '/config/settings.yml' )
+    
     # Start by loading the local config files
-    @clients = YAML.load_file(File.expand_path('../config/clients.yaml', __FILE__))
-    @company = YAML.load_file(File.expand_path('../config/company.yaml', __FILE__))
-    @settings = YAML.load_file(File.expand_path('../config/settings.yaml', __FILE__))
+    @clients = YAML.load_file(@stash_path + "/config/clients.yml")
+    @company = YAML.load_file(@stash_path + "/config/company.yml")
+
     # These are the available events in LEWT to which extensions can respond to
     # They are populated with HASH objects containing callback mappings that the
     # various extensions are requesting on init.
@@ -20,21 +26,22 @@ class Lewt
       "render" => Array.new,
       "end" => Array.new
     }
+
+    # Array to store our extension class names for later invokation. Then do load.
     @extensions = Array.new
-    
-    # next load extensions THEN parse commands and fire init event hook.
     loadExtensions
-    
-    # parseCommands and fire init hook
+
+    # Stores default options returned from extensions
+    # and the LEWT defaults at large
     options = {}
-    
-    # comand passed to lewt from CL
     @command = ARGV[0]
-    
-    # argument supplied for `cmd' (if any). ignore option flags ie args that start with the `-' symbol
+
+    # argument supplied for `cmd' (if any). ignore option flags IE args that start with the `-' symbol
     @argument = ARGV[1] == nil || ARGV[1].match(/\-/i) ? nil : ARGV[1]
     
-    parseInternalCommands
+    # Parse internal commands before extension commands & options to avoid any conflicts & to avoid extension invocation
+    # in case a internal command is called.
+
     
     OptionParser.new do |opts|
       
@@ -49,15 +56,37 @@ class Lewt
 
     end.parse(ARGV)
 
+    parseInternalCommands( options )
+
     extract = fireEventHooks("extract", options)
     process = fireEventHooks("process", extract, options )
     render = fireEventHooks("render", process, options )
   end
   
-  def parseInternalCommands
-    if @command == "extend"      
+  def parseInternalCommands( options )
+    if @command == "extend"
       exit
+    elsif @command == "extract"
+      input = readSTDIN
+      extract = fireEventHooks("extract", options)
+      puts extract
+    elsif @command == "process"
+      input = readSTDIN
+      process = fireEventHooks("process", input, options)
+      puts process
+    elsif @command == "render"
+      input = readSTDIN
+      render = fireEventHooks("render", input, options)
+      puts render
     end
+  end
+
+  def readSTDIN
+    data = ""
+    while line = $stdin.gets
+      data += line
+    end
+    return data
   end
   
   def fireInitEventHook ( cmd, arg, opts, defaults )
@@ -87,7 +116,7 @@ class Lewt
   end
   
   # fn loads all installed LEWT extensions by checking the ext_dir setting variable for available ruby files.
-  def loadExtensions( directory = @settings["ext_dir"] || File.expand_path('../extensions', __FILE__) )
+  def loadExtensions( directory = @stash_path + "/extensions" )
     Dir.foreach( directory ) do |file|
       next if (file =~ /\./) == 0
       if File.directory?(file)
@@ -103,17 +132,16 @@ class Lewt
     end
   end
   
-  # fn basically anticipates a class name given its filepath and then call its registerHanders method.
+  # fn basically anticipates a class name given its file path and then call its registerHanders method.
   # Class names are transformed into UC words. '-' are interpreted as spaces in this conversion, and are 
   # striped afterwards to return something like 'invoice-renderer.rb' >>> 'InvoiceRenderer' ready for
   # evaluation.
   def initializeExtension ( file )
     classConvention = file.gsub("-", " ").split.map(&:capitalize).join(' ').gsub(" ","")
-    exec = false
-    if defined? eval( classConvention + "::registerHandlers" ) == true
-      @extensions << classConvention
-      return registerExtensionHandlers( eval ( classConvention + "::registerHandlers" ) )
-    end
+    extInit = (classConvention + ".new").to_s
+    extension = eval( extInit )
+     @extensions << extension
+    return registerExtensionHandlers( @extensions.last::registerHandlers )
   end
   
   def registerExtensionHandlers ( request )
@@ -161,4 +189,3 @@ class Lewt
   end
 end
 
-Lewt.new

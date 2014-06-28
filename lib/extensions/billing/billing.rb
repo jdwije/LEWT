@@ -9,21 +9,22 @@ require "yaml"
 
 # load File.expand_path('../render-invoice.rb', __FILE__)
 
-class Billing
+class Billing < LewtExtension
   
   def initialize
-    @clients = YAML.load_file(File.expand_path('../../../config/clients.yaml', __FILE__))
-    @company = YAML.load_file(File.expand_path('../../../config/company.yaml', __FILE__))
+    super
+    @clients = YAML.load_file( stash_path + '/clients.yml')
+    @company = YAML.load_file( stash_path + '/company.yml')
   end
 
-  def self.registerHandlers
+  def registerHandlers
     return {
       "process" => method(:doInvoicing),
       "initialize" => method(:setOptions)
     }
   end
   
-  def self.setOptions(cmd, arg, opts, defaults)
+  def setOptions(cmd, arg, opts, defaults)
     @cmd = cmd
     @arg = arg
 
@@ -35,16 +36,14 @@ class Billing
   end
 
   # handles the invoicing workflow for you!
-  def self.doInvoicing( events, options )
-    @clients = YAML.load_file( File.expand_path('../../../config/clients.yaml', __FILE__) )
-    @company = YAML.load_file( File.expand_path('../../../config/company.yaml', __FILE__) )
+  def doInvoicing( events, options )
     @events = events
-    @client = self.getClient(@arg)
-    bill = self.generateBill(@client)
+    @client = getClient(@arg)
+    bill = generateBill(@client)
     return bill
   end
 
-  def self.getClient( query ) 
+  def getClient( query ) 
     client = nil
     @clients.each do |c|
       buildQ = [ c["name"], c["alias"] ].join("|")
@@ -56,7 +55,7 @@ class Billing
     return client
   end
 
-  def self.loadClientMatchData( query )
+  def loadClientMatchData( query )
     requestedClients = Array.new
     if query == nil
       @clients.each do |client|
@@ -77,7 +76,7 @@ class Billing
     return requestedClients
   end
 
-  def self.generateBill(client)
+  def generateBill(client)
     bill = {
       "date_created" => DateTime.now.strftime("%d/%m/%y"),
 #      "date_begin"=> @events.dateBegin.strftime("%d/%m/%y"),

@@ -1,12 +1,10 @@
-#!/usr/bin/ruby
-require "liquid"
+require "pdfkit"
 
-class LiquidRenderer
+class PdfRenderer
 
   def initialize ()
     readTextTemplate = File.open( File.expand_path('../../../templates/invoice.plain-text.liquid', __FILE__) ).read
     @@textTemplate = Liquid::Template::parse(readTextTemplate);
-    @@htmlTemplate = Liquid::Template::parse( File.open( File.expand_path('../../../templates/invoice.html.liquid', __FILE__) ).read );
   end
 
   def registerHandlers
@@ -24,18 +22,8 @@ class LiquidRenderer
       end
     elsif options["output_method"] == "html"
       data.each do |d|
-        output <<  @@htmlTemplate.render(d)
+        output <<  @@textTemplate.render(d)
       end
-    elsif options["output_method"] == "pdf"      
-      data.each do |d|
-        html = @@htmlTemplate.render(d)
-        kit = PDFKit.new(html, :page_size => 'Letter')
-        # kit.stylesheets << @stylesheet
-        savename = 'test.pdf'
-        file = kit.to_file(savename)
-        output << savename
-      end
-      puts output
     end
 
     if options["output"] != nil
@@ -73,4 +61,4 @@ class LiquidRenderer
 end
 
 
-LiquidRenderer.new
+PdfRenderer.new

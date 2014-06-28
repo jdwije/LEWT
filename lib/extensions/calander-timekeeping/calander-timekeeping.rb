@@ -2,21 +2,21 @@ load File.expand_path('../eventDataStructure.rb', __FILE__)
 load File.expand_path('../extractor.rb', __FILE__)
 load File.expand_path('../gcal_extractor.rb', __FILE__)
 
-
-class CalanderTimekeeping
+class CalanderTimekeeping < LewtExtension
 
   def initialize
-    @clients = YAML.load_file( File.expand_path('../../../clients.yaml', __FILE__) )
+    super()
+    @clients = YAML.load_file( stash_path + '/clients.yml' )
   end
 
-  def self.registerHandlers
+  def registerHandlers
     return {
       "extract" => method(:doExtract),
       "initialize" => method(:setOptions)
     }
   end
 
-  def self.setOptions(cmd, arg, opts, options)
+  def setOptions(cmd, arg, opts, options)
     # set default command line options if required
     options["start"] = DateTime.now - 8
     options["end"] = DateTime.now
@@ -45,12 +45,11 @@ class CalanderTimekeeping
     }
   end
 
- def self.doExtract(options)
-   @clients = YAML.load_file( File.expand_path('../../../config/clients.yaml', __FILE__) )
+ def doExtract(options)
     if @cmd == nil || @cmd == "all"
       puts "no command given to lewt. invoke with <cmd> eg: lewt invoice 'client_alias'"
     elsif @cmd == "invoice"
-      matchData = self.loadClientMatchData(@arg)
+      matchData = loadClientMatchData(@arg)
       dStart =  options["start"]
       dEnd = options["end"]
       if options["method"] == nil || options["method"] == "iCal"
@@ -63,7 +62,7 @@ class CalanderTimekeeping
  end
 
 
-  def self.getClient( query ) 
+  def getClient( query ) 
     client = nil
     @clients.each do |c|
       buildQ = [ c["name"], c["alias"] ].join("|")
@@ -75,7 +74,7 @@ class CalanderTimekeeping
     return client
   end
 
-  def self.loadClientMatchData( query )
+  def loadClientMatchData( query )
     requestedClients = Array.new
     if query == nil
       @clients.each do |client|
