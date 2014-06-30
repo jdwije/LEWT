@@ -1,5 +1,6 @@
 #!/usr/bin/ruby
 require "liquid"
+require "pdfkit"
 
 class LiquidRenderer
 
@@ -7,6 +8,7 @@ class LiquidRenderer
     readTextTemplate = File.open( File.expand_path('../../../templates/invoice.plain-text.liquid', __FILE__) ).read
     @@textTemplate = Liquid::Template::parse(readTextTemplate);
     @@htmlTemplate = Liquid::Template::parse( File.open( File.expand_path('../../../templates/invoice.html.liquid', __FILE__) ).read );
+    @@stylesheet = File.expand_path('../../../templates/style.css', __FILE__)
   end
 
   def registerHandlers
@@ -29,13 +31,12 @@ class LiquidRenderer
     elsif options["output_method"] == "pdf"      
       data.each do |d|
         html = @@htmlTemplate.render(d)
-        kit = PDFKit.new(html, :page_size => 'Letter')
-        # kit.stylesheets << @stylesheet
-        savename = 'test.pdf'
-        file = kit.to_file(savename)
+        kit = PDFKit.new(html, :page_size => 'A4')
+        kit.stylesheets << @@stylesheet
+        savename = options["save_name"] || 'test.pdf'
+        file = kit.to_file( savename )
         output << savename
       end
-      puts output
     end
 
     if options["output"] != nil
@@ -54,6 +55,10 @@ class LiquidRenderer
 
     opts.on("-m", "--output-method [STRING]", String, "Define output method id 'html','text'") do |output_method|
       defaults["output_method"] = output_method
+    end
+    
+    opts.on("-s", "--save-file [STRING]", String, "file save name") do |save_name|
+      defaults["save_name"] = save_name
     end
 
     opts.on("-o", "--dump-output", "Dumps output to the console") do |output|

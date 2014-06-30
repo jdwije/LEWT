@@ -1,4 +1,8 @@
-
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="lib/templates/style.css" />
+</head>
+<body>
 <hr />
 
 <p>
@@ -8,35 +12,43 @@
 
 
 <h2>INVOICED TO:</h2>
-<ul>
-  <li>{{ billed_to.name }},</li>
-  <li>
-    {{ billed_to.address.lines }} <br />
-    {{ billed_to.address.postal }}, {{ billed_to.address.state }}, <br />
-    {{ billed_to.address.country }},
-  </li>
-  <li>abn: {{ billed_to.business_number }}.</li>
-</ul>
+<address>
+  {{ billed_to.name }},<br />
+  {{ billed_to.address.lines }},<br />
+  {{ billed_to.address.postal }}, {{ billed_to.address.state }},<br />
+  {{ billed_to.address.country }},<br />
+  abn: {{ billed_to.business_number }}.
+</address>
 
 <h2>INVOICED FROM:</h2>
-<ul>
-  <li>{{ billed_from.name }},</li>
-  <li>
-    {{ billed_from.address.lines }},<br />
-    {{ billed_from.address.postal }}, {{ billed_from.address.state }}, <br />
-    {{ billed_from.address.country }},
-  </li>
-  <li>abn {{ billed_to.business_number }}.</li>
-</ul>
+<address>
+  {{ billed_from.name }},<br />
+  {{ billed_from.address.lines }},<br />
+  {{ billed_from.address.postal }}, {{ billed_from.address.state }},<br />
+  {{ billed_from.address.country }},<br />
+  abn: {{ billed_from.business_number }}.
+</address>
+
 
 <h2>ITEMS:</h2>
 
-<!-- <th>Start</th> <th>End</th> <th>Rate</th> <th>Duration</th> <th>Total</th> -->
-<ul>
+<ul class="unstyled invoice-items">
   {% for item in items %}
    <li>
-     <span>{{ item.start }}</span> <span>{{ item.end }}</span> <span>${{ item.rate }}</span> <span>{{ item.duration }}</span> <span>${{ item.total }}</span>
-     <p>{{ item.description }}</p>
+     <table>
+       <tr>
+	 <td><strong>Start:</strong> {{ item.start }}</td> 
+	 <td><strong>End:</strong> {{ item.end }}</td>
+	 <td><strong>Rate:</strong> ${{ item.rate }}</td>
+	 <td><strong>Duration:</strong> {{ item.duration }}</td> 
+	 <td><strong>Total:</strong> ${{ item.total }}</td>
+       </tr>
+	 <tr>
+	   <td colspan="5">
+	     {{ item.description }}
+	   </td>
+	 <tr>
+     </table>
    </li>
   {% endfor %}
 </ul>
@@ -49,4 +61,6 @@
 <h3>TOTAL: <span>{{ total }}</span></h3>
 
 <hr />
+</body>
+</html>
 
