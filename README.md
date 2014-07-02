@@ -35,7 +35,7 @@ It's pretty easy to create you own extension [even if it is currently unelegant,
 
 ```
 
-You can specify some basic config for your LEWT deployment in the ```./lib/config``` directory. 
+You can specify some basic config for your LEWT deployment in the ```./lib/config``` directory.
 
 
 

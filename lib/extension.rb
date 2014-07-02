@@ -2,8 +2,6 @@
 ## THE LEWT EXTENSION BASE CLASS ##
 ###################################
 # --------------------------------
-#   |  x  |    ***     |  @  |
-#   -------     ^      -------
 # This class provides some basic 
 # structuring for LEWT extensions 
 # and additionally adds some meta 
@@ -11,35 +9,42 @@
 # implement it in order to 
 # streamline development of LEWT
 # extensions.
-#           
-#               .............
-#              ***************          o o
-#             *       o o     o o      o   o   o o  
-#             *  o o      o o     o   o     o o   o o >
-#             (**************)     o o              
-#                   .....
 #********************************
       
 
 class LewtExtension
   
-  attr_reader :stash_path, :user_settings
+  # LEWT Stash is the user configured stash path where all extensions, config file, templates etc are stored.
+  attr_reader :lewt_stash
   
   # Global container of ALL extensions invocation names 
-  @@extensions = []
-  
+  @@call_mappings = {
+    "extractors" => null
+    "processors" => null
+    "renderers" => null
+  }
+
   def initialize
     path = File.expand_path( "../config/settings.yml", __FILE__ )
     core_settings = YAML.load_file( path )
-    @stash_path = core_settings['stash_path'] || File.expand_path('../config', __FILE__)
-    @settings = YAML.load_file( @stash_path + '/settings.yml' )
-    registerExtension
+    @@lewt_stash = core_settings['stash_path'] || File.expand_path('../config', __FILE__)
+    @settings = YAML.load_file( @@lewt_stash + '/settings.yml' )
   end
   
   protected
 
-  def registerExtension 
-    @@extensions << self.class.name
+end
+
+class Extractor < LewtExtension
+  def initialize
+    
   end
+end
+
+class Processor < LewtExtension
+  
+end
+
+class Renderer < LewtExtension
   
 end
