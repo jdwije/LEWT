@@ -1,5 +1,10 @@
 #!/usr/bin/env ruby
 
+# This is the command line tool wrapper for LEWT. RubyGEMS makes this available at $PATH.
+
 require 'lewt'
 
-Lewt.new
+lewt = Lewt.new
+
+# invoke the logic loop
+lewt.run_logic_loop

@@ -2,10 +2,7 @@
 
 # The Extractor class helps us extract data from iCal sources and converted it into a workable data structure.
 # The Data Structure is defined in eds.rb or 'EventDataStructure' for short.
-
 require 'icalendar'
-# load './lib/eds.rb'
-
 
 class LEWTCal < Array
 
@@ -30,7 +27,7 @@ class Extractor
 
   # inits the object and bubbles the result of extractCalenderData()
   def initialize( calendarPath, dateStart, dateEnd, matchingQueries ) 
-    @data = LEWTCal.new( dateStart, dateEnd )
+    @data = LEWTBooks.new
     @calendarPath = calendarPath
     @dateStart  = dateStart 
     @dateEnd = dateEnd
@@ -48,7 +45,9 @@ class Extractor
     calendars.each do |calendar|
       calendar.events.each do |e|
         if  self.isTargetDate(e.dtstart) == true && self.isTargetEvent( e ) != false
-          @data.push( EventDataStructure.new( e.summary, e.dtstart, e.dtend, e.description ) )
+          row = LEWTLedger.new()
+          # EventDataStructure.new( e.summary, e.dtstart, e.dtend, e.description )
+          @data.add_row( row )
         end
       end
     end

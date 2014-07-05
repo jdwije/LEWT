@@ -2,23 +2,18 @@
 require "liquid"
 require "pdfkit"
 
-class LiquidRenderer
+class LiquidRenderer < LewtExtension
 
   def initialize ()
+    super
+    register_extension("liquid_render")
     readTextTemplate = File.open( File.expand_path('../../../templates/invoice.plain-text.liquid', __FILE__) ).read
     @@textTemplate = Liquid::Template::parse(readTextTemplate);
     @@htmlTemplate = Liquid::Template::parse( File.open( File.expand_path('../../../templates/invoice.html.liquid', __FILE__) ).read );
     @@stylesheet = File.expand_path('../../../templates/style.css', __FILE__)
   end
 
-  def registerHandlers
-    return {
-      "initialize" => method(:setOptions),
-      "render" => method(:renderOutput)
-    }
-  end
-  
-  def renderOutput ( data, options )
+  def render ( options, data )
     output = Array.new
     if options["output_method"] == "text"
       data.each do |d|
@@ -48,27 +43,22 @@ class LiquidRenderer
     return output
   end
 
-  def setOptions( cmd, arg, opts, defaults )
+  def register_options ( opts, defaults )
     defaults["output_method"] = "text"
-    @cmd = cmd
-    @arg = arg
 
-    opts.on("-m", "--output-method [STRING]", String, "Define output method id 'html','text'") do |output_method|
+    opts.on("-m", "--output-method [STRING]", String, "Select an output method i.e: 'html' or 'html|text|pdf'") do |output_method|
       defaults["output_method"] = output_method
     end
     
-    opts.on("-s", "--save-file [STRING]", String, "file save name") do |save_name|
+    opts.on("-s", "--save-file [STRING]", String, "Specify a file name for the output to be dumped to") do |save_name|
       defaults["save_name"] = save_name
     end
 
-    opts.on("-o", "--dump-output", "Dumps output to the console") do |output|
-      defaults["output"] = output
+    opts.on("-d", "--dump-output", "Toggle dumping output to console.") do |dump_output|
+      defaults["console_dump_output"] = dump_output
     end
 
-    return {
-      "options" => opts,
-      "defaults" => defaults
-    }
+    return { "options" => opts, "defaults" => defaults }
   end
 
   def markup

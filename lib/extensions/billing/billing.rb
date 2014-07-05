@@ -11,41 +11,24 @@ require "yaml"
 
 class Billing < LewtExtension
   
+  attr_reader :data
+
   def initialize
     super
-    @clients = YAML.load_file( stash_path + '/clients.yml')
-    @company = YAML.load_file( stash_path + '/company.yml')
-  end
-
-  def registerHandlers
-    return {
-      "process" => method(:doInvoicing),
-      "initialize" => method(:setOptions)
-    }
+    register_extension "simple_billing"
   end
   
-  def setOptions(cmd, arg, opts, defaults)
-    @cmd = cmd
-    @arg = arg
-
-    response = {
-      "options" => opts,
-      "defaults" => defaults
-    }
-    return response
-  end
-
   # handles the invoicing workflow for you!
-  def doInvoicing( events, options )
-    @events = events
-    @client = getClient(@arg)
-    bill = generateBill(@client)
+  def process( options, data )
+    @data = data
+    @customer = getClient( options["target"] )
+    bill = generateBill(@customer)
     return bill
   end
 
   def getClient( query ) 
     client = nil
-    @clients.each do |c|
+    customers.each do |c|
       buildQ = [ c["name"], c["alias"] ].join("|")
       regex = Regexp.new(buildQ, Regexp::IGNORECASE)
       if regex.match( query ) != nil
@@ -58,13 +41,13 @@ class Billing < LewtExtension
   def loadClientMatchData( query )
     requestedClients = Array.new
     if query == nil
-      @clients.each do |client|
+      customers.each do |client|
         requestedClients.push(client["name"])
         requestedClients.push(client["alias"])
       end
     else
       requestedClients = Array.new
-      @clients.each do |client|
+      customers.each do |client|
         query.split(",").each do |q|
           if [client["alias"], client["name"]].include?(q) == true 
             requestedClients.push(client["name"])
@@ -82,7 +65,7 @@ class Billing < LewtExtension
 #      "date_begin"=> @events.dateBegin.strftime("%d/%m/%y"),
  #     "date_end"=> @events.dateEnd.strftime("%d/%m/%y"),
       "billed_to" => client,
-      "billed_from" => @company,
+      "billed_from" => enterprise,
       "items" => [
                   # eg: { description, duration, rate, total
                  ],
@@ -91,7 +74,7 @@ class Billing < LewtExtension
       "total" => nil
     }    
     # loop events and filter for requested matched
-    @events.each do |e|
+    @data.each do |e|
       item = {
         "description" => e.description.to_s,
         "duration" => e.duration,
@@ -103,10 +86,10 @@ class Billing < LewtExtension
       bill["items"].push( item );
       bill["sub-total"] += item["total"]
     end     
-    bill["tax"] = bill["sub-total"] * @company["invoice-tax"]
+    bill["tax"] = bill["sub-total"] * enterprise["invoice-tax"]
     bill["total"] = bill["sub-total"] + bill["tax"]
     
-    return Array.new << bill;
+    return bill;
   end
 
 end

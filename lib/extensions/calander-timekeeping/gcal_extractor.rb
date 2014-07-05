@@ -1,20 +1,15 @@
 #!/usr/bin/ruby
-
-# This is a handler for extracting calDAV data from a server and converting it into the locally understood data structure.
-
-# load "./lib/eds.rb"
-# load "./lib/extractor.rb"
-
-require 'rubygems'
 require 'google_calendar'
 
-
+# This is a handler for extracting calDAV data from a server and converting it into the locally understood data structure.
 class GCalExtractor < Extractor
 
-  def initialize ( dStart, dEnd, matchingQueries )
-    calendarPath = Google::Calendar.new(:username => 'admin@jwije.com',
-                           :password => 'cxfroeopthxtuqwv',
-                           :app_name => 'jwije.com-googlecalendar-integration')
+  def initialize ( dStart, dEnd, matchingQueries, username, password, app_name )
+    calendarPath = Google::Calendar.new(
+                                        :username => username,
+                                        :password => password,
+                                        :app_name => app_name
+                                        )
     super( calendarPath, dStart, dEnd, matchingQueries )
   end
 
@@ -38,18 +33,12 @@ class GCalExtractor < Extractor
         eStart = Time.parse( e.start_time )
         eEnd = Time.parse( e.end_time )
         if  self.isTargetDate( eStart ) == true && self.isTargetEvent( e ) != false
-          @data.push( 
-                     EventDataStructure.new( 
-                                            e.title, 
-                                            eStart,
-                                            eEnd,
-                                            e.content
-                                            ) 
-                     )
+          row = LEWTLedger.new( eStart, eEnd, )
+          @data.add_row(row)
         end
       end
     rescue
-      puts  "failed to extract data from Google Calander check your dates..."
+      raise Exception("Class #{self.class.name} failed to extract data from Google Calander.")
       exit
     end
   end
