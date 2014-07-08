@@ -4,39 +4,18 @@
 # The Data Structure is defined in eds.rb or 'EventDataStructure' for short.
 require 'icalendar'
 
-class LEWTCal < Array
-
-  def initialize ( dateBegin, dateEnd )
-    super()
-    @dateBegin = dateBegin
-    @dateEnd = dateEnd
-  end
-
-  def dateBegin 
-    @dateBegin
-  end
-
-  def dateEnd
-    @dateEnd
-  end
-
-end
-
-
-class Extractor
+class Extractor < LewtExtension
+  
+  attr_reader :data
 
   # inits the object and bubbles the result of extractCalenderData()
-  def initialize( calendarPath, dateStart, dateEnd, matchingQueries ) 
+  def initialize( calendarPath, dateStart, dateEnd, targets ) 
     @data = LEWTBooks.new
     @calendarPath = calendarPath
     @dateStart  = dateStart 
     @dateEnd = dateEnd
-    @matchingQueries = matchingQueries
+    @targets = targets
     self.extractCalendarData
-  end
-  
-  def data
-    return @data
   end
   
   # returns the extracted calendar data
@@ -80,21 +59,4 @@ class Extractor
     end
     return check
   end
-
 end
-
-
-
-
-
-
-# little bit of script to allow usage from a command line
-#filepath = ARGV[0]
-#to = ARGV[1]
-#from = ARGV[2]
-#query = ARGV[3]
-
-#if to != nil and from != nil
- # cli_mode = Extractor.new( filepath, DateTime.parse(to), DateTime.parse(from), query.split(",") )
-  #puts "completed"
-#end

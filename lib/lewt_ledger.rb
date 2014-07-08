@@ -12,7 +12,6 @@ class LEWTBooks < Array
   # on the in-and-outs of method riding in ruby so I am adding a new method add_row
   # instead to keep things simple for myself.
   def add_row ( element )
-    puts "self.push"
     if element.class.name == 'LEWTLedger'
       push(element)
     else
@@ -23,7 +22,7 @@ end
 
 
 class LEWTLedger < Hash
-  def  initialize ( d_start, d_end, category, entity, desc, quantity, unit_cost, total  )
+  def  initialize ( d_start, d_end, category, entity, desc, quantity, unit_cost, total = nil  )
     self["date_start"] = d_start
     self["date_end"] = d_end
     self["category"] = category
@@ -31,8 +30,6 @@ class LEWTLedger < Hash
     self["description"] = desc
     self["quantity"] = quantity
     self["unit_cost"] = unit_cost
-    self["total"] = total
-    # lock state
-    self.freeze
+    self["total"] = total || quantity * unit_cost
   end
 end

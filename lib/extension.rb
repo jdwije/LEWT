@@ -1,4 +1,4 @@
-###################################
+##################################
 ## THE LEWT EXTENSION BASE CLASS ##
 ###################################
 # --------------------------------
@@ -65,6 +65,25 @@ class LewtExtension
   # It is passed the processed data from the previous stage.
   def render
     raise Exception "A rendering method is not defined by the #{self.class.name} class"
+  end
+  
+  # This method mathes customers wth query strings provided by users in the CLI
+  def loadClientMatchData( query )
+    requestedClients = Array.new
+    if query == nil
+      customers.each do |client|
+        requestedClients.push(client)
+      end
+    else
+      customers.each do |client|
+        query.split(",").each do |q|
+          if [client["alias"], client["name"]].include?(q) == true 
+            requestedClients.push(client)
+          end
+        end
+      end
+    end
+    return requestedClients
   end
 
 end

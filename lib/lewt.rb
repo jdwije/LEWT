@@ -4,6 +4,7 @@ require 'date'
 require 'yaml'
 require 'optparse'
 require_relative 'extension.rb'
+require_relative 'lewt_ledger.rb'
 
 class Lewt
   
@@ -60,7 +61,8 @@ class Lewt
       end
 
       opts.on("-t", "--target [STRING]", String, "what or whom are we targeting") do |t|
-        options["target"] = t
+        # if no target is passed we are operating on all customers
+        options["target"] = t || @customers
       end
 
       opts.on("-s", "--start [Date]", String, "start date") do |s|
@@ -87,7 +89,6 @@ class Lewt
     extract = fireHooks("extract", @options)
     process = fireHooks("process",  @options, extract )
     render = fireHooks("render", @options, process )
-    puts render
   end
   
   # Passes an OptionsParser object to the extensions so they can set some custom CL option flags if they
@@ -131,34 +132,26 @@ class Lewt
   # Fire a hook with the given options and overloaded parameters.
   # Expected hooks are 'extract', 'process', 'render'.
   def fireHooks( hook, options, *data )
-    algamation = Array.new;
+    algamation = Array.new
     if hook == "extract"
-      puts "ass1"
       @extensions.each do |e|
         if defined? e["ext"].extract and e["cmd"].match(/#{options["extractor"]}/)
-          puts "ass2"
-          algamation + e["ext"].extract(options)
+          algamation.concat e["ext"].extract(options)
         end
       end
     elsif hook == "process"
-          puts "ass3"
       @extensions.each do |e|
         if defined? e["ext"].process and e["cmd"].match(/#{options["processor"]}/)
-          puts "ass4"
-          process = e["ext"].process(options, *data)
-          algamation.push process
+           algamation.concat e["ext"].process(options, *data)
         end
       end
     elsif hook == "render"
-      puts "ass5"
       @extensions.each do |e|
         if defined? e["ext"].render and e["cmd"].match(/#{options["renderer"]}/)
-          puts "ass6"
-          algamation + e["ext"].render(options, *data)
+           algamation.concat e["ext"].render(options, *data)
         end
       end
     end
-    puts algamation
     return algamation;
   end
 

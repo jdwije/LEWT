@@ -15,15 +15,22 @@ class LiquidRenderer < LewtExtension
 
   def render ( options, data )
     output = Array.new
-    if options["output_method"] == "text"
+
+    if options["output_method"].match "text"
       data.each do |d|
         output <<  @@textTemplate.render(d)
       end
-    elsif options["output_method"] == "html"
+    end
+    
+    if options["output_method"].match "html"
       data.each do |d|
         output <<  @@htmlTemplate.render(d)
       end
-    elsif options["output_method"] == "pdf"      
+    end
+    
+    if options["output_method"].match "pdf"
+      if options["save_name"] == nil then raise "--save-file flag for #{self.class.name} must be specified when PDF output requested" end
+
       data.each do |d|
         html = @@htmlTemplate.render(d)
         kit = PDFKit.new(html, :page_size => 'A4')
@@ -33,8 +40,8 @@ class LiquidRenderer < LewtExtension
         output << savename
       end
     end
-
-    if options["output"] != nil
+    
+    if options["console_dump_output"] != nil
       output.each do |r|
         puts r
       end
@@ -66,6 +73,3 @@ class LiquidRenderer < LewtExtension
   end
 
 end
-
-
-LiquidRenderer.new
