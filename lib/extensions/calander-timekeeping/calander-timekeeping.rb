@@ -11,9 +11,9 @@ class CalanderTimekeeping < LewtExtension
 
   def register_options(opts, options)
     # set default command line options if required
-    options["method"] = "gCal"
+    options["calext_method"] = "gCal"
     
-    opts.on("-m", "--method [STRING]", String, "Which extraction method to use") do |m|
+    opts.on("--calext-method [STRING]", String, "Which extraction method to use") do |m|
       options["method"] = m
     end
 
@@ -24,9 +24,9 @@ class CalanderTimekeeping < LewtExtension
     matchData = loadClientMatchData( options["target"] )
     dStart =  options["start"]
     dEnd = options["end"]
-    if options["method"] == nil || options["method"] == "iCal"
+    if options["calext_method"] == nil || options["calext_method"] == "iCal"
       rawEvents = Extractor.new( lewt_settings["ical_filepath"], dStart, dEnd, matchData )
-    elsif  options["method"] == "gCal"
+    elsif  options["calext_method"] == "gCal"
       rawEvents = GCalExtractor.new( dStart, dEnd, matchData, lewt_settings["gmail_username"], 
                                      lewt_settings["gmail_password"], lewt_settings["google_app_name"] )
     end

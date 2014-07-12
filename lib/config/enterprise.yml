@@ -14,3 +14,42 @@ alias: JDW
 rate: 40
 invoice-tax: 0.10
 invoice_directory: /Applications/MAMP/htdocs/LEWT/test/
+tax_levees:
+ -
+   applies_to: income
+   name: income tax
+   lower_threshold: 0
+   upper_threshold: 18000
+   rate: 0.00
+ -
+   applies_to: income
+   name: income tax
+   lower_threshold: 18001
+   upper_threshold: 37000
+   rate: 0.19
+ -
+   applies_to: income
+   name: income tax
+   lower_threshold: 37001
+   upper_threshold: 80000
+   flatrate: 3572
+   rate: 0.325
+ -
+   applies_to: income
+   name: income tax
+   lower_threshold: 80001
+   upper_threshold: 180000
+   flatrate: 17547
+   rate: 0.37
+ -
+   applies_to: income
+   name: income tax
+   lower_threshold: 180000
+   upper_threshold: ~
+   flatrate: 54547
+   rate: 0.45
+ -
+   applies_to: revenue
+   name: GST
+   rate: 0.10
+ 

@@ -36,7 +36,6 @@ class Lewt
     # Parse internal commands before extension commands & options to avoid any conflicts & to avoid extension invocation
     # in case a internal command is called.
     OptionParser.new do |opts|
-      
       # LEWT's reserved option flags
       #
       # -x: what extractor[s] to use
