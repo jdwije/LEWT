@@ -1,8 +1,8 @@
 # setup
 Gem::Specification.new do |s|
   s.name        = 'lewt'
-  s.version     = '0.2.3'
-  s.date        = '2014-06-16'
+  s.version     = '0.4.1'
+  s.date        = '2014-07-12'
   s.summary     = "Lazy Enterprise for hackers Without Time"
   s.description = "A dead simple command line tool for managing enterprises. It can currently handle invoicing, expenses, reporting, and is very extensible"
   s.authors     = ["Jason Wijegooneratne"]
