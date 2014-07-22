@@ -4,13 +4,21 @@ LEWT
 
 LEWT is a command line program written in Ruby that helps you invoice, manage expenses, and report useful business information with minimal friction. It is designed to encourage lazy accounting and to get more out of it. It is also designed to be further extended from the ground up...
 
+# Installation
+
+Install LEWT as a GEM.
+
+```
+gem install lewt
+```
+
 # The Basics
 
 The LEWT program is based around a loop construct I call *extract, process, render* [EPR]. Data is extracted from some sources and transformed into a general ledger format, this is then passed to the specified processor(s) which may use it to perform operations, the processors working are then finally passed onto your renderer for outputting into a useful format.
 
-LEWT by itself is basically just an extension system, all the EPR operations are performed by extensions making LEWT highly customisable. Being the first version of this software, I have shipped LEWT with some basic extension which I find useful and sue in my day to day contracting operations. These *core extensions* as I will call them for now are...
+LEWT by itself is basically just an extension system, all the EPR operations are performed by extensions making LEWT highly customisable. Being an fledgling version of this software, I have shipped LEWT with some basic extension which I find useful in my day to day contracting operations. These *core extensions* as I will call them for now are...
 
-1. Calender Time-Keeping: Extract Timesheet data from iCal and Google Calender sources and transform it into the general ledger format.
+1. Calender Time-Keeping: Extract Time sheet data from iCal and Google Calender sources and transform it into the general ledger format.
 2. Simple Invoices: Process ledger data as an invoice.
 3. Simple Reports: Process ledger data as a report.
 4. Liquid Renderer: .liquid template rendering for your all your shizz including PDFs.
@@ -49,11 +57,11 @@ Here is a minimal implementation of a LEWT extensions, an extractor in this case
 
 # Config
 
-LEWT extensions want config. They want it in the form of flat .yml [YAML](http://yaml.org) files. They reside in your config directory which can be found at ``` path-to-lewt/lib/config```. Strictly speaking you could use some other format, however I have chosen YAML as the preferred format for the LEWT project because it is human readable whilst still being serializable. This is important to encourage lazy enterprise, you can always edit the .yml files by hand in a text editor and any programs with or on top of LEWT (ie GUIs or whatever) will totally be able to deal with it. Please prefer YAML over other formats where possible when architecting your extensions.
+LEWT extensions want config. They want it in the form of flat .yml [YAML](http://yaml.org) files. They reside in your config directory which can be found at ```path-to-lewt/lib/config```. Strictly speaking you could use some other format, however I have chosen YAML as the preferred format for the LEWT project because it is human readable whilst still being serializable. This is important to encourage lazy enterprise, you can always edit the .yml files by hand in a text editor and any programs with or on top of LEWT (ie GUIs or whatever) will totally be able to deal with it. Please prefer YAML over other formats where possible when architecting your extensions.
 
 # Why use LEWT?
 
-Because its esoteric and arcane, and if your anything like me it's still faster than PayPal or other similar systems even with my simplistic core extensions. You can also include LEWT as a drop in library as well as using it on the command line - all extensions are available in both environments making LEWT and all its extensions generally more useful. Everything in LEWT except for the extract, process, render cycle and a few basic command lines is customizable and designed to be that way, LEWT was made so you can automate enterprise your way.
+Because its esoteric and arcane, and if your anything like me it's still faster than PayPal or other similar systems even with my simplistic core extensions. You can also include LEWT as a drop in library as well as using it on the command line - all extensions are available in both environments making LEWT and all its extensions generally more useful. Everything in LEWT except for the extract, process, render cycle and a few basic command lines is customisable and designed to be that way, LEWT was made so you can automate accounting your way.
 
 
 
