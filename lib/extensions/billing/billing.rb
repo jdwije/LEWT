@@ -15,7 +15,7 @@ class Billing < LewtExtension
 
   def initialize
     super
-    register_extension "simple_billing"
+    register_extension "invoice"
   end
   
   # handles the invoicing workflow for you!
