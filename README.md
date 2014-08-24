@@ -29,13 +29,14 @@ Put it all together and you can mash up some CLs.
 
 ```
 # output an invoice for client ACME to the terminal in PLAIN text. Extract time sheet data and work expenses from the last week for this (default)
-lewt -x expenses,calender -p invoice -r liquid -t ACME
+lewt -x expenses,calender -p invoice -o liquid -t ACME
+
 
 # output an invoice for specified client as a html, save a pdf simultaneously.
-lewt -x expenses,calender -p invoice -r liquid -t ACME --template invoice --method pdf, html --save-file acmeXX-XX-XXXX.pdf 
+lewt -x expenses,calender -p invoice -o liquid -t ACME --method pdf, html --save-file acmeXX-XX-XXXX.pdf 
 
 # mash up a bunch of extraction sources and process it as a report.
-lewt -x expenses,calender,milestones -p report -r liquid --template report --method text,pdf --save-file mash_report.pdf
+lewt -x expenses,calender,milestones -p report -o liquid --method text,pdf --save-file mash_report.pdf
 
 ```
 The neat thing about LEWT is that extractors must all return there data in this general ledger format, thus a universal compatibility can be maintained with any processor. Processors must also always return hashes to be used by the renderer, they share a similar compatibility albeit less autonomous.
