@@ -4,7 +4,8 @@ class Reports < LewtExtension
 
   def initialize
     super
-    register_extension "report"
+    @command_name = "report"
+    register_extension
   end
 
   def process ( options, data )

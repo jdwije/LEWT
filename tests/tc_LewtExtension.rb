@@ -22,9 +22,9 @@ class TestLewtExtension < Test::Unit::TestCase
 
   def test_register_extension
     lewt_object = LewtExtension.new
-    lewt_object.send(:register_extension, "test_extension")
-    assert_kind_of( String, lewt_object.lewt_extensions[0]["cmd"], "LEWT extensions not registering proper 'cmd' string")
-    assert_kind_of( LewtExtension, lewt_object.lewt_extensions[0]["ext"], "LEWT extension not being referenced properly")
+    lewt_object.send(:register_extension)
+    assert_kind_of( String, lewt_object.lewt_extensions[0].command_name, "LEWT extensions not registering proper 'cmd' string")
+    assert_kind_of( LewtExtension, lewt_object.lewt_extensions[0], "LEWT extension not being referenced properly")
   end
 
 end

@@ -13,9 +13,11 @@ class Billing < LewtExtension
   
   attr_reader :data
 
+
   def initialize
     super
-    register_extension "invoice"
+    @command_name = "invoice"
+    register_extension
   end
   
   # handles the invoicing workflow for you!

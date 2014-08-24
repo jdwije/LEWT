@@ -3,6 +3,7 @@ require 'rubygems'
 require 'date'
 require 'yaml'
 require 'optparse'
+require_relative 'lewtopts.rb'
 require_relative 'extension.rb'
 require_relative 'lewt_ledger.rb'
 
@@ -28,80 +29,18 @@ class Lewt
     
     # argument supplied for `cmd' (if any). ignore option flags IE args that start with the `-' symbol
     @argument = ARGV[1] == nil || ARGV[1].match(/\-/i) ? nil : ARGV[1]
-
-    options["start"] = DateTime.now - 8
-    options["end"] = DateTime.now
     
-
-    # Parse internal commands before extension commands & options to avoid any conflicts & to avoid extension invocation
-    # in case a internal command is called.
-    OptionParser.new do |opts|
-      # LEWT's reserved option flags
-      #
-      # -x: what extractor[s] to use
-      # -p: what processor[s] to use
-      # -o: what renderer[s] to use
-      # -t: target
-      # -s: start target date
-      # -e: end target date
-      #
-      # The user defined values for these options are readable by extensions at runtime.
-
-      opts.on("-x", "--extractor [STRING]", String, "which extractor[s] to use") do |x|
-        options["extractor"] = x
-      end
-      
-      opts.on("-p", "--processor [STRING]", String, "which processor[s] to use") do |p|
-        options["processor"] = p
-      end
-      
-      opts.on("-o", "--renderer [STRING]", String, "which renderer[s] to use") do |o|
-        options["renderer"] = o
-      end
-
-      opts.on("-t", "--target [STRING]", String, "what or whom are we targeting") do |t|
-        # if no target is passed we are operating on all customers
-        options["target"] = t || @customers
-      end
-
-      opts.on("-s", "--start [Date]", String, "start date") do |s|
-        options["start"] = DateTime.parse(s)
-      end
-
-      opts.on("-e", "--end [Date]", String, "end date") do |e|
-        options["end"] = DateTime.parse(e)
-      end
-
-      
-      register_extension_options(opts,options)
-      
-      opts.banner = "Usage: lewt -x EXTRACTOR -p PROCESSOR -o RENDERER"
-      
-    end.parse!(ARGV)
+    @options = LewtOpts.new( @extensions )
     
-    @options = options
-
     # parseInternalCommands( options )
   end
 
   def run_logic_loop
     extract = fireHooks("extract", @options)
-    process = fireHooks("process",  @options, extract )
+    process = fireHooks("process", @options, extract )
     render = fireHooks("render", @options, process )
   end
   
-  # Passes an OptionsParser object to the extensions so they can set some custom CL option flags if they
-  # so desire...
-  def register_extension_options ( opts, defaults )
-    @extensions.each do |e|
-      if defined? e["ext"].register_options
-        response = e["ext"].register_options(opts,defaults)
-        opts = response["options"]
-        defaults = response["defaults"]
-      end
-    end
-  end
-
   def parseInternalCommands( options )
     if @command == "extend"
       exit
@@ -134,20 +73,20 @@ class Lewt
     algamation = Array.new
     if hook == "extract"
       @extensions.each do |e|
-        if defined? e["ext"].extract and e["cmd"].match(/#{options["extractor"]}/)
-          algamation.concat e["ext"].extract(options)
+        if defined? e.extract and e.command_name.match(/#{options["extractor"]}/)
+          algamation.concat e.extract(options)
         end
       end
     elsif hook == "process"
       @extensions.each do |e|
-        if defined? e["ext"].process and e["cmd"].match(/#{options["processor"]}/)
-           algamation.concat e["ext"].process(options, *data)
+        if defined? e.process and e.command_name.match(/#{options["processor"]}/)
+           algamation.concat e.process(options, *data)
         end
       end
     elsif hook == "render"
       @extensions.each do |e|
-        if defined? e["ext"].render and e["cmd"].match(/#{options["renderer"]}/)
-           algamation.concat e["ext"].render(options, *data)
+        if defined? e.render and e.command_name.match(/#{options["renderer"]}/)
+           algamation.concat e.render(options, *data)
         end
       end
     end

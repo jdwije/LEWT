@@ -3,27 +3,31 @@ load File.expand_path('../extractor.rb', __FILE__)
 load File.expand_path('../gcal_extractor.rb', __FILE__)
 
 class CalanderTimekeeping < LewtExtension
-
+  
+  
+  
   def initialize
     super
-    register_extension("calender_extract")
-  end
-
-  def register_options(opts, options)
-    # set default command line options if required
-    options["calext_method"] = "gCal"
+    # set extension options
+    @options = {
+      :calext_method => {
+        :default => "gCal",
+        :definition => "The default calender extraction method to use i.e. gCal, iCal...",
+        :type => String,
+        :short_flag => "-m"
+      }
+    }
     
-    opts.on("--calext-method [STRING]", String, "Which extraction method to use") do |m|
-      options["method"] = m
-    end
+    @command_name = "calender_extract"
 
-    return { "options" => opts, "defaults" => options }
+    register_extension
   end
 
   def extract( options )
     matchData = loadClientMatchData( options["target"] )
     dStart =  options["start"]
     dEnd = options["end"]
+
     if options["calext_method"] == nil || options["calext_method"] == "iCal"
       rawEvents = Extractor.new( lewt_settings["ical_filepath"], dStart, dEnd, matchData )
     elsif  options["calext_method"] == "gCal"

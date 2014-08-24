@@ -15,11 +15,12 @@ require "yaml"
 class LewtExtension
   
   # LEWT Stash is the user configured stash path where all extensions, config file, templates etc are stored.
-  attr_reader :lewt_stash, :lewt_settings, :customers, :enterprise
+  attr_reader :lewt_stash, :lewt_settings, :customers, :enterprise, :options, :command_name
   
   # @@extensions is a registry shared between all extensions that impliment this class
   # containing there class names for invocation by the core system.
   @@lewt_extensions = Array.new
+  @options = nil
 
   def initialize
     # load core settings and check for user defined stash path
@@ -41,8 +42,8 @@ class LewtExtension
   
   # register the given extensions' class name with the system for later invocation
   # register the extensions CL name for user invocation
-  def register_extension cmd_str
-    @@lewt_extensions << { "ext" => self.clone, "cmd" => cmd_str }    
+  def register_extension 
+    @@lewt_extensions << self.clone    
   end
 
   # This method is used by extensions to hook into the command line
