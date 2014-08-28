@@ -12,7 +12,7 @@ require "../lib/lewt.rb"
 class TestLewt < Test::Unit::TestCase
 
   def test_initialize
-    lewt = Lewt.new
+    lewt = Lewt.new( { :target => "ACME" } )
     assert_kind_of( Lewt, lewt, "Failed to initialize Lewt object.")
   end
   

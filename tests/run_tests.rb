@@ -7,3 +7,6 @@ load 'tc_Lewt.rb'
 load 'tc_Billing.rb'
 load 'tc_LewtExtension.rb'
 load 'tc_LewtLedger.rb'
+load 'tc_LewtOpts.rb'
+
+
