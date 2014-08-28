@@ -9,7 +9,7 @@ require_relative 'lewt_ledger.rb'
 
 class Lewt
   
-  def initialize()
+  def initialize( library_options = nil )
     core_settings = YAML.load_file( File.expand_path( '../config/settings.yml', __FILE__) )
     @lewt_stash = core_settings['lewt_stash'] || File.expand_path('../', __FILE__)
     @settings = YAML.load_file( @lewt_stash + '/config/settings.yml' )
@@ -30,7 +30,7 @@ class Lewt
     # argument supplied for `cmd' (if any). ignore option flags IE args that start with the `-' symbol
     @argument = ARGV[1] == nil || ARGV[1].match(/\-/i) ? nil : ARGV[1]
     
-    @options = LewtOpts.new( @extensions )
+    @options = LewtOpts.new( @extensions, library_options  )
     
     # parseInternalCommands( options )
   end
