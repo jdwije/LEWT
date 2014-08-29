@@ -97,12 +97,15 @@ class Lewt
   def loadExtensions( directory = @lewt_stash + "/extensions" )
     Dir.foreach( directory ) do |file|
       next if (file =~ /\./) == 0
-      if File.directory?(file)
-        if Regexp.new('\.rb',Regexp::IGNORECASE).match(file) != nil
-          load(directory + "/" + file)
-          ext_object = initializeExtension(file)
-        end
+
+      # Cannot match with File.directory?(file) due to how ruby performs
+      # this test internaly when script is called from another dir.
+      # Therefor some REGEX will be used to match the .rb file extension instead...
+      if file.match(/\.rb/) != nil
+        load(directory + "/" + file)
+        ext_object = initializeExtension( file )
       else
+        # is a directory
         # load file in dir named {dir_name}.rb
         load "#{directory}/#{file}/#{file}.rb"
         ext_object = initializeExtension(file)
@@ -115,7 +118,7 @@ class Lewt
   # striped afterwards to return something like 'invoice-renderer.rb' >>> 'InvoiceRenderer' ready for
   # evaluation.
   def initializeExtension ( file )
-    classConvention = file.gsub("-", " ").split.map(&:capitalize).join(' ').gsub(" ","")
+    classConvention = file.gsub("-", " ").split.map(&:capitalize).join(' ').gsub(" ","").gsub(".rb","")
     extInit = (classConvention + ".new").to_s
     extension = eval( extInit )
     # extension will be registered on init so just reference the last one

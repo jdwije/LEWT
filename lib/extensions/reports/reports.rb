@@ -26,6 +26,7 @@ class Reports < LewtExtension
       targets.each do |t|
         # match targets for report
         if row["entity"] == t["name"]
+          puts "proc"
           if row["total"] > 0
             report["revenue"] += row["total"]
           else
