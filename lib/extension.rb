@@ -21,8 +21,10 @@ class LewtExtension
   # containing there class names for invocation by the core system.
   @@lewt_extensions = Array.new
   @options = nil
-
-  def initialize
+  
+  # ext_init [Hash]: contains the keys :cmd, :options - which are the command name (String) and options (Hash) for the extension
+  # respectively. See the calender core extension for an example.
+  def initialize ( ext_init = { :cmd => "lewt_base_extension" } )
     # load core settings and check for user defined stash path
     path = File.expand_path( "../config/settings.yml", __FILE__ )
     core_settings = YAML.load_file( path )
@@ -31,6 +33,9 @@ class LewtExtension
     @lewt_settings = YAML.load_file( lewt_stash + '/settings.yml' )
     @customers = YAML.load_file( lewt_stash + '/customers.yml' )
     @enterprise = YAML.load_file( lewt_stash + '/enterprise.yml' )
+    @command_name = ext_init[:cmd]
+    @options = ext_init[:options] || nil
+    register_extension
   end
 
   # returns all registered extensions as an array of class names
@@ -42,8 +47,11 @@ class LewtExtension
   
   # register the given extensions' class name with the system for later invocation
   # register the extensions CL name for user invocation
-  def register_extension 
-    @@lewt_extensions << self.clone    
+  def register_extension
+    # only register subclass of this basclass
+    if self.class != LewtExtension
+      @@lewt_extensions << self.clone    
+    end
   end
 
   # This method is used by extensions to hook into the command line

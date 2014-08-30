@@ -7,9 +7,7 @@ class LiquidRenderer < LewtExtension
   attr_reader :textTemplate, :htmlTemplate, :pdfTemplate, :stylesheet
 
   def initialize ()
-    super
-
-    @options = {
+    options = {
       :output_method => {
         :definition => "Specify html, text, pdf, or any combination of the three to define output method",
         :default => "text",
@@ -27,9 +25,7 @@ class LiquidRenderer < LewtExtension
       }
     }
 
-    @command_name = "liquid_render"
-
-    register_extension
+    super({:cmd => "liquid_render", :options => options })
   end
 
   def loadTemplates ( template )

@@ -4,9 +4,7 @@ require "csv"
 class SimpleExpenses < LewtExtension
   
   def initialize
-    super
-    @command_name = "expenses_extract"
-    register_extension
+    super({:cmd => "expenses"})
   end
 
   def extract( options )

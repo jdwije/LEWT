@@ -7,7 +7,7 @@
 #
 # ********************************************
 require "test/unit"
-require "../lib/lewt.rb"
+require_relative "../lib/lewt.rb"
  
 class TestLewt < Test::Unit::TestCase
 

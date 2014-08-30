@@ -62,7 +62,7 @@ LEWT extensions want config. They want it in the form of flat .yml [YAML](http:/
 
 # Why use LEWT?
 
-Because its esoteric and arcane, and if your anything like me it's still faster than PayPal or other similar systems even with my simplistic core extensions. You can also include LEWT as a drop in library as well as using it on the command line - all extensions are available in both environments making LEWT and all its extensions generally more useful. Everything in LEWT except for the extract, process, render cycle and a few basic command lines is customisable and designed to be that way, LEWT was made so you can automate accounting your way.
+Because its esoteric and arcane, and if your anything like me it's still faster than PayPal or other similar systems even with my simplistic core extensions. You can also include LEWT as a drop in library as well as using it on the command line - all extensions are available in both environments making LEWT and all its extensions generally more useful. Everything in LEWT except for the extract, process, render cycle and a few basic command lines is customisable and designed to be that way, LEWT was made so you can automate enterprise your way.
 
 
 

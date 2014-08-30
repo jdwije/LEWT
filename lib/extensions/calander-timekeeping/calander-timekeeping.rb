@@ -7,20 +7,16 @@ class CalanderTimekeeping < LewtExtension
   
   
   def initialize
-    super
     # set extension options
-    @options = {
+    options = {
       :calext_method => {
         :default => "gCal",
         :definition => "The default calender extraction method to use i.e. gCal, iCal...",
         :type => String,
         :short_flag => "-m"
       }
-    }
-    
-    @command_name = "calender_extract"
-
-    register_extension
+    }    
+    super({:cmd => "calender", :option => options})
   end
 
   def extract( options )

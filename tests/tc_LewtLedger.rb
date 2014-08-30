@@ -1,5 +1,5 @@
 require "test/unit"
-load "../lib/lewt_ledger.rb"
+require_relative "../lib/lewt_ledger.rb"
  
 class TestLewtExtension < Test::Unit::TestCase
 

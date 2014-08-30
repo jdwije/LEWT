@@ -1,6 +1,7 @@
 require "test/unit"
-load "../lib/lewtopts.rb"
-load "../lib/extensions/billing/billing.rb"
+
+require_relative "../lib/lewtopts.rb"
+require_relative "../lib/extensions/billing/billing.rb"
 
 class TestLewtOpts < Test::Unit::TestCase
 

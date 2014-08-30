@@ -1,23 +1,14 @@
 #!/usr/bin/env ruby
 
-# @class: ClientInvoicing 
-#
-# Takes an array of EventDataStructure objects and processes them into an invoice for the
-# 'recipientClient' which you can configure in ./config/clients.yaml. The resulting invoice
-# is structured YAML, it can be converted and prettified to MARKDOWN.
 require "yaml"
 
-# load File.expand_path('../render-invoice.rb', __FILE__)
 
 class Billing < LewtExtension
   
   attr_reader :data
 
-
   def initialize
-    super
-    @command_name = "invoice"
-    register_extension
+    super({:cmd => "invoice"})
   end
   
   # handles the invoicing workflow for you!

@@ -3,9 +3,7 @@
 class Reports < LewtExtension
 
   def initialize
-    super
-    @command_name = "report"
-    register_extension
+    super({:cmd => "report"})
   end
 
   def process ( options, data )
