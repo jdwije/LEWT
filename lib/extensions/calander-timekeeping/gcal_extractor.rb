@@ -35,7 +35,7 @@ class GCalExtractor < Extractor
       timeDiff = (eEnd - eStart).to_i / 60 / 60
       @targets.each do |t|
         if  self.isTargetDate( eStart ) == true && self.isTargetEvent( e, t ) != false
-          row = LEWTLedger.new( eStart, eEnd, 'Income', t["name"], e.content, timeDiff, t["rate"] )
+          row = LEWTLedger.new( eStart, eEnd, 'Hourly Income', t["name"], e.content, timeDiff, t["rate"] )
           @data.add_row(row)
         end
       end

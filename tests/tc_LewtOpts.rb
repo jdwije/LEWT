@@ -1,7 +1,7 @@
 require "test/unit"
 
 require_relative "../lib/lewtopts.rb"
-require_relative "../lib/extensions/billing/billing.rb"
+require_relative "../lib/extensions/billing.rb"
 
 class TestLewtOpts < Test::Unit::TestCase
 

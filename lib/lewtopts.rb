@@ -5,7 +5,7 @@
 
 class LewtOpts < Hash
   
-  attr_reader :options
+  attr_reader :options, :defaults
 
   def initialize ( extensions, library_options = nil )
     # LEWT's reserved option flags
@@ -38,7 +38,7 @@ class LewtOpts < Hash
       },
       :extractor => {
         :definition => "The extraction extension(s) LEWT should use to pull data with. This can be a comma separated list for multiple sources",
-        :default => "calender_extractor",
+        :default => "calender",
         :type => String,
         :short_flag => "-x"
       },
@@ -63,6 +63,8 @@ class LewtOpts < Hash
       end
     end
 
+    @defaults = default_options
+
     # determine if using LEWT from command line (CL) or as a drop in library and parse options accordingly
     if File.basename($0).match(/\.rb/) != nil
       parse_library_options( default_options, library_options )
@@ -76,7 +78,7 @@ class LewtOpts < Hash
   # sets the value of the instantized object equal to the parsed options hash
   def parse_command_line_options( default_options )
     options = self
-
+    
     # Parse internal commands before extension commands & options to avoid any conflicts & to avoid extension invocation
     # in case a internal command is called.
     OptionParser.new do |opts|

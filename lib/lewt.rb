@@ -32,7 +32,7 @@ class Lewt
     
     @options = LewtOpts.new( @extensions, library_options  )
     
-    # parseInternalCommands( options )
+    parseInternalCommands( options )
   end
 
   def run_logic_loop
@@ -42,21 +42,12 @@ class Lewt
   end
   
   def parseInternalCommands( options )
-    if @command == "extend"
+    trigger = false
+
+    if trigger == true
       exit
-    elsif @command == "extract"
-      input = readSTDIN
-      extract = fireEventHooks("extract", options)
-      puts extract
-    elsif @command == "process"
-      input = readSTDIN
-      process = fireEventHooks("process", input, options)
-      puts process
-    elsif @command == "render"
-      input = readSTDIN
-      render = fireEventHooks("render", input, options)
-      puts render
     end
+
   end
 
   def readSTDIN

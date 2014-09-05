@@ -29,9 +29,9 @@ class LiquidRenderer < LewtExtension
   end
 
   def loadTemplates ( template )
-    @textTemplate = Liquid::Template::parse( File.open( File.expand_path("../../../templates/#{template}.text.liquid", __FILE__) ).read )
-    @htmlTemplate = Liquid::Template::parse( File.open( File.expand_path("../../../templates/#{template}.html.liquid", __FILE__) ).read )
-    @stylesheet = File.expand_path('../../../templates/style.css', __FILE__)
+    @textTemplate = Liquid::Template::parse( File.open( File.expand_path( lewt_stash  + "/templates/#{template}.text.liquid", __FILE__) ).read )
+    @htmlTemplate = Liquid::Template::parse( File.open( File.expand_path( lewt_stash + "/templates/#{template}.html.liquid", __FILE__) ).read )
+    @stylesheet = File.expand_path( lewt_stash + '/templates/style.css', __FILE__)
   end
 
   def render ( options, data )

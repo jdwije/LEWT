@@ -18,18 +18,23 @@ class Reports < LewtExtension
       "revenue" => 0,
       "expenses" => 0,
       "income" => 0,
-      "taxes" => Array.new
+      "taxes" => Array.new,
+      "hours" => 0
     }
     data.each do |row|      
       targets.each do |t|
         # match targets for report
         if row["entity"] == t["name"]
-          puts "proc"
           if row["total"] > 0
             report["revenue"] += row["total"]
           else
             report["expenses"] += row["total"]
           end
+
+          if row["category"] == "Hourly Income"
+            report["hours"] += row["quantity"]
+          end
+
         end
       end
     end

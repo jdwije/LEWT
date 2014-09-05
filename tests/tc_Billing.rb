@@ -10,7 +10,7 @@
 require "test/unit"
 
 require_relative "../lib/extension.rb"
-require_relative "../lib/extensions/billing/billing.rb"
+require_relative "../lib/extensions/billing.rb"
  
 class TestBilling < Test::Unit::TestCase
 

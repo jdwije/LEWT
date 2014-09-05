@@ -9,14 +9,14 @@ class CalanderTimekeeping < LewtExtension
   def initialize
     # set extension options
     options = {
-      :calext_method => {
+      :ext_method => {
         :default => "gCal",
         :definition => "The default calender extraction method to use i.e. gCal, iCal...",
         :type => String,
         :short_flag => "-m"
       }
     }    
-    super({:cmd => "calender", :option => options})
+    super({:cmd => "calender", :options => options})
   end
 
   def extract( options )
@@ -24,9 +24,9 @@ class CalanderTimekeeping < LewtExtension
     dStart =  options["start"]
     dEnd = options["end"]
 
-    if options["calext_method"] == nil || options["calext_method"] == "iCal"
+    if options["ext_method"] == nil || options["ext_method"] == "iCal"
       rawEvents = Extractor.new( lewt_settings["ical_filepath"], dStart, dEnd, matchData )
-    elsif  options["calext_method"] == "gCal"
+    elsif  options["ext_method"] == "gCal"
       rawEvents = GCalExtractor.new( dStart, dEnd, matchData, lewt_settings["gmail_username"], 
                                      lewt_settings["gmail_password"], lewt_settings["google_app_name"] )
     end

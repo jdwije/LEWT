@@ -1,0 +1,28 @@
+<hr />
+
+<p><b>Date Created:</b> {{ date_created }}</p>
+
+Included:
+<ul>
+{% for target in included_customers %} 
+<li>{{ target.name }}</li>
+{% endfor %}
+</ul>
+
+<p><b>Revenue:</b> {{ revenue }}</p>
+<p><b>Expenses:</b> {{ expenses }}</p>
+
+Tax-Levees:
+<ul>
+{% for tax in taxes %} 
+<li>{{ tax.name }}[{{ tax.rate }}]: {{ tax.amount }}</li>
+{% endfor %}
+</ul>
+
+<p><b>Bottom Line:</b> {{ bottom_line }}</p>
+
+<hr />
+
+<p><b>Hours Worked:</b> {{ hours }}</p>
+
+<hr />
