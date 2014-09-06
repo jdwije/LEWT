@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'rake/testtask'
 require 'rubygems/package_task' 
+require 'rdoc/task'
 
 # setup
 spec = Gem::Specification.new do |s|
@@ -35,6 +36,14 @@ Rake::TestTask.new do |t|
   t.verbose = true
 end
 
+
+RDoc::Task.new :rdoc do |rdoc|
+  rdoc.main = "README.rdoc"
+  rdoc.rdoc_dir = "docs"
+  rdoc.title = "LEWT"
+  rdoc.rdoc_files.include("README.rdoc", "lib/**/*.rb")
+end
+
 # build gem and move to the ./dist directory
 Gem::PackageTask.new(spec) do |pkg|
   pkg.need_zip = true
@@ -42,7 +51,7 @@ Gem::PackageTask.new(spec) do |pkg|
 end
 
 # This is the default 'build' task. Append new items to it's task array as you create them.
-task :build => [:test] do
+task :build => [:test, :rdoc] do
   puts "Build completed!"
 end
 
