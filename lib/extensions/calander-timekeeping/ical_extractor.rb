@@ -4,7 +4,7 @@ require 'icalendar'
 class ICalExtractor < CalExtractor
 
   # Initialises the object and calls the parent class' super() method.
-  def initialize( dateStart, dateEnd, targets, lewt_settings ) 
+  def initialize( dateStart, dateEnd, targets, lewt_settings, suppressTargets )
     @calendarPath = lewt_settings["ical_filepath"]
     super( dateStart, dateEnd, targets )
   end

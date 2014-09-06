@@ -10,9 +10,13 @@ class CalanderTimekeeping < LewtExtension
     options = {
       :ext_method => {
         :default => "gCal",
-        :definition => "The default calender extraction method to use i.e. gCal, iCal...",
+        :definition => "The calender extraction method to use, supports gCal, iCal, osx calender extraction. Defaults to gCal.",
         :type => String,
-        :short_flag => "-m"
+      },
+      :suppress_cost => {
+        :default => false,
+        :definition => "Suppresses the cost calculation for the specified targets when calulating the hourly rates on extracted calender data. This is useful if you want to use this extension for tracking non-profit activites such as open-source project work as well as when you are being paid for these hours from another means (ie: milestones) and you just want to aggregate the hourly data into a report or something.",
+        :type => String
       }
     }    
     super({:cmd => "calender", :options => options})
@@ -22,12 +26,14 @@ class CalanderTimekeeping < LewtExtension
     targetCustomers = self.loadClientMatchData( options["target"] )
     dStart =  options["start"]
     dEnd = options["end"]
+    suppressTargets = options["suppress_cost"] == false ? false : self.loadClientMatchData(options["suppress_cost"])
+
     if options["ext_method"] == "iCal"
-      extract = ICalExtractor.new( dStart, dEnd, targetCustomers, lewt_settings )
+      extract = ICalExtractor.new( dStart, dEnd, targetCustomers, lewt_settings, suppressTargets )
     elsif options["ext_method"] == "gCal"
-      extract = GCalExtractor.new(dStart, dEnd, targetCustomers, lewt_settings )
+      extract = GCalExtractor.new(dStart, dEnd, targetCustomers, lewt_settings, suppressTargets )
     elsif options["ext_method"] == "apple"
-      extract = AppleExtractor.new(dStart, dEnd, targetCustomers, lewt_settings )
+      extract = AppleExtractor.new(dStart, dEnd, targetCustomers, lewt_settings, suppressTargets )
     end
     return extract.data
   end

@@ -6,7 +6,7 @@ class GCalExtractor < CalExtractor
 
   # Initialises as per its super-class plus the additional ```google``` parameter.
   # @param: google (Hash):: a hash containing your username, password, and google app name
-  def initialize ( dStart, dEnd, targets, lewt_settings )
+  def initialize ( dStart, dEnd, targets, lewt_settings, suppressTargets )
     uname = lewt_settings["gmail_username"]
     pass = lewt_settings["gmail_password"]
     app = lewt_settings["google_app_name"]

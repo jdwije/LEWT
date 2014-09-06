@@ -8,9 +8,10 @@ class SimpleExpenses < LewtExtension
   end
 
   def extract( options )
-    matchData = loadClientMatchData( options["target"] )
+    @targets = loadClientMatchData( options["target"] )
     @dStart =  options["start"]
     @dEnd = options["end"]
+    @category = 'Expenses'
     exFile = lewt_settings["expenses_filepath"]
     return getExpenses ( exFile )
   end
@@ -22,7 +23,7 @@ class SimpleExpenses < LewtExtension
     # ROWS:
     # [0]Date [1]Description [2]Context [3]Cost
     count = 0
-    data = LEWTBooks.new
+    data = LEWTBook.new
 
     CSV.foreach(filepath) do |row|
       if count > 0
@@ -31,9 +32,9 @@ class SimpleExpenses < LewtExtension
         context = row[2]
         cost = row[3].to_f * -1
 
-        if self.isTargetDate( date ) == true
+        if self.isTargetDate( date ) == true && self.isTargetContext?(context) == true
           # create ledger entry and append to books
-          row_data = LEWTLedger.new( date, date, 'Expenses', context, desc, 1, cost )
+          row_data = LEWTLedger.new( date, date, @category, context, desc, 1, cost )
           data.add_row(row_data)       
         end
       end
@@ -55,4 +56,16 @@ class SimpleExpenses < LewtExtension
     return check
   end
   
+
+  def isTargetContext?(context)
+    match = false
+    @targets.each do |t|
+      reg = [ t['alias'], t['name'] ]
+      regex = Regexp.new( reg.join("|"), Regexp::IGNORECASE )
+      match = regex.match(context) != nil ? true : false;
+      break if match != false
+    end
+    return match
+  end
+
 end
