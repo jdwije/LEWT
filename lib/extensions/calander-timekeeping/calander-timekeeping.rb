@@ -1,10 +1,9 @@
-load File.expand_path('../eventDataStructure.rb', __FILE__)
 load File.expand_path('../extractor.rb', __FILE__)
 load File.expand_path('../gcal_extractor.rb', __FILE__)
+load File.expand_path('../ical_extractor.rb', __FILE__)
+load File.expand_path('../apple_extractor.rb', __FILE__)
 
 class CalanderTimekeeping < LewtExtension
-  
-  
   
   def initialize
     # set extension options
@@ -20,29 +19,17 @@ class CalanderTimekeeping < LewtExtension
   end
 
   def extract( options )
-    matchData = loadClientMatchData( options["target"] )
+    targetCustomers = self.loadClientMatchData( options["target"] )
     dStart =  options["start"]
     dEnd = options["end"]
-
-    if options["ext_method"] == nil || options["ext_method"] == "iCal"
-      rawEvents = Extractor.new( lewt_settings["ical_filepath"], dStart, dEnd, matchData )
-    elsif  options["ext_method"] == "gCal"
-      rawEvents = GCalExtractor.new( dStart, dEnd, matchData, lewt_settings["gmail_username"], 
-                                     lewt_settings["gmail_password"], lewt_settings["google_app_name"] )
+    if options["ext_method"] == "iCal"
+      extract = ICalExtractor.new( dStart, dEnd, targetCustomers, lewt_settings )
+    elsif options["ext_method"] == "gCal"
+      extract = GCalExtractor.new(dStart, dEnd, targetCustomers, lewt_settings )
+    elsif options["ext_method"] == "apple"
+      extract = AppleExtractor.new(dStart, dEnd, targetCustomers, lewt_settings )
     end
-    return rawEvents.data
-  end
-
-  def getClient( query ) 
-    client = nil
-    customers.each do |c|
-      buildQ = [ c["name"], c["alias"] ].join("|")
-      regex = Regexp.new(buildQ, Regexp::IGNORECASE)
-      if regex.match( query ) != nil
-        client = c
-      end
-    end
-    return client
+    return extract.data
   end
 
 end

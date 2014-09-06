@@ -16,7 +16,7 @@ class TestLewtExtension < Test::Unit::TestCase
   end
 
   def test_lewt_books
-    books = LEWTBooks.new
+    books = LEWTBook.new
     assert_raise( TypeError ) { books.add_row(1) }
     row = create_row
     books.add_row( row )

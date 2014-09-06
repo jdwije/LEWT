@@ -49,3 +49,19 @@
   email: test@jwije.com
  alias: Performax
  rate: 60
+-
+ name: ACME
+ business_number: 45 443 23 123
+ address:
+   lines: 2 ACME Rd
+   city    : Old Skool
+   state   : Digidom
+   postal  : 90210
+   country: Cartoon Land
+ contact:
+  name: 
+   first: Wiley
+   last: Coyote
+  email: test@jwije.com
+ alias: AC
+ rate: 60

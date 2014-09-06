@@ -3,7 +3,7 @@
 # The Lewt ledger is used by extractors as a generic data structure to adhere to when
 # returning there results.
 # It follows a basic *general ledger* format without the double-entry book keeping.
-class LEWTBooks < Array
+class LEWTBook < Array
 
   # @NOTE!!
   # Ideally I would like to override the Array.push method for LEWTBooks in such a way
