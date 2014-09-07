@@ -7,6 +7,14 @@ require_relative 'lewtopts.rb'
 require_relative 'extension.rb'
 require_relative 'lewt_ledger.rb'
 
+
+# Author::    Jason Wijegooneratne  (mailto:code@jwije.com)
+# Copyright:: Copyright (c) 2014 Jason Wijegooneratne
+# License::   MIT. See LICENSE.md distributed with the source code for more information.
+
+# The Lewt class contains the major functionality of this program.
+# It handles loading all extensions, gathering the results and passing options ariound the place.
+# It also works quite closely with the LewtExtension and LewtOpts classes.
 class Lewt
   
   def initialize( library_options = nil )
@@ -35,12 +43,14 @@ class Lewt
     parseInternalCommands( options )
   end
 
+  # Runs the extract render process loop
   def run_logic_loop
     extract = fireHooks("extract", @options)
     process = fireHooks("process", @options, extract )
     render = fireHooks("render", @options, process )
   end
   
+  # Parses internal commands (not yet implimented)
   def parseInternalCommands( options )
     trigger = false
 
@@ -50,6 +60,7 @@ class Lewt
 
   end
 
+  # reads input from standard INPUT
   def readSTDIN
     data = ""
     while line = $stdin.gets
@@ -59,7 +70,9 @@ class Lewt
   end
   
   # Fire a hook with the given options and overloaded parameters.
-  # Expected hooks are 'extract', 'process', 'render'.
+  # hook [String]:: Expected hooks are 'extract', 'process', 'render'.
+  # options [Hash]:: The options gathered from using LewtOpts
+  # data [Mixed]:: The data to pass to the extensions.
   def fireHooks( hook, options, *data )
     algamation = Array.new
     if hook == "extract"
@@ -84,7 +97,8 @@ class Lewt
     return algamation;
   end
 
-  # fn loads all installed LEWT extensions by checking the ext_dir setting variable for available ruby files.
+  # Loads all installed LEWT extensions by checking the ext_dir setting variable for available ruby files.
+  # directory [String]:: The path where to look for extensions as a string.
   def loadExtensions( directory = @lewt_stash + "/extensions" )
     Dir.foreach( directory ) do |file|
       next if (file =~ /\./) == 0
@@ -108,6 +122,7 @@ class Lewt
   # Class names are transformed into UC words. '-' are interpreted as spaces in this conversion, and are 
   # striped afterwards to return something like 'invoice-renderer.rb' >>> 'InvoiceRenderer' ready for
   # evaluation.
+  # file [String]:: The file name as a string
   def initializeExtension ( file )
     classConvention = file.gsub("-", " ").split.map(&:capitalize).join(' ').gsub(" ","").gsub(".rb","")
     extInit = (classConvention + ".new").to_s
@@ -119,6 +134,7 @@ class Lewt
   # fn returns the desired customer given there name or alias.
   # A REGEXP query can be passed to this object i.e. "ACME|NovaCorp|..."
   # to match multiple customers.
+  # query [String]:: The query to search against.
   def getClient( query ) 
     client = nil
     @customers.each do |c|

@@ -1,16 +1,27 @@
-#!/usr/bin/env ruby
+# Author::    Jason Wijegooneratne  (mailto:code@jwije.com)
+# Copyright:: Copyright (c) 2014 Jason Wijegooneratne
+# License::   MIT. See LICENSE.md distributed with the source code for more information.
+
+# The Reports LEWT Extension processes ledger data into a brief report.
 
 class Reports < LewtExtension
-
+  
+  # Registers this extension.
   def initialize
     super({:cmd => "report"})
   end
 
+  # Called on Lewt process cycle and uses the ledger data to compose a report.
+  # options [Hash]:: The options hash passed to this function by the Lewt program.
+  # data [LEWTBook]:: The data in LEWTBook format
   def process ( options, data )
     targets = loadClientMatchData( options["target"] )
     return Array.new.push(make_report(targets, data))
   end
 
+  # This method handles the bulk of the calculation required in compiling the report.
+  # targets [Hash]:: The target client(s) to operate on
+  # data [LEWTBook]:: The data in LEWTBook format
   def make_report ( targets, data )
     report = {
       "date_created" => DateTime.now.strftime("%d/%m/%y"),

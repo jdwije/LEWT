@@ -1,6 +1,15 @@
 require 'icalendar'
 
+# Author::    Jason Wijegooneratne  (mailto:code@jwije.com)
+# Copyright:: Copyright (c) 2014 Jason Wijegooneratne
+# License::   MIT. See LICENSE.md distributed with the source code for more information.
+
 # This class handles extraction from iCal sources.
+#
+# ===Usage:
+# - Add the key <tt>osxcal_path</tt> to your settings file and set its value to the location of your calender directory. This must
+#   be the full path.
+
 class AppleExtractor < CalExtractor
 
   # Initialises the object and calls the parent class' super() method.

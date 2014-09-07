@@ -3,7 +3,7 @@ require "yaml"
 # Author::    Jason Wijegooneratne  (mailto:code@jwije.com)
 # Copyright:: Copyright (c) 2014 Jason Wijegooneratne
 # License::   MIT. See LICENSE.md distributed with the source code for more information.
-#
+
 # The Billing LEWT Extension handles processing invoices from extracted data and returns them as a hash
 # for rendering.
 

@@ -1,15 +1,14 @@
-##################################
-## THE LEWT EXTENSION BASE CLASS ##
-###################################
-# --------------------------------
-# This class provides some basic 
-# structuring for LEWT extensions 
-# and additionally adds some meta 
-# features to extensions which 
-# implement it in order to 
-# streamline development of LEWT
+# Author::    Jason Wijegooneratne  (mailto:code@jwije.com)
+# Copyright:: Copyright (c) 2014 Jason Wijegooneratne
+# License::   MIT. See LICENSE.md distributed with the source code for more information.
+
+# =THE LEWT EXTENSION BASE CLASS
+#
+# This class provides some basic structuring for LEWT extensions 
+# and additionally adds some meta features to extensions which 
+# implement it in order to streamline development of LEWT
 # extensions.
-#********************************
+
 require "yaml"
 
 class LewtExtension
@@ -22,8 +21,8 @@ class LewtExtension
   @@lewt_extensions = Array.new
   @options = nil
   
-  # ext_init [Hash]: contains the keys :cmd, :options - which are the command name (String) and options (Hash) for the extension
-  # respectively. See the calender core extension for an example.
+  # This method is inoked by subclasses to initialise themselves within Lewt's extension registry.
+  # ext_init [Hash]:: contains the keys <tt>:cmd</tt>, <tt>:options</tt> - which are the command name (String) and options (Hash) for the extension respectively.
   def initialize ( ext_init = { :cmd => "lewt_base_extension" } )
     # load core settings and check for user defined stash path
     path = File.expand_path( "../config/settings.yml", __FILE__ )
@@ -44,6 +43,7 @@ class LewtExtension
   end
 
   # This method mathes customers wth query strings provided by users in the CLI
+  # query [String]:: A search string to query against.
   def loadClientMatchData( query )
     requestedClients = Array.new
     if query == nil
@@ -65,7 +65,6 @@ class LewtExtension
   protected
   
   # register the given extensions' class name with the system for later invocation
-  # register the extensions CL name for user invocation
   def register_extension
     # only register subclass of this basclass
     if self.class != LewtExtension

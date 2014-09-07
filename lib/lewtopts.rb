@@ -1,23 +1,28 @@
-#
+# Author::    Jason Wijegooneratne  (mailto:code@jwije.com)
+# Copyright:: Copyright (c) 2014 Jason Wijegooneratne
+# License::   MIT. See LICENSE.md distributed with the source code for more information.
+
 # This is the options handling class for LEWT extensions. It handles translating extension options for usage in the command line
 # & library run-times and acts as a sort of wrapper class for this functionality.
 #
+# ===LEWT's reserved option flags
+#
+# -x --extract:: what extractor[s] to use
+# -p --process:: what processor[s] to use
+# -o --render:: what renderer[s] to use
+# -t --target:: target
+# -s --start:: start target date
+# -e --end:: end target date
+#
+# The user defined values for these options are readable by extensions at runtime.
+
 
 class LewtOpts < Hash
   
   attr_reader :options, :defaults
 
+  # Sets up this extension.
   def initialize ( extensions, library_options = nil )
-    # LEWT's reserved option flags
-    #
-    # -x: what extractor[s] to use
-    # -p: what processor[s] to use
-    # -o: what renderer[s] to use
-    # -t: target
-    # -s: start target date
-    # -e: end target date
-    #
-    # The user defined values for these options are readable by extensions at runtime.
     default_options  = {
       :start => {
         :definition => "Start time for LEWT snapshot",
@@ -76,6 +81,7 @@ class LewtOpts < Hash
   
   # handles parsing & translating options in command line mode
   # sets the value of the instantized object equal to the parsed options hash
+  # default_options [Hash]:: The default options gathered from all extension & Lewt itself to use in case user supplied values aren't given.
   def parse_command_line_options( default_options )
     options = self
     
@@ -119,6 +125,8 @@ class LewtOpts < Hash
   
   # handles parsing & translating options in library mode
   # sets the value of the instantized object equal to the parsed options hash
+  # default_options [Hash]:: The default options gathered from all extension & Lewt itself to use in case user supplied values aren't given.
+  # library_options [Hash]:: Some options translated for use in lib mode
   def parse_library_options ( default_options, library_options )
     options = Hash.new
 

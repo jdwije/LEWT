@@ -1,12 +1,29 @@
 require "csv"
 
+# Author::    Jason Wijegooneratne  (mailto:code@jwije.com)
+# Copyright:: Copyright (c) 2014 Jason Wijegooneratne
+# License::   MIT. See LICENSE.md distributed with the source code for more information.
+
+# The Simple Expenses LEWT Extensions allows you to manage you expenses in a CSV file. The CSV
+# file itself must conform to the following specification:
+#
+# ===Row Indexes:
+# [0] Date 
+# [1] Description 
+# [2] Context 
+# [3] Cost
+#
+# The key <tt>expenses_filepath</tt> can be added to your settings file to change the location where this extension looks for the CSV. 
 
 class SimpleExpenses < LewtExtension
   
+  # Registers this extension
   def initialize
     super({:cmd => "expenses"})
   end
 
+  # Extracts data from the expenses CSV file.
+  # options [Hash]:: The options hash passed to this function by the Lewt program.
   def extract( options )
     @targets = loadClientMatchData( options["target"] )
     @dStart =  options["start"]
@@ -17,8 +34,8 @@ class SimpleExpenses < LewtExtension
   end
 
 
-  # Read file @ filepath and parses it with some rules kinda similar to EMACS ORG-Mode
-  # Returns ledger format file
+  # Read file at filepath and parses it expecting the format presented in this classes header.
+  # filepath [String]:: The CSV filepath as a string.
   def getExpenses ( filepath )
     # ROWS:
     # [0]Date [1]Description [2]Context [3]Cost
@@ -46,7 +63,9 @@ class SimpleExpenses < LewtExtension
     return data
   end
 
-  # checks whether event date is within target range
+  # Checks whether event date is within target range
+  # date [DateTime]:: The date to check
+  # returns: Boolean
   def isTargetDate ( date ) 
     d = date.to_date
     check = false
@@ -56,7 +75,8 @@ class SimpleExpenses < LewtExtension
     return check
   end
   
-
+  # Checks if the context field in the CSV matches any of our target clients names or alias'
+  # context [String]:: The context field as a string.
   def isTargetContext?(context)
     match = false
     @targets.each do |t|

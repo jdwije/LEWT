@@ -4,14 +4,14 @@ require "pdfkit"
 # Author::    Jason Wijegooneratne  (mailto:code@jwije.com)
 # Copyright:: Copyright (c) 2014 Jason Wijegooneratne
 # License::   MIT. See LICENSE.md distributed with the source code for more information.
-#
+
 # The Liquid Renderer LEWT Extension handles rendering processed data to TEXT, HTML, and PDF formats using the
 # {liquid templating engine}[http://liquidmarkup.org] at its core. This allows for easy marking up of templates
 # to be used with arbitrary LEWT extensions and processing them into multiple human readable formats on the fly.
 
 class LiquidRenderer < LewtExtension
   
-  attr_reader :textTemplate, :htmlTemplate, :pdfTemplate, :stylesheet
+  attr_reader :textTemplate, :htmlTemplate, :pdfTemplate, :stylesheet, :markup
 
   # Sets up this extension and registers its run-time options.
   def initialize ()
@@ -41,17 +41,22 @@ class LiquidRenderer < LewtExtension
   end
 
   
+  # Loads the plaint-text, html, & (optionally) pdf template files of the given template name and parses it with the Liquid class
+  # template [String]:: The name of the template to load.
   def loadTemplates ( template )
     @textTemplate = Liquid::Template::parse( File.open( File.expand_path( lewt_stash  + "/templates/#{template}.text.liquid", __FILE__) ).read )
     @htmlTemplate = Liquid::Template::parse( File.open( File.expand_path( lewt_stash + "/templates/#{template}.html.liquid", __FILE__) ).read )
     @stylesheet = File.expand_path( lewt_stash + '/templates/style.css', __FILE__)
   end
 
+  # Called on LEWT render cycle, this method outputs the data as per a pre-formated liquid template.
+  # options [Hash]:: The options hash passed to this function by the Lewt program.
+  # data [Array]:: An array of hash data to format.
   def render ( options, data )
     output = Array.new
     
     # template name is always the same as processor name
-    template = options["liquid_template"] != nil ? options["liquid_template"] : options["proces"]
+    template = options["liquid_template"] != nil ? options["liquid_template"] : options["process"]
     loadTemplates( template )
 
     if options["output_method"].match "text"
@@ -86,10 +91,6 @@ class LiquidRenderer < LewtExtension
     end
 
     return output
-  end
-
-  def markup
-    @markup
   end
 
 end

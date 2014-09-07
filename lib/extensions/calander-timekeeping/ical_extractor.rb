@@ -1,6 +1,14 @@
 require 'icalendar'
 
+# Author::    Jason Wijegooneratne  (mailto:code@jwije.com)
+# Copyright:: Copyright (c) 2014 Jason Wijegooneratne
+# License::   MIT. See LICENSE.md distributed with the source code for more information.
+
 # This class handles extraction from iCal sources.
+#
+# ===Usage:
+# - add the key <tt>ical_filepath</tt> to you settings file corresponding to the filepath of the ical file you wish to have parsed.
+#
 class ICalExtractor < CalExtractor
 
   # Initialises the object and calls the parent class' super() method.

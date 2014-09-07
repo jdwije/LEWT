@@ -1,16 +1,18 @@
-#!/usr/bin/ruby
+# Author::    Jason Wijegooneratne  (mailto:code@jwije.com)
+# Copyright:: Copyright (c) 2014 Jason Wijegooneratne
+# License::   MIT. See LICENSE.md distributed with the source code for more information.
 
-# The CalExtractor class acts as base class for various calender extraction interfaces such as google, ical, apple, etc.
-# It provides some convenience methods that are useful across the various implementations.
+# The CalExtractor class acts as base class for various calender extraction interfaces such as GCalExtractor, ICalExtractor
+# AppleExtractor. It provides some convenience methods that are useful across the various implementations.
 class CalExtractor < LewtExtension
   
   attr_reader :data
 
-  # Initialises this class. This method should be invoked by sub-classes with 'super()'. It invokes
-  # ```extractCalenderData``` on the sub-classes behalf when called...
-  # @param dateStart (String):: a human readable date as a string for the start time period
-  # @param dateEnd (String):: a human readable date as a string for the end time period
-  # @param targets (Hash):: a hash containing all the targets returned by the LewtExtension.loadClientMatchData() method
+  # Initialises this class. This method should be invoked by sub-classes with <tt>super()</tt>. It invokes
+  # <tt>extractCalenderData</tt> on the sub-classes behalf when called...
+  # dateStart [String]:: a human readable date as a string for the start time period
+  # dateEnd [String]:: a human readable date as a string for the end time period
+  # targets [Hash]:: a hash containing all the targets returned by the LewtExtension.loadClientMatchData() method
   def initialize( dateStart, dateEnd, targets ) 
     @data = LEWTBook.new
     @dateStart  = dateStart.to_date 
@@ -25,8 +27,8 @@ class CalExtractor < LewtExtension
   end
   
   # Matches a search string against customer names/aliases
-  # @param: evtSearch (String):: a string to search against (such as the title of an event)
-  # @returns: (Boolean|Hash): false when no match found or the target customer details (as a hash) when matched
+  # evtSearch [String]:: a string to search against such as the title of an event
+  # returns:: false when no match found or the target customer details (as a hash) when matched
   def isTargetCustomer? ( evtSearch )
     match = false
     @targets.each do |t|
@@ -39,8 +41,8 @@ class CalExtractor < LewtExtension
   end
   
   # Checks whether an event date is within target range
-  # @param: date (Date):: the date to check against
-  # @return: (Boolean):: true/false operation status
+  # date [Date]:: the date to check against
+  # return:: Boolean true/false operation status
   def isTargetDate? ( date ) 
     d = date
     check = false
