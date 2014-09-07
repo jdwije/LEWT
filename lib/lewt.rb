@@ -64,19 +64,19 @@ class Lewt
     algamation = Array.new
     if hook == "extract"
       @extensions.each do |e|
-        if defined? e.extract and e.command_name.match(/#{options["extractor"]}/)
+        if defined? e.extract and e.command_name.match(/#{options["extract"].gsub(",","|")}/)
           algamation.concat e.extract(options)
         end
       end
     elsif hook == "process"
       @extensions.each do |e|
-        if defined? e.process and e.command_name.match(/#{options["processor"]}/)
+        if defined? e.process and e.command_name.match(/#{options["process"].gsub(",","|")}/)
            algamation.concat e.process(options, *data)
         end
       end
     elsif hook == "render"
       @extensions.each do |e|
-        if defined? e.render and e.command_name.match(/#{options["renderer"]}/)
+        if defined? e.render and e.command_name.match(/#{options["render"].gsub(",","|")}/)
            algamation.concat e.render(options, *data)
         end
       end

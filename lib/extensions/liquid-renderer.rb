@@ -1,11 +1,19 @@
-#!/usr/bin/ruby
 require "liquid"
 require "pdfkit"
+
+# Author::    Jason Wijegooneratne  (mailto:code@jwije.com)
+# Copyright:: Copyright (c) 2014 Jason Wijegooneratne
+# License::   MIT. See LICENSE.md distributed with the source code for more information.
+#
+# The Liquid Renderer LEWT Extension handles rendering processed data to TEXT, HTML, and PDF formats using the
+# {liquid templating engine}[http://liquidmarkup.org] at its core. This allows for easy marking up of templates
+# to be used with arbitrary LEWT extensions and processing them into multiple human readable formats on the fly.
 
 class LiquidRenderer < LewtExtension
   
   attr_reader :textTemplate, :htmlTemplate, :pdfTemplate, :stylesheet
 
+  # Sets up this extension and registers its run-time options.
   def initialize ()
     options = {
       :output_method => {
@@ -22,12 +30,17 @@ class LiquidRenderer < LewtExtension
         :definition => "Toggle dumping output to console or log",
         :default => true,
         :short_flag => "-d"
+      },
+      :liquid_template => {
+        :definition => "Override the template that liquid render should use. Defaults to the template which matches the processor name but you will want to override this if you are using multiple processors.",
+        :type => String
       }
     }
 
     super({:cmd => "liquid_render", :options => options })
   end
 
+  
   def loadTemplates ( template )
     @textTemplate = Liquid::Template::parse( File.open( File.expand_path( lewt_stash  + "/templates/#{template}.text.liquid", __FILE__) ).read )
     @htmlTemplate = Liquid::Template::parse( File.open( File.expand_path( lewt_stash + "/templates/#{template}.html.liquid", __FILE__) ).read )
@@ -38,7 +51,8 @@ class LiquidRenderer < LewtExtension
     output = Array.new
     
     # template name is always the same as processor name
-    loadTemplates( options["processor"] ) 
+    template = options["liquid_template"] != nil ? options["liquid_template"] : options["proces"]
+    loadTemplates( template )
 
     if options["output_method"].match "text"
       data.each do |d|

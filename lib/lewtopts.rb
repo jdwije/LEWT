@@ -36,19 +36,19 @@ class LewtOpts < Hash
         :short_flag => "-t",
         :type => String
       },
-      :extractor => {
+      :extract => {
         :definition => "The extraction extension(s) LEWT should use to pull data with. This can be a comma separated list for multiple sources",
         :default => "calender",
         :type => String,
         :short_flag => "-x"
       },
-      :processor => {
+      :process => {
         :definition => "The processor extensions LEWT should use to process the data with.",
         :default => "invoice",
         :type => String,
         :short_flag => "-p"
       },
-      :renderer => {
+      :render => {
         :definition => "The render(s) LEWT should use to output the data with. This can be a comma separate list for multiple outputs.",
         :default => "liquid_render",
         :type => String,

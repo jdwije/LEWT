@@ -28,9 +28,51 @@ spec = Gem::Specification.new do |s|
   #  }
 end
 
+# just some output helper methods
+class CLOut
+
+  def initialize
+    @lineSymbol = "-"
+    @paddingSymbol = " "
+    @margin  = 2
+    @padding = 4
+  end
+
+  def header (text)
+    puts buildLine(text)
+    puts buildMargin(false) + text.upcase + buildMargin(true)
+    puts buildLine(text)
+  end
+
+  private
+
+  def buildLine(text)
+    line = String.new
+    until line.length == text.length
+      line += @lineSymbol
+    end
+    return (buildMargin(false) + line + buildMargin(true)).gsub!(@paddingSymbol, @lineSymbol)
+  end
+
+
+  def buildMargin( reverse )
+    margin = String.new
+    until margin.length == (@margin + @padding)
+      if margin.length <= @margin
+        margin += (reverse == false ? @lineSymbol : @paddingSymbol)
+      else
+        margin += (reverse == false ? @paddingSymbol : @lineSymbol)
+      end
+    end
+    return margin
+  end
+
+end
+
+
 # setup tests
 Rake::TestTask.new do |t|
-  puts "running tests"
+#  CLOut.new::header("running tests")
   t.libs << "tests"
   t.test_files = FileList['tests/tc*.rb']
   t.verbose = true
@@ -38,6 +80,7 @@ end
 
 
 RDoc::Task.new :rdoc do |rdoc|
+ # CLOut.new::header("Building documentation")
   rdoc.main = "README.rdoc"
   rdoc.rdoc_dir = "docs"
   rdoc.title = "LEWT"
@@ -46,13 +89,14 @@ end
 
 # build gem and move to the ./dist directory
 Gem::PackageTask.new(spec) do |pkg|
+  #CLOut.new::header("Packaging")
   pkg.need_zip = true
   pkg.need_tar = true
 end
 
 # This is the default 'build' task. Append new items to it's task array as you create them.
 task :build => [:test, :rdoc] do
-  puts "Build completed!"
+  CLOut.new::header("Build Completed")
 end
 
 # set default task...
