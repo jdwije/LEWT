@@ -1,9 +1,10 @@
 ---
-ical_filepath: /users/jwijeswww/documents/development.ics
-osxcal_path: /Users/JWIJESWWW/Library/Calendars/
-gmail_username: admin@jwije.com
-gmail_password: cxfroeopthxtuqwv
-gmail_app_name: jwije.com-googlecalendar-integration
-expenses_filepath: /Users/JWIJESWWW/Google Drive/Administration/business expenses.csv
-milestones_filepath: /Users/JWIJESWWW/Google Drive/Administration/milestone income.csv
-store_path: /Users/JWIJESWWW/desktop/store/
+lewt_stash: /users/jwijeswww/documents/lewtstash/
+ical_filepath: /path/to/ical.ics
+osxcal_path: /path/to/osxcalender/dir/
+gmail_username: you@google.com
+gmail_password: your_secret
+gmail_app_name: "some-goggle-hash-code"
+expenses_filepath: /path/to/expenses.csv
+milestones_filepath: /path/to/milestones.csv
+store_path: /path/to/store/dir/

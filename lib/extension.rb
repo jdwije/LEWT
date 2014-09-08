@@ -24,14 +24,23 @@ class LewtExtension
   # This method is inoked by subclasses to initialise themselves within Lewt's extension registry.
   # ext_init [Hash]:: contains the keys <tt>:cmd</tt>, <tt>:options</tt> - which are the command name (String) and options (Hash) for the extension respectively.
   def initialize ( ext_init = { :cmd => "lewt_base_extension" } )
-    # load core settings and check for user defined stash path
-    path = File.expand_path( "../config/settings.yml", __FILE__ )
-    core_settings = YAML.load_file( path )
-    @lewt_stash = core_settings['stash_path'] || File.expand_path('../config', __FILE__)
-    # Use namespaces wisely!
-    @lewt_settings = YAML.load_file( lewt_stash + '/settings.yml' )
-    @customers = YAML.load_file( lewt_stash + '/customers.yml' )
-    @enterprise = YAML.load_file( lewt_stash + '/enterprise.yml' )
+    core_settings = YAML.load_file( File.expand_path( '../config/settings.yml', __FILE__) )
+    @lewt_stash = core_settings['lewt_stash'] || File.expand_path('../', __FILE__) + "/config/"
+    @lewt_settings = YAML.load_file( @lewt_stash + 'settings.yml' )
+
+    # Start by loading the local config files
+    @customers = YAML.load_file(@lewt_stash + "customers.yml")
+    @enterprise = YAML.load_file(@lewt_stash + "enterprise.yml")
+
+
+    # # load core settings and check for user defined stash path
+    # path = File.expand_path( "../config/settings.yml", __FILE__ )
+    # core_settings = YAML.load_file( path )
+    # @lewt_stash = core_settings['stash_path'] || File.expand_path('../config', __FILE__)
+    # # Use namespaces wisely!
+    # @lewt_settings = YAML.load_file( lewt_stash + '/settings.yml' )
+    # @customers = YAML.load_file( lewt_stash + '/customers.yml' )
+    # @enterprise = YAML.load_file( lewt_stash + '/enterprise.yml' )
     @command_name = ext_init[:cmd]
     @options = ext_init[:options] || nil
     register_extension

@@ -20,15 +20,23 @@ class Lewt
   
   def initialize( library_options = nil )
     core_settings = YAML.load_file( File.expand_path( '../config/settings.yml', __FILE__) )
-    @lewt_stash = core_settings['lewt_stash'] || File.expand_path('../', __FILE__)
-    @settings = YAML.load_file( @lewt_stash + '/config/settings.yml' )
+    @lewt_stash = core_settings['lewt_stash'] || File.expand_path('../', __FILE__) + "/config/"
+    @settings = YAML.load_file( @lewt_stash + 'settings.yml' )
     
     # Start by loading the local config files
-    @customers = YAML.load_file(@lewt_stash + "/config/customers.yml")
-    @enterprise = YAML.load_file(@lewt_stash + "/config/enterprise.yml")
+    @customers = YAML.load_file(@lewt_stash + "customers.yml")
+    @enterprise = YAML.load_file(@lewt_stash + "enterprise.yml")
     
     # Referenceall registered extension for later invocation
     @extensions = LewtExtension.new.lewt_extensions
+
+
+    if core_settings.has_key?("lewt_stash")
+      # Load core extensions
+      loadExtensions( File.expand_path('../extensions', __FILE__) )
+    end
+
+    # load user defined extesnions
     loadExtensions
     
     # Stores default options returned from extensions
@@ -100,28 +108,30 @@ class Lewt
 
   # Loads all installed LEWT extensions by checking the ext_dir setting variable for available ruby files.
   # directory [String]:: The path where to look for extensions as a string.
-  def loadExtensions( directory = @lewt_stash + "/extensions" )
-    Dir.foreach( directory ) do |file|
-      next if (file =~ /\./) == 0
+  def loadExtensions( directory = @lewt_stash + "extensions" )
+    if Dir.exists? directory
+      Dir.foreach( directory ) do |file|
+        next if (file =~ /\./) == 0
 
-      # Cannot match with File.directory?(file) due to how ruby performs
-      # this test internaly when script is called from another dir.
-      # Therefor some REGEX will be used to match the .rb file extension instead...
-      if file.match(/\.rb/) != nil
-        load(directory + "/" + file)
-        ext_object = initializeExtension( file )
-      else
-        # is a directory
-        # load file in dir named {dir_name}.rb
-        load "#{directory}/#{file}/#{file}.rb"
-        ext_object = initializeExtension(file)
+        # Cannot match with File.directory?(file) due to how ruby performs
+        # this test internaly when script is called from another dir.
+        # Therefor some REGEX will be used to match the .rb file extension instead...
+        if file.match(/\.rb/) != nil
+          load(directory + "/" + file)
+          ext_object = initializeExtension( file )
+        else
+          # is a directory
+          # load file in dir named {dir_name}.rb
+          load "#{directory}/#{file}/#{file}.rb"
+          ext_object = initializeExtension(file)
+        end
       end
-    end
-    gems = @settings['gem_loads']
-    if gems != nil
-      gems.split(",").each do |g|
-        match = g.split("::")
-        ext_object = initializeGem(match[0], match[1])
+      gems = @settings['gem_loads']
+      if gems != nil
+        gems.split(",").each do |g|
+          match = g.split("::")
+          ext_object = initializeGem(match[0], match[1])
+        end
       end
     end
   end
