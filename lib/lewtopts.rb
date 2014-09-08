@@ -92,7 +92,7 @@ class LewtOpts < Hash
       default_options.each do | name, details |
         # translate options default value if defined
         if details.key?(:default) == true
-          options[name.to_s] = details[:default]
+          options[name] = details[:default]
         end
 
         cl_type = details[:type].to_s == "DateTime" ? String : details[:type]
@@ -102,15 +102,15 @@ class LewtOpts < Hash
 
         if details.key?(:short_flag) == true && details.key?(:type) == true
           opts.on( details[:short_flag], cl_option, cl_type, details[:definition] ) do |o|
-            options[ name.to_s ] = prepare_input( details, o )
+            options[ name ] = prepare_input( details, o )
           end 
         elsif details.key?(:short_flag) == true && details.key?(:type) == false
           opts.on( details[:short_flag], "--#{name.to_s.gsub("_","-")}", details[:definition] ) do |o|
-            options[ name.to_s ] = prepare_input( details, o )
+            options[ name ] = prepare_input( details, o )
           end  
         elsif details.key?(:short_flag) == false 
           opts.on( cl_option, cl_type, details[:definition] ) do |o|
-            options[ name.to_s ] = prepare_input( details, o )
+            options[ name ] = prepare_input( details, o )
           end
         end
 
@@ -133,16 +133,16 @@ class LewtOpts < Hash
     default_options.each do | name, details |
       # translate options default value if defined
       if details.key?(:default) == true
-        options[name.to_s] = details[:default]
+        options[name] = details[:default]
       end
     end
 
     # merge library options with options array
     options.merge!(library_options)
     
-    # sanitize symbols to strings and assign to self
+    # assign options to self
     options.each do |k,v|
-      self[k.to_s] = v
+      self[k] = v
     end
   end
   

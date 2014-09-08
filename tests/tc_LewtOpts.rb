@@ -18,10 +18,8 @@ class TestLewtOpts < Test::Unit::TestCase
     options = LewtOpts.new( extensions, simulated_options )
     assert_instance_of(LewtOpts, options, "LewtOpts not inheriting hash properties properly in libmode.")
 
-#    puts options
-    
-    assert_instance_of(String, options["target"], "LewtOpts not setting supplied values properly in libmode.")
-    assert_equal("ACME", options["target"], "Expected 'ACME' (String) but got #{options["target"]} in libmode.")
+    assert_instance_of(String, options[:target], "LewtOpts not setting supplied values properly in libmode.")
+    assert_equal("ACME", options[:target], "Expected 'ACME' (String) but got #{options[:target]} in libmode.")
   end
 
 

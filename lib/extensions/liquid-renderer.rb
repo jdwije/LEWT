@@ -54,37 +54,35 @@ class LiquidRenderer < LewtExtension
   # data [Array]:: An array of hash data to format.
   def render ( options, data )
     output = Array.new
-    
     # template name is always the same as processor name
-    template = options["liquid_template"] != nil ? options["liquid_template"] : options["process"]
+    template = options[:liquid_template] != nil ? options[:liquid_template] : options[:process]
     loadTemplates( template )
 
-    if options["output_method"].match "text"
+    if options[:output_method].match "text"
       data.each do |d|
         output <<  textTemplate.render(d)
       end
     end
     
-    if options["output_method"].match "html"
+    if options[:output_method].match "html"
       data.each do |d|
         output <<  htmlTemplate.render(d)
       end
     end
     
-    if options["output_method"].match "pdf"
-      if options["save_file"] == nil then raise "--save-file flag for #{self.class.name} must be specified when PDF output requested" end
+    if options[:output_method].match "pdf"
+      if options[:save_file] == nil then raise "--save-file flag for #{self.class.name} must be specified when PDF output requested" end
 
       data.each do |d|
         html = htmlTemplate.render(d)
         kit = PDFKit.new(html, :page_size => 'A4')
         kit.stylesheets << @stylesheet
-        savename = options["save_file"] || 'test.pdf'
+        savename = options[:save_file] || 'test.pdf'
         file = kit.to_file( savename )
         output << savename
       end
     end
-    
-    if options["dump_output"] != nil
+    if options[:dump_output] != false
       output.each do |r|
         puts r
       end

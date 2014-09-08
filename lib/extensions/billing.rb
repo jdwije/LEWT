@@ -21,7 +21,7 @@ class Billing < LewtExtension
   # data [LEWTBook]:: A hash-like object containing all the extracted data in the LEWTLedger format.
   # returns [Array]: The invoice data as an array of hashes.
   def process ( options, data )
-    matchData = loadClientMatchData( options["target"] )
+    matchData = loadClientMatchData( options[:target] )
     bills = Array.new
     matchData.each do |client|
       bills.push( generateBill( client, data) )
@@ -49,14 +49,14 @@ class Billing < LewtExtension
     }    
     # loop events and filter for requested entity (client)
     data.each do |row|
-      if row["entity"] == client["name"]
+      if row[:entity] == client["name"]
         item = {
-          "description" => row["description"],
-          "duration" => row["quantity"],
-          "rate" => row["unit_cost"],
-          "total" => row["total"],
-          "start" => row["date_start"].strftime("%d/%m/%y %l:%M%P"),
-          "end" => row["date_end"].strftime("%d/%m/%y %l:%M%P")
+          "description" => row[:description],
+          "duration" => row[:quantity],
+          "rate" => row[:unit_cost],
+          "total" => row[:total],
+          "start" => row[:date_start].strftime("%d/%m/%y %l:%M%P"),
+          "end" => row[:date_end].strftime("%d/%m/%y %l:%M%P")
         }
         bill["items"].push( item );
         bill["sub-total"] += item["total"]

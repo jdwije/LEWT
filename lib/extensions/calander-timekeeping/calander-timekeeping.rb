@@ -42,16 +42,16 @@ class CalanderTimekeeping < LewtExtension
   # options [Hash]:: The options hash passed to this function by the Lewt program.
   # returns:: LEWTBook
   def extract( options )
-    targetCustomers = self.loadClientMatchData( options["target"] )
-    dStart =  options["start"]
-    dEnd = options["end"]
-    suppressTargets = options["suppress_cost"] == false ? false : self.loadClientMatchData(options["suppress_cost"])
+    targetCustomers = self.loadClientMatchData( options[:target] )
+    dStart =  options[:start]
+    dEnd = options[:end]
+    suppressTargets = options[:suppress_cost] == false ? false : self.loadClientMatchData(options[:suppress_cost])
 
-    if options["ext_method"] == "iCal"
+    if options[:ext_method] == "iCal"
       extract = ICalExtractor.new( dStart, dEnd, targetCustomers, lewt_settings, suppressTargets )
-    elsif options["ext_method"] == "gCal"
+    elsif options[:ext_method] == "gCal"
       extract = GCalExtractor.new(dStart, dEnd, targetCustomers, lewt_settings, suppressTargets )
-    elsif options["ext_method"] == "apple"
+    elsif options[:ext_method] == "apple"
       extract = AppleExtractor.new(dStart, dEnd, targetCustomers, lewt_settings, suppressTargets )
     end
     return extract.data

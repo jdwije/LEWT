@@ -27,10 +27,10 @@ class SimpleMilestones < LewtExtension
   # Extracts data from the milestones CSV file.
   # options [Hash]:: The options hash passed to this function by the Lewt program.
   def extract( options )
-    matchData = loadClientMatchData( options["target"] )
-    @dStart =  options["start"].to_date
-    @dEnd = options["end"].to_date
-    @targets = self.loadClientMatchData(options["target"])
+    matchData = loadClientMatchData( options[:target] )
+    @dStart =  options[:start].to_date
+    @dEnd = options[:end].to_date
+    @targets = self.loadClientMatchData(options[:target])
     exFile = lewt_settings["milestones_filepath"]
     return getMilestones ( exFile )
   end

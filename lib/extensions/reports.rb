@@ -15,7 +15,7 @@ class Reports < LewtExtension
   # options [Hash]:: The options hash passed to this function by the Lewt program.
   # data [LEWTBook]:: The data in LEWTBook format
   def process ( options, data )
-    targets = loadClientMatchData( options["target"] )
+    targets = loadClientMatchData( options[:target] )
     return Array.new.push(make_report(targets, data))
   end
 
@@ -35,15 +35,15 @@ class Reports < LewtExtension
     data.each do |row|      
       targets.each do |t|
         # match targets for report
-        if row["entity"] == t["name"]
-          if row["total"] > 0
-            report["revenue"] += row["total"]
+        if row[:entity] == t["name"]
+          if row[:total] > 0
+            report["revenue"] += row[:total]
           else
-            report["expenses"] += row["total"]
+            report["expenses"] += row[:total]
           end
 
-          if row["category"] == "Hourly Income"
-            report["hours"] += row["quantity"]
+          if row[:category] == "Hourly Income"
+            report["hours"] += row[:quantity]
           end
 
         end

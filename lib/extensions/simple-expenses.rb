@@ -25,9 +25,9 @@ class SimpleExpenses < LewtExtension
   # Extracts data from the expenses CSV file.
   # options [Hash]:: The options hash passed to this function by the Lewt program.
   def extract( options )
-    @targets = loadClientMatchData( options["target"] )
-    @dStart =  options["start"]
-    @dEnd = options["end"]
+    @targets = loadClientMatchData( options[:target] )
+    @dStart =  options[:start]
+    @dEnd = options[:end]
     @category = 'Expenses'
     exFile = lewt_settings["expenses_filepath"]
     return getExpenses ( exFile )

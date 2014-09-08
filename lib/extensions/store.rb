@@ -60,7 +60,7 @@ class Store < LewtExtension
   def render( options, data )
     save_path = lewt_settings["store_path"] + options["store_archive"]
     @processData = data.to_yaml
-    name = options["store_file"]
+    name = options[:store_file]
     ymlData = options["store_target"] == "extract" ? @extractData : @processData
     self.store(ymlData, save_path, name)
   end
