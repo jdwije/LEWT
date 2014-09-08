@@ -5,6 +5,7 @@ require 'yaml'
 require 'optparse'
 require_relative 'lewtopts.rb'
 require_relative 'extension.rb'
+require_relative 'lewt_book.rb'
 require_relative 'lewt_ledger.rb'
 
 
@@ -116,8 +117,24 @@ class Lewt
         ext_object = initializeExtension(file)
       end
     end
+    gems = @settings['gem_loads']
+    if gems != nil
+      gems.split(",").each do |g|
+        match = g.split("::")
+        ext_object = initializeGem(match[0], match[1])
+      end
+    end
   end
   
+  # This method initialised a gem as specifed in your settings file.
+  # gem_require [String]:: The gem require path as a string
+  # gem_class [String]:: The gem class name for initialisation
+  def initializeGem( gem_require, gem_class )
+    require gem_require
+    extension = eval(gem_class + ".new")
+    return @extensions.last
+  end
+
   # fn basically anticipates a class name given its file path and then call its registerHanders method.
   # Class names are transformed into UC words. '-' are interpreted as spaces in this conversion, and are 
   # striped afterwards to return something like 'invoice-renderer.rb' >>> 'InvoiceRenderer' ready for

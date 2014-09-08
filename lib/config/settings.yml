@@ -5,4 +5,5 @@ gmail_username: admin@jwije.com
 gmail_password: cxfroeopthxtuqwv
 gmail_app_name: jwije.com-googlecalendar-integration
 expenses_filepath: /Users/JWIJESWWW/Google Drive/Administration/business expenses.csv
+milestones_filepath: /Users/JWIJESWWW/Google Drive/Administration/milestone income.csv
 store_path: /Users/JWIJESWWW/desktop/store/

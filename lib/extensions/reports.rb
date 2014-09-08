@@ -36,21 +36,21 @@ class Reports < LewtExtension
       targets.each do |t|
         # match targets for report
         if row[:entity] == t["name"]
-          if row[:total] > 0
+          if row[:category].downcase.match /income/
             report["revenue"] += row[:total]
-          else
+            # check if category Hourly Income. If so add quantity to our 'hours' counter.
+            if row[:category].downcase.match /hourly/
+              report["hours"] += row[:quantity]
+            end
+          elsif row[:category].downcase.match /expense/
             report["expenses"] += row[:total]
           end
-
-          if row[:category] == "Hourly Income"
-            report["hours"] += row[:quantity]
-          end
-
         end
       end
     end
     
-    report["income"] = report["revenue"] - report["expenses"]
+    # remember expenses is a negative amount to begin with so don't subtract it!
+    report["income"] = report["revenue"] + report["expenses"]
     tax_levees = enterprise["tax_levees"]
     tax_total = 0
 

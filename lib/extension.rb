@@ -44,16 +44,24 @@ class LewtExtension
 
   # This method mathes customers wth query strings provided by users in the CLI
   # query [String]:: A search string to query against.
-  def loadClientMatchData( query )
+  # suppress [String]:: A list of clients to exclude. Defaults to nil ie: none.
+  def loadClientMatchData( query, suppress = nil )
     requestedClients = Array.new
+    symbols_reg = /[,:-]/
     if query == nil
       @customers.each do |client|
-        requestedClients.push(client)
+        client_match = [ client["alias"], client["name"] ].join("|")
+        if suppress == nil or client_match.match(suppress.gsub(symbols_reg,"|")) == nil
+          requestedClients.push(client)
+        else
+          puts "ignored #{client["name"]}"
+        end
       end
     else
       @customers.each do |client|
-        query.split(",").each do |q|
-          if [client["alias"], client["name"]].include?(q) == true 
+        client_match = [ client["alias"], client["name"] ].join("|")
+        if client_match.match( query.gsub(symbols_reg,"|") ) != nil
+          if suppress == nil or client_match.match(suppress.gsub(symbols_reg,"|")) == nil
             requestedClients.push(client)
           end
         end

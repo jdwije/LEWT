@@ -46,7 +46,7 @@ class SimpleMilestones < LewtExtension
     CSV.foreach(filepath) do |row|
       if count > 0
         id = row[0]
-        date = DateTime.parse(row[1])
+        date = DateTime.parse( row[1] )
         desc = row[2]
         context = row[3]
         amount = row[4].to_f

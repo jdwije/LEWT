@@ -41,14 +41,12 @@ class SimpleExpenses < LewtExtension
     # [0]Date [1]Description [2]Context [3]Cost
     count = 0
     data = LEWTBook.new
-
     CSV.foreach(filepath) do |row|
       if count > 0
         date = DateTime.parse(row[0])
         desc = row[1]
         context = row[2]
         cost = row[3].to_f * -1
-
         if self.isTargetDate( date ) == true && self.isTargetContext?(context) == true
           # create ledger entry and append to books
           row_data = LEWTLedger.new( date, date, @category, context, desc, 1, cost )

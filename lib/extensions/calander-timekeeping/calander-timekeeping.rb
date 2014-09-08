@@ -29,8 +29,7 @@ class CalanderTimekeeping < LewtExtension
         :definition => "The calender extraction method to use, supports gCal, iCal, osx calender extraction. Defaults to gCal.",
         :type => String,
       },
-      :suppress_cost => {
-        :default => false,
+      :suppress => {
         :definition => "Suppresses the cost calculation for the specified targets when calulating the hourly rates on extracted calender data. This is useful if you want to use this extension for tracking non-profit activites such as open-source project work as well as when you are being paid for these hours from another means (ie: milestones) and you just want to aggregate the hourly data into a report or something.",
         :type => String
       }
@@ -42,10 +41,10 @@ class CalanderTimekeeping < LewtExtension
   # options [Hash]:: The options hash passed to this function by the Lewt program.
   # returns:: LEWTBook
   def extract( options )
-    targetCustomers = self.loadClientMatchData( options[:target] )
+    targetCustomers = self.loadClientMatchData( options[:target], options[:suppress] )
     dStart =  options[:start]
     dEnd = options[:end]
-    suppressTargets = options[:suppress_cost] == false ? false : self.loadClientMatchData(options[:suppress_cost])
+    suppressTargets = options[:suppress] == nil ? nil : self.loadClientMatchData(options[:suppress])
 
     if options[:ext_method] == "iCal"
       extract = ICalExtractor.new( dStart, dEnd, targetCustomers, lewt_settings, suppressTargets )
