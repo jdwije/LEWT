@@ -40,7 +40,7 @@ class GCalExtractor < CalExtractor
       target = self.isTargetCustomer?(e.title)
       if  self.isTargetDate?( eStart ) == true && target != false
         row = LEWTLedger.new( eStart, eEnd, @category, target["name"], e.content, timeDiff, target["rate"] )
-        @data.add_row(row)
+        @data.push(row)
       end
     end
   end

@@ -54,7 +54,7 @@ class SimpleMilestones < LewtExtension
         if self.isTargetDate?( date ) == true && self.isTargetContext?(context) == true
           # create ledger entry and append to books
           row_data = LEWTLedger.new( date, date, @category, context, desc, 1, amount )
-          data.add_row(row_data)
+          data.push(row_data)
         end
       end
         # increment our row index counter

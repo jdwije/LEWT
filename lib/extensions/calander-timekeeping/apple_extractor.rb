@@ -39,7 +39,7 @@ class AppleExtractor < CalExtractor
         if  self.isTargetDate?(e.dtstart) == true &&  target != false
           timeDiff = (e.dtend - e.dtstart).to_i / 60 / 60
           row = LEWTLedger.new(e.dtstart, e.dtend, @category, target["name"], e.description, timeDiff, target["rate"])
-          @data.add_row( row )
+          @data.push(row)
         end
       end
     end
