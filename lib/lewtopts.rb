@@ -58,6 +58,11 @@ class LewtOpts < Hash
         :default => "liquid_render",
         :type => String,
         :short_flag => "-o"
+      },
+      :dump_output => {
+        :definition => "Toggle dumping output to console or log",
+        :default => true,
+        :short_flag => "-d"
       }
     }
     

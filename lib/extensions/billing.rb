@@ -28,6 +28,18 @@ class Billing < LewtExtension
     end
     return bills
   end
+  
+  protected 
+  
+  # Generates a UID for this invoice based of the customer it is being sent to
+  def generate_id
+    if !lewt_settings.has_key?("invoice_id_counter")
+      self.write_settings("settings.yml", "invoice_id_counter", 0)
+    end
+    id = lewt_settings["invoice_id_counter"].to_i + 1
+    self.write_settings("settings.yml", "invoice_id_counter", id)
+    return id
+  end
 
   # Generates a bill for the given client.
   # client [Hash]:: The client to calculate the invoice for.
@@ -36,6 +48,7 @@ class Billing < LewtExtension
   def generateBill(client, data)
     bill = {
       "date_created" => DateTime.now.strftime("%d/%m/%y"),
+      "id" => generate_id,
       # "date_begin"=> @events.dateBegin.strftime("%d/%m/%y"),
       # "date_end"=> @events.dateEnd.strftime("%d/%m/%y"),
       "billed_to" => client,

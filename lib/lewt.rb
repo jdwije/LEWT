@@ -33,11 +33,11 @@ class Lewt
 
     if core_settings.has_key?("lewt_stash")
       # Load core extensions
-      loadExtensions( File.expand_path('../extensions', __FILE__) )
+      load_extensions( File.expand_path('../extensions', __FILE__) )
     end
 
     # load user defined extesnions
-    loadExtensions
+    load_extensions
     
     # Stores default options returned from extensions
     # and the LEWT defaults at large
@@ -49,7 +49,7 @@ class Lewt
     
     @options = LewtOpts.new( @extensions, library_options  )
     
-    parseInternalCommands( options )
+    parse_internal_commands
   end
 
   # Runs the extract render process loop
@@ -59,105 +59,7 @@ class Lewt
     render = fireHooks("render", @options, process )
   end
   
-  # Parses internal commands (not yet implimented)
-  def parseInternalCommands( options )
-    trigger = false
 
-    if trigger == true
-      exit
-    end
-
-  end
-
-  # reads input from standard INPUT
-  def readSTDIN
-    data = ""
-    while line = $stdin.gets
-      data += line
-    end
-    return data
-  end
-  
-  # Fire a hook with the given options and overloaded parameters.
-  # hook [String]:: Expected hooks are 'extract', 'process', 'render'.
-  # options [Hash]:: The options gathered from using LewtOpts
-  # data [Mixed]:: The data to pass to the extensions.
-  def fireHooks( hook, options, *data )
-    algamation = Array.new
-    if hook == "extract"
-      @extensions.each do |e|
-        if defined? e.extract and e.command_name.match(/#{options[:extract].gsub(",","|")}/)
-          algamation.concat e.extract(options)
-        end
-      end
-    elsif hook == "process"
-      @extensions.each do |e|
-        if defined? e.process and e.command_name.match(/#{options[:process].gsub(",","|")}/)
-           algamation.concat e.process(options, *data)
-        end
-      end
-    elsif hook == "render"
-      @extensions.each do |e|
-        if defined? e.render and e.command_name.match(/#{options[:render].gsub(",","|")}/)
-           algamation.concat e.render(options, *data)
-        end
-      end
-    end
-    return algamation;
-  end
-
-  # Loads all installed LEWT extensions by checking the ext_dir setting variable for available ruby files.
-  # directory [String]:: The path where to look for extensions as a string.
-  def loadExtensions( directory = @lewt_stash + "extensions" )
-    if Dir.exists? directory
-      Dir.foreach( directory ) do |file|
-        next if (file =~ /\./) == 0
-
-        # Cannot match with File.directory?(file) due to how ruby performs
-        # this test internaly when script is called from another dir.
-        # Therefor some REGEX will be used to match the .rb file extension instead...
-        if file.match(/\.rb/) != nil
-          load(directory + "/" + file)
-          ext_object = initializeExtension( file )
-        else
-          # is a directory
-          # load file in dir named {dir_name}.rb
-          load "#{directory}/#{file}/#{file}.rb"
-          ext_object = initializeExtension(file)
-        end
-      end
-      gems = @settings['gem_loads']
-      if gems != nil
-        gems.split(",").each do |g|
-          match = g.split("::")
-          ext_object = initializeGem(match[0], match[1])
-        end
-      end
-    end
-  end
-  
-  # This method initialised a gem as specifed in your settings file.
-  # gem_require [String]:: The gem require path as a string
-  # gem_class [String]:: The gem class name for initialisation
-  def initializeGem( gem_require, gem_class )
-    require gem_require
-    extension = eval(gem_class + ".new")
-    return @extensions.last
-  end
-
-  # fn basically anticipates a class name given its file path and then call its registerHanders method.
-  # Class names are transformed into UC words. '-' are interpreted as spaces in this conversion, and are 
-  # striped afterwards to return something like 'invoice-renderer.rb' >>> 'InvoiceRenderer' ready for
-  # evaluation.
-  # file [String]:: The file name as a string
-  def initializeExtension ( file )
-    classConvention = file.gsub("-", " ").split.map(&:capitalize).join(' ').gsub(" ","").gsub(".rb","")
-    extInit = (classConvention + ".new").to_s
-    extension = eval( extInit )
-    # extension will be registered on init so just reference the last one
-    return @extensions.last
-  end
-  
   # fn returns the desired customer given there name or alias.
   # A REGEXP query can be passed to this object i.e. "ACME|NovaCorp|..."
   # to match multiple customers.
@@ -173,6 +75,140 @@ class Lewt
     end
     return client
   end
+  
+  protected 
 
+  # Parses lewsts intenral commands. If none have been invoked it simple returns.
+  def parse_internal_commands
+    return if @command == nil
+    # raise argument error if command invoked without argument
+    if @argument == nil and @command != nil
+      raise ArgumentError, "Class #{self.class.name} requires an argument t be supplied with a command" 
+    end
+    
+    if @command.match(/pipe/)
+      # pipe stdin into fire_hook(@argument) event
+      data = Psych.load(read_stdin)
+      if data != nil
+        hook_process(@argument, data)
+      else
+        raise ArgumentError, "could not parse STDIN pipe as YAML data."
+      end
+      exit
+    end
+
+  end
+  
+  # Fire the logic loop from the specified hook onwards. Used when piping data in from CL
+  # hook [Sting]:: extract, process, or render
+  # data:: The data to pass to fireHooks
+  def hook_process (hook, data)
+    case hook
+    when "extract"
+      extracted_data = fireHooks("extract",@options,data)
+      hook_process("process", extracted_data)
+    when "process"
+      processed_data = fireHooks("process",@options,data)
+      hook_process("render",@options,processed_data)
+    when "render"
+      render_data = fireHooks("render",@options,data)
+    else
+      raise ArugmentError, "#{self.class.name}.hook_process requires the start hook to be either render or process"
+    end
+  end
+
+  # reads input from standard INPUT
+  def read_stdin
+    data = ""
+    while line = $stdin.gets
+      data += line
+    end
+    return data
+  end
+  
+  # Fire a hook with the given options and overloaded parameters.
+  # hook [String]:: Expected hooks are 'extract', 'process', 'render'.
+  # options [Hash]:: The options gathered from using LewtOpts
+  # data [Mixed]:: The data to pass to the extensions.
+  def fireHooks( hook, options, *data )
+    algamation = Array.new
+    @extensions.each { |e|
+      ## filter hooks
+      case hook
+      when "extract"
+        if defined? e.extract and e.command_name.match(/#{options[:extract].gsub(",","|")}/)
+          algamation.concat e.extract(options)
+        end
+      when "process"
+        if defined? e.process and e.command_name.match(/#{options[:process].gsub(",","|")}/)
+           algamation.concat e.process(options, *data)
+        end
+      when "render"
+        if defined? e.render and e.command_name.match(/#{options[:render].gsub(",","|")}/)
+          rendered = e.render(options, *data)
+          algamation.concat rendered
+          # dump render output to console of option specified.
+          if options[:dump_output] == true
+            puts algamation
+          end
+        end
+      end
+    }
+    return algamation;
+  end
+
+  # Loads all installed LEWT extensions by checking the ext_dir setting variable for available ruby files.
+  # directory [String]:: The path where to look for extensions as a string.
+  def load_extensions( directory = @lewt_stash + "extensions" )
+    raise Exception, "Directory does not exist: #{directory}" if !Dir.exists?(directory)
+
+    Dir.foreach( directory ) do |file|
+      next if (file =~ /\./) == 0
+      # Cannot match with File.directory?(file) due to how ruby performs
+      # this test internaly when script is called from another dir.
+      # Therefor some REGEX will be used to match the .rb file extension instead...
+      if file.match(/\.rb/) != nil
+        load(directory + "/" + file)
+        ext_object = initialize_extension( file )
+      else
+        # is a directory
+        # load file in dir named {dir_name}.rb
+        load "#{directory}/#{file}/#{file}.rb"
+        ext_object = initialize_extension(file)
+      end
+    end
+
+    # load GEMS
+    if @settings['gem_loads'] != nil
+      @settings['gem_loads'].split(",").each do |g|
+        match = g.split("::")
+        ext_object = initialize_gem(match[0], match[1])
+      end
+    end
+    
+  end
+  
+  # This method initialised a gem as specifed in your settings file.
+  # gem_require [String]:: The gem require path as a string
+  # gem_class [String]:: The gem class name for initialisation
+  def initialize_gem( gem_require, gem_class )
+    require gem_require
+    extension = eval(gem_class + ".new")
+    return @extensions.last
+  end
+
+  # fn basically anticipates a class name given its file path and then call its registerHanders method.
+  # Class names are transformed into UC words. '-' are interpreted as spaces in this conversion, and are 
+  # striped afterwards to return something like 'invoice-renderer.rb' >>> 'InvoiceRenderer' ready for
+  # evaluation.
+  # file [String]:: The file name as a string
+  def initialize_extension ( file )
+    classConvention = file.gsub("-", " ").split.map(&:capitalize).join(' ').gsub(" ","").gsub(".rb","")
+    extInit = (classConvention + ".new").to_s
+    extension = eval( extInit )
+    # extension will be registered on init so just reference the last one
+    return @extensions.last
+  end
+  
 end
 

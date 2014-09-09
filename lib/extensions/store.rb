@@ -18,17 +18,11 @@ class Store < LewtExtension
   # Sets up this extensions command name and run-time options.
   def initialize
     options = {
-      :store_archive => {
-        :definition => "The sub-folder within lewt_store to save data in",
-        :default => "",
-        :type => String
-      },
-      :store_file => {
+      :store_filename => {
         :definition => "File name to save as",
-        :default => "store-#{DateTime.now.to_s}.yml",
         :type => String
       },
-      :store_target => {
+      :store_hook => {
         :definition => "Tell store whether to save either the 'extract' or 'process' data",
         :default => "process",
         :type => String
@@ -53,16 +47,15 @@ class Store < LewtExtension
   end
 
   # Captures proess data and converts it to a YML string. This method also handles the
-  # actual writing of data to the file system. The options 'store_target' toggles exract or
+  # actual writing of data to the file system. The options 'store_hook' toggles exract or
   # process targeting.
   # options [Hash]:: A hash that is passed to this extension by the main LEWT program containing ru-time options.
   # data [Array]:: The processed data as an array of hashes.
   def render( options, data )
-    save_path = lewt_settings["store_path"] + options["store_archive"]
     @processData = data.to_yaml
-    name = options[:store_file]
-    ymlData = options["store_target"] == "extract" ? @extractData : @processData
-    self.store(ymlData, save_path, name)
+    name = options[:store_filename]
+    yml = options[:store_hook] == "extract" ? @extractData : @processData
+    name != nil ? store(yml, name) : [yml]
   end
 
   protected
@@ -72,11 +65,11 @@ class Store < LewtExtension
   # yml [String]:: A YAML string of data.
   # path [String]:: The path to store too.
   # name [String]:: The name of the file to save as.
-  def store ( yml, path, name  )
-    storefile = File.new( path + name.gsub(".yml", "") + ".yml", "w")
+  def store ( yml, name  )
+    storefile = File.new( name, "w")
     storefile.puts(yml)
     storefile.close
-    return ["storeid"]
+    return [yml]
   end
 
 end

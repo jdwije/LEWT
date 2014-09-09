@@ -26,11 +26,6 @@ class LiquidRenderer < LewtExtension
         :definition => "Specify where to save the output file (required for PDFs)",
         :type => String
       },
-      :dump_output => {
-        :definition => "Toggle dumping output to console or log",
-        :default => true,
-        :short_flag => "-d"
-      },
       :liquid_template => {
         :definition => "Override the template that liquid render should use. Defaults to the template which matches the processor name but you will want to override this if you are using multiple processors.",
         :type => String
@@ -82,13 +77,16 @@ class LiquidRenderer < LewtExtension
         output << savename
       end
     end
-    if options[:dump_output] != false
-      output.each do |r|
-        puts r
-      end
-    end
+
+    # if options[:dump_output] != false
+    #   output.each do |r|
+    #     puts r
+    #   end
+    # end
 
     return output
   end
+  
+  protected
 
 end

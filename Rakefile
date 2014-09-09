@@ -6,7 +6,7 @@ require 'rdoc/task'
 # setup
 spec = Gem::Specification.new do |s|
   s.name        = 'lewt'
-  s.version     = '0.5.7'
+  s.version     = '0.5.8'
   s.date        = '2014-08-24'
   s.summary     = "Lazy Enterprise for hackers Without Time"
   s.description = "A dead simple command line tool and library for enterprise management. It can currently handle invoicing, expenses, reporting, and is highly extensible"

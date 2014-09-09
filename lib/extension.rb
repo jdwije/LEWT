@@ -26,21 +26,7 @@ class LewtExtension
   def initialize ( ext_init = { :cmd => "lewt_base_extension" } )
     core_settings = YAML.load_file( File.expand_path( '../config/settings.yml', __FILE__) )
     @lewt_stash = core_settings['lewt_stash'] || File.expand_path('../', __FILE__) + "/config/"
-    @lewt_settings = YAML.load_file( @lewt_stash + 'settings.yml' )
-
-    # Start by loading the local config files
-    @customers = YAML.load_file(@lewt_stash + "customers.yml")
-    @enterprise = YAML.load_file(@lewt_stash + "enterprise.yml")
-
-
-    # # load core settings and check for user defined stash path
-    # path = File.expand_path( "../config/settings.yml", __FILE__ )
-    # core_settings = YAML.load_file( path )
-    # @lewt_stash = core_settings['stash_path'] || File.expand_path('../config', __FILE__)
-    # # Use namespaces wisely!
-    # @lewt_settings = YAML.load_file( lewt_stash + '/settings.yml' )
-    # @customers = YAML.load_file( lewt_stash + '/customers.yml' )
-    # @enterprise = YAML.load_file( lewt_stash + '/enterprise.yml' )
+    load_lewt_settings()
     @command_name = ext_init[:cmd]
     @options = ext_init[:options] || nil
     register_extension
@@ -81,6 +67,33 @@ class LewtExtension
 
   protected
   
+  # This method loads the core LEWT settings files
+  def load_lewt_settings 
+    @lewt_settings = load_settings( "settings.yml")
+    # Start by loading the local config files
+    @customers = load_settings("customers.yml")
+    @enterprise = load_settings("enterprise.yml")
+  end
+
+  # Writes a key/value pair to the settings file. This can then be accessed with lewt_settings[key] and is persisted
+  # on the user's file system in a YAML settings file.
+  # key [String]:: The key to write to the settings file
+  # value:: The value to assign to this key.
+  def write_settings ( file, key, value )
+    settings = load_settings(file)
+    settings[key] = value
+    File.open( @lewt_stash + file, 'w') {|f| f.write settings.to_yaml } #Store
+    load_lewt_settings() # reload settings vars
+    return settings
+  end
+  
+  # Loads the specified settings file
+  # property:: The variable you would like to assign the loaded YAML to
+  # file [String]:: The settings file to load from lewt stash.
+  def load_settings ( file )
+    return YAML.load_file( @lewt_stash + file )
+  end
+
   # register the given extensions' class name with the system for later invocation
   def register_extension
     # only register subclass of this basclass

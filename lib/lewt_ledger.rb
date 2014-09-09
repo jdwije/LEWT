@@ -59,6 +59,8 @@ class LEWTLedger < Hash
     return tags
   end
   
+  protected
+
   # this function extracts all tags/values from a given string.
   # string [String]:: a string to search for meta tags in.
   def parseTags (string)
@@ -74,8 +76,6 @@ class LEWTLedger < Hash
     end
     return tags
   end
-  
-  protected
 
   # parses the name of a tag and returns it as a symbol to be used as a hash key
   # tag {string] a string containing the a singular meta tag.

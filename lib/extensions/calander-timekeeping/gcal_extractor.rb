@@ -21,9 +21,6 @@ class GCalExtractor < CalExtractor
     uname = lewt_settings["gmail_username"]
     pass = lewt_settings["gmail_password"]
     app = lewt_settings["google_app_name"]
-    puts uname
-    puts pass
-    puts app
     @googleCalender = Google::Calendar.new(
                                            :username => uname,
                                            :password => pass,
