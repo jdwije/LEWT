@@ -17,6 +17,14 @@ require_relative 'lewt_ledger.rb'
 # It handles loading all extensions, gathering the results and passing options ariound the place.
 # It also works quite closely with the LewtExtension and LewtOpts classes.
 class Lewt
+
+
+  # Can be used to split strings passed to lewt through CL optios ie: 
+  #  "acme,wayne_corp".split(CLIENT_SPLIT_REGEX) # get each argument for client mathching
+  OPTION_DELIMITER_REGEX = /[,+:]/
+
+  # This matches symbols passed thought command ie: -p meta-stat => meta_stat
+  OPTION_SYMBOL_REGEX = /\W/  
   
   def initialize( library_options = nil )
     core_settings = YAML.load_file( File.expand_path( '../config/settings.yml', __FILE__) )
@@ -83,6 +91,7 @@ class Lewt
     return if @command == nil
     # raise argument error if command invoked without argument
     if @argument == nil and @command != nil
+      puts @command
       raise ArgumentError, "Class #{self.class.name} requires an argument t be supplied with a command" 
     end
     
@@ -134,23 +143,18 @@ class Lewt
     algamation = Array.new
     @extensions.each { |e|
       ## filter hooks
-      case hook
-      when "extract"
-        if defined? e.extract and e.command_name.match(/#{options[:extract].gsub(",","|")}/)
+      filter_regex = /#{options[hook.to_sym].gsub(",","|")}/
+      if e.methods.include?(hook.to_sym) and e.command_name.match(filter_regex)
+        case hook
+        when "extract"
           algamation.concat e.extract(options)
-        end
-      when "process"
-        if defined? e.process and e.command_name.match(/#{options[:process].gsub(",","|")}/)
-           algamation.concat e.process(options, *data)
-        end
-      when "render"
-        if defined? e.render and e.command_name.match(/#{options[:render].gsub(",","|")}/)
+        when "process"
+          algamation.concat e.process(options, *data)
+        when "render"
           rendered = e.render(options, *data)
           algamation.concat rendered
           # dump render output to console of option specified.
-          if options[:dump_output] == true
-            puts algamation
-          end
+          puts algamation if options[:dump_output] == true
         end
       end
     }

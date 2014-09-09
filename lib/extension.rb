@@ -15,7 +15,7 @@ class LewtExtension
   
   # LEWT Stash is the user configured stash path where all extensions, config file, templates etc are stored.
   attr_reader :lewt_stash, :lewt_settings, :customers, :enterprise, :options, :command_name
-  
+
   # @@extensions is a registry shared between all extensions that impliment this class
   # containing there class names for invocation by the core system.
   @@lewt_extensions = Array.new
@@ -42,11 +42,10 @@ class LewtExtension
   # suppress [String]:: A list of clients to exclude. Defaults to nil ie: none.
   def loadClientMatchData( query, suppress = nil )
     requestedClients = Array.new
-    symbols_reg = /[,:-]/
     if query == nil
       @customers.each do |client|
         client_match = [ client["alias"], client["name"] ].join("|")
-        if suppress == nil or client_match.match(suppress.gsub(symbols_reg,"|")) == nil
+        if suppress == nil or client_match.match(suppress.gsub(Lewt::OPTION_DELIMITER_REGEX,"|")) == nil
           requestedClients.push(client)
         else
           puts "ignored #{client["name"]}"
@@ -55,8 +54,8 @@ class LewtExtension
     else
       @customers.each do |client|
         client_match = [ client["alias"], client["name"] ].join("|")
-        if client_match.match( query.gsub(symbols_reg,"|") ) != nil
-          if suppress == nil or client_match.match(suppress.gsub(symbols_reg,"|")) == nil
+        if client_match.match( query.gsub(Lewt::OPTION_DELIMITER_REGEX,"|") ) != nil
+          if suppress == nil or client_match.match(suppress.gsub(Lewt::OPTION_DELIMITER_REGEX,"|")) == nil
             requestedClients.push(client)
           end
         end

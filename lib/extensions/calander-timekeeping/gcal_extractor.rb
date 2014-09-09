@@ -36,7 +36,7 @@ class GCalExtractor < CalExtractor
     @googleCalender.find_events_in_range(@dateStart, @dateEnd + 1, gConf).each do |e|
       eStart = Time.parse( e.start_time )
       eEnd = Time.parse( e.end_time )
-      timeDiff = (eEnd - eStart).to_i / 60 / 60
+      timeDiff = (eEnd - eStart) / 60 / 60
       target = self.isTargetCustomer?(e.title)
       if  self.isTargetDate?( eStart ) == true && target != false
         row = LEWTLedger.new( eStart, eEnd, @category, target["name"], e.content, timeDiff, target["rate"] )

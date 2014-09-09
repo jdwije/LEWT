@@ -31,6 +31,10 @@
 class LEWTLedger < Hash
 
   attr_reader :metatags
+  
+  # This is a general matching regex for metatags.
+  MATCH_SINGLE_META_REGEX = /[#](\S*)/
+  MATCH_MULTIPLE_META_REGEX = /#\S*/
 
   def  initialize ( date_start, date_end, category, entity, description, quantity, unit_cost, sub_total = nil, gst = nil, total = nil  )
     self[:date_start] = date_start
@@ -43,7 +47,8 @@ class LEWTLedger < Hash
     self[:sub_total] = sub_total || quantity * unit_cost
     self[:gst] = gst || 0
     self[:total] = total || ( self[:sub_total] + self[:gst] )
-    @metatags = parseMetaTags(:description)
+    @metatags = parse_meta_tags(:description)
+    strip_readable_meta if @metatags != nil
   end
   
   # parses a field on this object for meta data. Meta data can be embedded inside the ledger fields
@@ -53,33 +58,40 @@ class LEWTLedger < Hash
   #  #good-pay // true
   #  #happiness=6/10 // Rational(6,10)
   # field_key [Symbol]:: the ledger key you wish to parse as a symbol.
-  def parseMetaTags ( field_key )
+  def parse_meta_tags ( field_key )
     value = self[field_key]
-    tags = parseTags value
+    tags = parse_tags value
     return tags
   end
   
   protected
+  
+  # strips the meta data from a field so that it is no longer readable. leaves the metatags property on the object intact however
+  # field:: A Symbol corresponding to the field on this object to strip. Defaults to the description field.
+  def strip_readable_meta ( field = :description )
+    self[field].scan(LEWTLedger::MATCH_MULTIPLE_META_REGEX).each do |m|
+      self[field].slice!(m).strip!
+    end
+  end
 
   # this function extracts all tags/values from a given string.
   # string [String]:: a string to search for meta tags in.
-  def parseTags (string)
-    match_meta = /[#](\S*)/
+  def parse_tags (string)
     tags = nil
-    string.scan(match_meta) do |t|
+    string.scan(LEWTLedger::MATCH_SINGLE_META_REGEX) { |t|
       if tags == nil
         tags = Hash.new
       end
-      tag_value = parseTagValue t[0]
-      tag_name = parseTagName t[0]
+      tag_value = parse_tag_value t[0]
+      tag_name = parse_tag_name t[0]
       tags[tag_name.gsub(/\W/,"_").to_sym] = tag_value
-    end
+    }
     return tags
   end
 
   # parses the name of a tag and returns it as a symbol to be used as a hash key
-  # tag {string] a string containing the a singular meta tag.
-  def parseTagName ( tag )
+  # tag [string] a string containing the a singular meta tag.
+  def parse_tag_name( tag )
     match_name = /[^=]*/
     m = tag.match(match_name)
     return m[0]
@@ -88,18 +100,18 @@ class LEWTLedger < Hash
   # parses the value of a meta tag string. if just the string is given (ie: no = xx/xx) then the tag will have
   # a value of true returned for it.
   # tag [String]:: a meta tag string
-  def parseTagValue ( tag )
+  def parse_tag_value ( tag )
     match_value = /[=]\d*\/\d*/
     match = tag.match match_value
     # if no value found then this must be a boolean switch (because a tag was parsed from the field!) so set value to true
-    value = match != nil ? extractFraction(match[0]) : true
+    value = match != nil ? extract_fraction(match[0]) : true
     return value
   end
   
   # extracts a mathematical expression from a single tag
   # format: Num +-/* Num
   # string:: the string to extract the fraction from
-  def extractFraction ( string )
+  def extract_fraction ( string )
     match_fraction = /(\d{1,})([\/\+])(\d{1,})+/
     #    m = string.match(match_fraction)[0]
     m = string.match(match_fraction)

@@ -25,7 +25,7 @@ class ICalExtractor < CalExtractor
       calendar.events.each do |e|
         target = self.isTargetCustomer?( e.summary )
         if  self.isTargetDate?(e.dtstart) == true &&  target != false
-          timeDiff = (e.dtstart - e.dtend).to_i / 60 / 60
+          timeDiff = (e.dtstart - e.dtend) / 60 / 60
           row = LEWTLedger.new(e.dtstart, e.dtend, @category, target["name"], e.description, timeDiff, target["rate"])
           @data.push( row )
         end
