@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.5.9
+- IMPROVED: metastats extension. now does better tallying and some statistics.
+- REFACTORED: function names throughout LEWT to use this_naming_convention instead of camel case
+
 ## 0.5.8
 - ADDED: meta logging to LEWTLedger class
 - FIXED: Loading paths bug
