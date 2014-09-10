@@ -1,4 +1,5 @@
 require "rinruby"
+require_relative "metamath.rb"
 
 # Author::    Jason Wijegooneratne  (mailto:code@jwije.com)
 # Copyright:: Copyright (c) 2014 Jason Wijegooneratne
@@ -48,10 +49,10 @@ class Metastat < LewtExtension
   def process (options, extract_data)
     @options = options
     extract_data.each do |row|
-      inspect_row(row, options)
+      filter_row_values(row, options)
     end
     @dataset[:boolean_table] = @boolean_table
-    @dataset[:statistics] = compute_stats @raw_data
+    @dataset[:correlations] = compute_correlations @raw_data
     return Array.new.push @dataset
   end
 
@@ -60,26 +61,23 @@ class Metastat < LewtExtension
   # extracts row data from a LEWTLedger object. Also handles initiating tag lookup.
   # row [LEWTLedger]:: a LEWTLedger object container the row data.
   # options [Hash]:: a Hash containing the options passed to LEWT.
-  def inspect_row (row, options)
-    tags = row.metatags
-    if tags != nil 
-      # match tags requested via options
-      options[:metatags].split(Lewt::OPTION_DELIMITER_REGEX).each do |meta|
-        tags.each { |k, v|
-          next unless meta.gsub(Lewt::OPTION_SYMBOL_REGEX,"_").to_sym == k
-          # found match operate on it
-          client = loadClientMatchData(row[:entity])[0]
-          # case our value
-          case v
-          when !!v == v
-            push_boolean_table( client, row, k, v )
-          when Rational
-            push_raw_data( client, row, k, v)
-          end
-        }
-      end
+  def filter_row_values (row, options)
+    return if row.metatags == nil
+    # match tags requested via options
+    options[:metatags].split(Lewt::OPTION_DELIMITER_REGEX).each do |meta|
+      row.metatags.each { |k, v|
+        next unless meta.gsub(Lewt::OPTION_SYMBOL_REGEX,"_").to_sym == k
+        # found match operate on it
+        client = loadClientMatchData(row[:entity])[0]
+        # case our value
+        case v
+        when !!v == v
+          add_to_tally( client, row, k, v )
+        when Rational
+          transform_dataset( client, row, k, v)
+        end
+      }
     end
-    return row
   end
   
   # adds +1 count to the client table for the provided key
@@ -87,19 +85,19 @@ class Metastat < LewtExtension
   # r [LEWTLedger]:: A LEWTLedger row
   # k:: the metatag hash key
   # v:: the meta tag value, this should be a boolean
-  def push_boolean_table( c, r, k, v )
+  def add_to_tally( c, r, k, v )
     if !@boolean_table.has_key?(c["name"])
       @boolean_table[ c["name"] ] = { k.to_s => 0 }
     end
     @boolean_table[ c["name"] ][k.to_s] += 1
   end
 
-  # computes a row of graphable data
+  # Transforms the dataset into something usable for statistical computation
   # c [Hash]:: The client hash
   # r [LEWTLedger]:: A LEWTLedger row
   # k:: the metatag hash key
   # v:: the meta tag value, this should be a boolean
-  def push_raw_data( c, r, k, v )
+  def transform_dataset( c, r, k, v )
     if !@raw_data.has_key?(c["name"])
       @raw_data[ c["name"] ] = Array.new
     end
@@ -121,7 +119,7 @@ class Metastat < LewtExtension
   
   # performs some statistics using R. 
   # d:: the dataset to work with
-  def compute_stats(d)
+  def compute_correlations(d)
     result = nil
     d.each { |context, data_array|
       # hash of arrays
@@ -132,82 +130,23 @@ class Metastat < LewtExtension
           data_hash[k].push v
         }
       end
-      result = compute_regression data_hash, @options[:y_series]
+      result = correlate_y data_hash, @options[:y_series]
     }
     return result
   end
-
-  def compute_regression(r_dataset, y_key)
+  
+  def correlate_y(r_dataset, y_key)
     results = Hash.new
     r_dataset.each { |k, v_set|
       next if k == y_key.to_sym
       results[y_key.to_sym] = Hash.new if results[y_key.to_sym] == nil
       results[y_key.to_sym][k] = Hash.new if results[y_key.to_sym][k] == nil
 
-      r = PearsonCorrelation.new( v_set, r_dataset[y_key.to_sym] )
-      results[y_key.to_sym][k][:pearson_correlate] = r.correlate
-      results[y_key.to_sym][k][:x_mean] = r.mean(v_set)
+      r = PearsonR.new( v_set, r_dataset[y_key.to_sym] )
+      results[y_key.to_sym][k][:pearson_r] = r.correlate
+      results[y_key.to_sym][k][:descriptive_stats] = r.descriptive_stats(v_set)
     }
     return results
   end
-
-end
-
-class StatObject
-
-  def initialize(xs, ys)
-    @xs, @ys = xs, ys
-    if @xs.length != @ys.length
-      raise "Unbalanced data. xs need to be same length as ys"
-    end
-  end
- 
-  def y_intercept
-    mean(@ys) - (slope * mean(@xs))
-  end
- 
-  def slope
-    x_mean = mean(@xs)
-    y_mean = mean(@ys)
- 
-    numerator = (0...@xs.length).reduce(0) do |sum, i|
-      sum + ((@xs[i] - x_mean) * (@ys[i] - y_mean))
-    end
- 
-    denominator = @xs.reduce(0) do |sum, x|
-      sum + ((x - x_mean) ** 2)
-    end
- 
-    (numerator / denominator)
-  end
- 
-  def mean(values)
-    total = values.reduce(0) { |sum, x| x + sum }
-    Float(total) / Float(values.length)
-  end
-end
-
-
-class PearsonCorrelation < StatObject
-  
-  def initialize (xs, ys)
-    super(xs,ys)
-  end
-  
-  def correlate
-    x_mean = mean(@xs)
-    y_mean = mean(@ys)
- 
-    numerator = (0...@xs.length).reduce(0) do |sum, i|
-      sum + ((@xs[i] - x_mean) * (@ys[i] - y_mean))
-    end
- 
-    denominator = @xs.reduce(0) do |sum, x|
-      sum + ((x - x_mean) ** 2)
-    end
- 
-    (numerator / Math.sqrt(denominator))
-  end
- 
 
 end
