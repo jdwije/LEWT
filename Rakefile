@@ -16,6 +16,8 @@ spec = Gem::Specification.new do |s|
   s.executables = ["lewt"]
   s.homepage    = 'http://jwije.com/lewt'
   s.license       = 'MIT'
+  
+
   # required LEWT gems
   s.add_dependency 'safe_yaml', '~> 1.0.0'
   

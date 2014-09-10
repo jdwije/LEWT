@@ -51,8 +51,7 @@ class Metastat < LewtExtension
       inspect_row(row, options)
     end
     @dataset[:boolean_table] = @boolean_table
-    @dataset[:raw_data] = @raw_data
-    @dataset[:statistics] = compute_stats @dataset
+    @dataset[:statistics] = compute_stats @raw_data
     return Array.new.push @dataset
   end
 
@@ -124,7 +123,7 @@ class Metastat < LewtExtension
   # d:: the dataset to work with
   def compute_stats(d)
     result = nil
-    d[:raw_data].each { |context, data_array|
+    d.each { |context, data_array|
       # hash of arrays
       data_hash = Hash.new
       data_array.each do |r|
@@ -142,18 +141,20 @@ class Metastat < LewtExtension
     results = Hash.new
     r_dataset.each { |k, v_set|
       next if k == y_key.to_sym
-      results[k] = Hash.new if results[k] == nil
-      r = SimpleLinearRegression.new( v_set, r_dataset[y_key.to_sym] )
-      results[k][:y_intercept] = r.y_intercept
-      results[k][:slope] = r.slope
-      results[k][:y_tag] = y_key
+      results[y_key.to_sym] = Hash.new if results[y_key.to_sym] == nil
+      results[y_key.to_sym][k] = Hash.new if results[y_key.to_sym][k] == nil
+
+      r = PearsonCorrelation.new( v_set, r_dataset[y_key.to_sym] )
+      results[y_key.to_sym][k][:pearson_correlate] = r.correlate
+      results[y_key.to_sym][k][:x_mean] = r.mean(v_set)
     }
     return results
   end
 
 end
 
-class SimpleLinearRegression
+class StatObject
+
   def initialize(xs, ys)
     @xs, @ys = xs, ys
     if @xs.length != @ys.length
@@ -184,4 +185,29 @@ class SimpleLinearRegression
     total = values.reduce(0) { |sum, x| x + sum }
     Float(total) / Float(values.length)
   end
+end
+
+
+class PearsonCorrelation < StatObject
+  
+  def initialize (xs, ys)
+    super(xs,ys)
+  end
+  
+  def correlate
+    x_mean = mean(@xs)
+    y_mean = mean(@ys)
+ 
+    numerator = (0...@xs.length).reduce(0) do |sum, i|
+      sum + ((@xs[i] - x_mean) * (@ys[i] - y_mean))
+    end
+ 
+    denominator = @xs.reduce(0) do |sum, x|
+      sum + ((x - x_mean) ** 2)
+    end
+ 
+    (numerator / Math.sqrt(denominator))
+  end
+ 
+
 end
