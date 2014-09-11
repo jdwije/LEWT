@@ -18,7 +18,7 @@ LEWT requires you have [Ruby](https://www.ruby-lang.org/en/) & [Ruby Gems](https
 
 ## Quick Start
 
-The LEWT program is based around a procedure I call *extract, process, render* [EPR]. Data is extracted from some source(s) and transformed into a general ledger data structure, this is then passed to the specified processor(s) which may use it to perform calculations, the processed data is then finally passed onto a renderer for outputting in a useful format. All EPR operations are handled by LEWT Extensions, thus a basic LEWT command only involves you specify which extensions to use for the EPR proceedure:
+The LEWT program is based around a procedure I call *extract, process, render* [EPR]. Data is extracted from some source(s) and transformed into a general ledger data structure, this is then passed to the specified processor(s) which may use it to perform calculations, the processed data is then finally passed onto a renderer for outputting in a useful format. All EPR operations are handled by LEWT Extensions, thus a basic LEWT command only involves you specify which extensions to use for the EPR procedure:
 
 ```
 # -e = extractor, -p = processor, -o = renderer. Outputs an invoice for target client ACME
@@ -28,7 +28,7 @@ lewt -x calendar -p invoice -o liquid -t ACME
 You can also extract from multiple sources at once and feed it into a processor:
 
 ```
-# extract timesheet data, expenses, and milstone data for client named 'ACME' and
+# extract time sheet data, expenses, and milestone data for client named 'ACME' and
 # feed data into reporting processor.
 lewt -x expenses,calendar,milestones -p report -t ACME
 ```
@@ -59,7 +59,7 @@ lewt -x calendar -p metastat --metatag happiness -t ACME
 
 ```
 
-The neat thing about LEWT is that extractors must all return there data in a pre-specified format, thus a universal compatibility can be maintained between extractors and any processor. You can therefor mashup extraction sources to your hearts content.
+The neat thing about LEWT is that extractors must all return there data in a pre-specified format, thus a universal compatibility can be maintained between extractors and any processor. You can therefor mash up extraction sources to your hearts content.
 
 For a list of options available from the CL run:
 
@@ -109,7 +109,28 @@ LEWT (and it's extensions) want config. They want it in the form of flat YAML fi
 
 ## Why Use LEWT?
 
-In one word - Automation. Accounting sucks, I hate it, luckily it's one of the easiest tasks to automate. If like me you operate as a contractor, LEWT can help you gain visibility over your operations again - fire your accountant, they make you do the hard work anyway! LEWT does it for you, and it's free (as in free beer) distributed under an MIT license, see LICENSE.md for more information on licensing.
+In one word - Automation. Accounting sucks, I hate it, luckily it's one of the easiest tasks to automate. If like me you operate as a contractor, LEWT can help you gain visibility over your operations again - fire your accountant, they make you do the hard work anyway! LEWT does it for you, and it's free (as in free beer) distributed under an MIT license.
+
+# Want to learn more?
+
+Checkout the [WIKI](https://github.com/jdwije/LEWT/wiki) section for a bunch of tutorials on setting LEWT up and getting started writing extensions. You can also generate the rDoc documentation from the source code as follows:
+
+```
+# change dir to LEWT
+cd /path/to/lewt/
+
+# build LEWT + docs
+rake build
+```
+
+This will generate a folder ```/docs``` with the  documentation in it as a HTML web page.
+
+Finally go browse through the source code, there is only ~1500 lines of ruby including comments which which I have tried to be liberal.
+
+
+## License
+
+LEWT is distributed under the terms and conditions of the MIT license, see LICENSE.md for more information.
 
 
 
