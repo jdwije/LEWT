@@ -10,7 +10,7 @@ LEWT is a command line program & library written in Ruby that can help you invoi
 
 ## Installation
 
-LEWT requires you have Ruby & Ruby Gems installed on your machine. Once you have that sorted:
+LEWT requires you have [Ruby](https://www.ruby-lang.org/en/) & [Ruby Gems](https://rubygems.org) installed on your machine. Once you have that sorted:
 
 ```
  gem install lewt
@@ -18,11 +18,11 @@ LEWT requires you have Ruby & Ruby Gems installed on your machine. Once you have
 
 ## Quick Start
 
-The LEWT program is based around a procedure I call *extract, process, render* [EPR]. Data is extracted from some source(s) and transformed into a general ledger data structure, this is then passed to the specified processor(s) which may use it to perform calculations, the processed data is then finally passed onto a renderer for outputting in a useful format. All EPR operations are handled by LEWT Extensions, thus a basic LEWT command oly involves you specify which extensions to use:
+The LEWT program is based around a procedure I call *extract, process, render* [EPR]. Data is extracted from some source(s) and transformed into a general ledger data structure, this is then passed to the specified processor(s) which may use it to perform calculations, the processed data is then finally passed onto a renderer for outputting in a useful format. All EPR operations are handled by LEWT Extensions, thus a basic LEWT command only involves you specify which extensions to use for the EPR proceedure:
 
 ```
-# -e = extractor, -p = processor, -o = renderer. Outputs an invoice for client ACME
-lewt -x calendar -p invoice -t ACME
+# -e = extractor, -p = processor, -o = renderer. Outputs an invoice for target client ACME
+lewt -x calendar -p invoice -o liquid -t ACME
 ```
 
 You can also extract from multiple sources at once and feed it into a processor:
@@ -59,7 +59,31 @@ lewt -x calendar -p metastat --metatag happiness -t ACME
 
 ```
 
-The neat thing about LEWT is that extractors must all return there data in a pre-specified format, thus a universal compatibility can be maintained between extractors and any processor.
+The neat thing about LEWT is that extractors must all return there data in a pre-specified format, thus a universal compatibility can be maintained between extractors and any processor. You can therefor mashup extraction sources to your hearts content.
+
+For a list of options available from the CL run:
+
+```
+lewt --help
+```
+
+of course you can perform all of the above in library mode as well:
+
+```
+options = {
+	:extract => 'calendar',
+	:process => 'invoice',
+	:render => 'liquid',
+	:target => 'ACME'
+}
+
+# setup
+l = LEWT::lewt.new( options )
+
+# do
+l.run_logic_loop
+
+```
 
 ## LEWT Extensions
 
@@ -74,7 +98,7 @@ LEWT by itself is basically just an extension system, all the EPR operations are
 7. Store: Persist lewt data as YAML formatted files. Re-use this data later.
 8. Metastat: Generate simple statistics from your data sources using embedded metatags.
 
-Conceptually, there are 3 different kinds of extensions: **Extractors, Processors, and Renderers<**. However for now they all inherit from the same **LEWT::Extension** base class. This class provides some convenience methods for the extensions as well as a means for them to register themselves within LEWT - specifying options such as command line flags and call handles.
+Conceptually, there are 3 different kinds of extensions: **Extractors, Processors, and Renderers**, however for now they all inherit from the same **LEWT::Extension** base class. This class provides some convenience methods for the extensions as well as a means for them to register themselves within LEWT.
 
 It's pretty easy to create you own extension all you need to do is create a folder in your extensions directory with a **.rb** file in it with the same name as the parent directory. This directory will house all your extension code, the naming convention is used for initialization. Alternatively you can create a Ruby Gem and have it loaded at run time by specified it in your settings.yml config file. See the [Authoring LEWT Extensions](https://github.com/jdwije/LEWT/wiki/3-Creating-Extensions-for-LEWT) for more information.
 
@@ -85,7 +109,9 @@ LEWT (and it's extensions) want config. They want it in the form of flat YAML fi
 
 ## Why Use LEWT?
 
-One word - Automation. Accounting sucks, I hate it, luckily it's one of the easiest tasks to automate. If like me you operate as a contractor, LEWT can help you gain visibility over your operations again - fire your accountant, they make you do the hard work anyway! LEWT does it for you, and it's free (as in free beer) distributed under an MIT license.
+In one word - Automation. Accounting sucks, I hate it, luckily it's one of the easiest tasks to automate. If like me you operate as a contractor, LEWT can help you gain visibility over your operations again - fire your accountant, they make you do the hard work anyway! LEWT does it for you, and it's free (as in free beer) distributed under an MIT license, see LICENSE.md for more information on licensing.
+
+
 
 
 
