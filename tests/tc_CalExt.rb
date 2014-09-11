@@ -12,7 +12,7 @@ require "test/unit"
 require_relative "../lib/extension.rb"
 require_relative "../lib/extensions/calendar-timekeeping/calendar-timekeeping.rb"
  
-class TestCalanderTimekeeping < Test::Unit::TestCase
+class TestCalendarTimekeeping < Test::Unit::TestCase
 
   def  test_initialize
     caltime = LEWT::CalendarTimekeeping.new
