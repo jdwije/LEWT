@@ -111,7 +111,7 @@ LEWT (and it's extensions) want config. They want it in the form of flat YAML fi
 
 In one word - Automation. Accounting sucks, I hate it, luckily it's one of the easiest tasks to automate. If like me you operate as a contractor, LEWT can help you gain visibility over your operations again - fire your accountant, they make you do the hard work anyway! LEWT does it for you, and it's free (as in free beer) distributed under an MIT license.
 
-# Want to learn more?
+## Want to learn more?
 
 Checkout the [WIKI](https://github.com/jdwije/LEWT/wiki) section for a bunch of tutorials on setting LEWT up and getting started writing extensions. You can also generate the rDoc documentation from the source code as follows:
 
@@ -125,7 +125,7 @@ rake build
 
 This will generate a folder ```/docs``` with the  documentation in it as a HTML web page.
 
-Finally go browse through the source code, there is only ~1500 lines of ruby including comments which which I have tried to be liberal.
+Finally go browse through the source code, there is only ~1500 lines of ruby including comments with which I have tried to be liberal.
 
 
 ## License
