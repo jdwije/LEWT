@@ -7,7 +7,7 @@ class TestLewtOpts < Test::Unit::TestCase
 
   def  test_initialize
     extensions = [
-                  Billing.new
+                  LEWT::Billing.new
                  ]
 
     simulated_options = {
@@ -15,8 +15,8 @@ class TestLewtOpts < Test::Unit::TestCase
       :target => "ACME"
     }
 
-    options = LewtOpts.new( extensions, simulated_options )
-    assert_instance_of(LewtOpts, options, "LewtOpts not inheriting hash properties properly in libmode.")
+    options = LEWT::LewtOpts.new( extensions, simulated_options )
+    assert_instance_of(LEWT::LewtOpts, options, "LewtOpts not inheriting hash properties properly in libmode.")
 
     assert_instance_of(String, options[:target], "LewtOpts not setting supplied values properly in libmode.")
     assert_equal("ACME", options[:target], "Expected 'ACME' (String) but got #{options[:target]} in libmode.")

@@ -15,7 +15,7 @@ require_relative "../lib/extensions/billing.rb"
 class TestBilling < Test::Unit::TestCase
 
   def  test_initialize
-    billing = Billing.new
+    billing = LEWT::Billing.new
     assert_kind_of( Array || Hash , billing.customers, "@clients is not an *Array*")
     assert_kind_of( Hash, billing.enterprise, "@company not a *Hash*")
   end

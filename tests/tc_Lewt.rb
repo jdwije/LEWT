@@ -12,8 +12,8 @@ require_relative "../lib/lewt.rb"
 class TestLewt < Test::Unit::TestCase
 
   def test_initialize
-    lewt = Lewt.new( { :target => "ACME" } )
-    assert_kind_of( Lewt, lewt, "Failed to initialize Lewt object.")
+    lewt = LEWT::Lewt.new( { :target => "ACME" } )
+    assert_kind_of( LEWT::Lewt, lewt, "Failed to initialize Lewt object.")
   end
   
 end

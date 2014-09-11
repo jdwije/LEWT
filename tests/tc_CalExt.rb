@@ -10,19 +10,19 @@
 require "test/unit"
 
 require_relative "../lib/extension.rb"
-require_relative "../lib/extensions/calander-timekeeping/calander-timekeeping.rb"
+require_relative "../lib/extensions/calendar-timekeeping/calendar-timekeeping.rb"
  
 class TestCalanderTimekeeping < Test::Unit::TestCase
 
   def  test_initialize
-    caltime = CalanderTimekeeping.new
-    assert_instance_of( CalanderTimekeeping, caltime, "Extension CalanderTimekeeping not initialising properly." )
-    calext = CalExtractor.new( (DateTime.now - 8)::to_s, DateTime.now::to_s,"ACME")
-    assert_instance_of( CalExtractor, calext, "Extension CalanderTimekeeping sub-module CalExtractor not initialising properly." )
+    caltime = LEWT::CalendarTimekeeping.new
+    assert_instance_of( LEWT::CalendarTimekeeping, caltime, "Extension CalandarTimekeeping not initialising properly." )
+    calext = CalendarExtractors::CalExtractor.new( (DateTime.now - 8)::to_s, DateTime.now::to_s,"ACME")
+    assert_instance_of( CalendarExtractors::CalExtractor, calext, "Extension CalandarTimekeeping sub-module CalExtractor not initialising properly." )
   end
 
   def test_filtering_methods
-    calext = CalExtractor.new( (DateTime.now - 8)::to_s, DateTime.now::to_s, LewtExtension.new::loadClientMatchData("ACME") )
+    calext = CalendarExtractors::CalExtractor.new( (DateTime.now - 8)::to_s, DateTime.now::to_s, LEWT::Extension.new::loadClientMatchData("ACME") )
     assert_instance_of(Hash, calext.isTargetCustomer?("ACME"), "#{calext.class.name} not matching customer names properly.")
     assert_instance_of(Hash, calext.isTargetCustomer?("ACME doing some stuff"), "#{calext.class.name} not matching customer names properly.")
     assert_instance_of(Hash, calext.isTargetCustomer?("making thing! ACME"), "#{calext.class.name} not matching customer names properly.")

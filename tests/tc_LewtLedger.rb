@@ -16,16 +16,16 @@ class TestLewtExtension < Test::Unit::TestCase
   end
 
   def test_lewt_books
-    books = LEWTBook.new
+    books = LEWT::LEWTBook.new
     assert_raise( TypeError ) { books.push(1) }
     row = create_row
     books.push( row )
-    assert_instance_of( LEWTLedger, books[0], "#{books.class.name} push method not working properly." )
+    assert_instance_of( LEWT::LEWTLedger, books[0], "#{books.class.name} push method not working properly." )
   end
 
 
   def create_row
-    return LEWTLedger.new( DateTime.now - 8, DateTime.now, "Expenses", "ACME", "Paid for softwware license", 1, 40.00, 40.00)    
+    return LEWT::LEWTLedger.new( DateTime.now - 8, DateTime.now, "Expenses", "ACME", "Paid for softwware license", 1, 40.00, 40.00)    
   end
 
 end
