@@ -1,61 +1,80 @@
-= LEWT
+# LEWT
 
-LEWT is a command line program written in Ruby that helps you invoice, manage expenses, and report useful business information with minimal friction. It is designed to encourage lazy accounting and to get more out of it. It is also designed to be further extended from the ground up.
+LEWT is a command line program & library written in Ruby that can help you invoice customers, manage expenses, generate reports and much more. It is designed to encourage lazy accounting and to get more out of it. It is also designed to be extended with minimal friction making integrating it with your existing setups (or creating entirely new ones) as painless as it can get.
 
-== Installation
+**Features**
 
-Install LEWT as a GEM.
+- Can operate in a terminal or as a drop in library in your Ruby programs.
+- Simple & concise architecture. Less than 1500 lines of ruby code including the bundled core extensions.
+- A nifty extension system.
 
+## Installation
+
+LEWT requires you have Ruby & Ruby Gems installed on your machine. Once you have that sorted:
+
+```
  gem install lewt
+```
 
-== The Basics
+## Quick Start
 
-The LEWT program is based around a loop construct I call *extract, process, render* [EPR]. Data is extracted from some sources and transformed into a general ledger format, this is then passed to the specified processor(s) which may use it to perform operations, the processors working are then finally passed onto your renderer for outputting into a useful format.
-
-LEWT by itself is basically just an extension system, all the EPR operations are performed by extensions making LEWT highly customisable. Being an fledgling version of this software, I have shipped LEWT with some basic extension which I find useful in my day to day contracting operations. These *core extensions* as I will call them for now are...
-
-1. Calender Time-Keeping: Extract Time sheet data from iCal and Google Calender sources and transform it into the general ledger format.
-2. Simple Invoices: Process ledger data as an invoice.
-3. Simple Reports: Process ledger data as a report.
-4. Liquid Renderer: .liquid template rendering for your all your shizz including PDFs.
-5. Simple Expenses: Manage expenses like a poon using CSVs.
-6. Simple Milestones: Do milestones like a total poon using CSVs.
+The LEWT program is based around a procedure I call *extract, process, render* [EPR]. Data is extracted from some source(s) and transformed into a general ledger data structure, this is then passed to the specified processor(s) which may use it to perform calculations, the processed data is then finally passed onto a renderer for outputting in a useful format.
 
 Put it all together and you can mash up some CLs.
 
-
+```
  # output an invoice for client ACME to the terminal in PLAIN text. Extract time sheet data and work expenses from the last week for this (default)
- lewt -x expenses,calender -p invoice -o liquid -t ACME
+ lewt -x expenses,calendar -p invoice -o liquid -t ACME
 
 
  # output an invoice for specified client as a html, save a pdf simultaneously.
- lewt -x expenses,calender -p invoice -o liquid -t ACME --method pdf, html --save-file acmeXX-XX-XXXX.pdf 
+ lewt -x expenses,calendar -p invoice -o liquid -t ACME --method pdf, html --save-file acme-invoice.pdf
 
- mash up a bunch of extraction sources and process it as a report.
- lewt -x expenses,calender,milestones -p report -o liquid --method text,pdf --save-file mash_report.pdf
+ # mash up a bunch of extraction sources and process it as a report.
+ lewt -x expenses,calendar,milestones -p report -o liquid --method text,pdf --save-file business_report.pdf
 
-The neat thing about LEWT is that extractors must all return there data in this general ledger format, thus a universal compatibility can be maintained with any processor. Processors must also always return hashes to be used by the renderer, they share a similar compatibility albeit less autonomous.
+ # Persist an invoice using the store extensions
+ lewt -p invoice -o store >> invoice.yml
 
-== Extensions
+ # reuse it and output in plain text
+ cat invoice.yml | lewt pipe process -p invoice -m text
 
-Your business work flows probably differ from mine. Both of ours are likely to change over time as well - LEWT extension system is designed to support that.
+ # Generate and outputs PearsonR & Descriptive stats for metatag 'happiness'
+lewt -x calendar -p metastat --metatag happiness -t ACME
 
-Conceptually, there are 3 different kinds of extensions: <b>Extractors, Processors, and Renderers</b>. However for now they all inherit from the same <tt>LEWTExtension</tt> base class. This class provides some convenience methods for the extensions as well as a means for them to register themselves within LEWT - specifying options such as command line flags and call handles.
+```
 
-It's pretty easy to create you own extension all you need to do is create a folder in your extensions directory with a <tt>.rb</tt> file in it with the same name as the parent directory. This directory will house all your extension code, the naming convention is used for initialization. Alternatively you can create a Ruby Gem and have it loaded at run time by specified it in your settings.yml config file.
+The neat thing about LEWT is that extractors must all return there data in a pre-specified format, thus a universal compatibility can be maintained between extractors and any processor.
 
-Here is a minimal implementation of a LEWT extensions, an extractor in this case.
+## LEWT Extensions
 
- # Minimial extension
- mmm... more to come.
+LEWT by itself is basically just an extension system, all the EPR operations are performed by extensions making LEWT very customisable. Being a beta version of this software, I have shipped LEWT with some basic extension which I find useful in my day to day contracting operations. These *core extensions* as I will call them for now are:
 
-== Config
+1. Calendar Timekeeping: Extract Time sheet data from iCal, OSX Calendar, and Google Calender sources and transform it for further processing.
+2. Simple Invoices: Process extract data as an invoice.
+3. Simple Reports: Process extract data as a report.
+4. Liquid Renderer: Liquid template rendering with support for text, html, and PDF tempting.
+5. Simple Expenses: Manage expenses with in simple CSV file and extract it to LEWT.
+6. Simple Milestones: Manage milestone payments in a CSV file and extract it to LEWT.
+7. Store: Persist lewt data as YAML formatted files. Re-use this data later.
+8. Metastat: Generate simple statistics from your data sources using embedded metatags.
 
-LEWT extensions want config. They want it in the form of flat .yml YAML[http://yaml.org] files. They reside in your config directory which can be found at <tt>path-to-lewt/lib/config</tt>. Strictly speaking you could use some other format, however I have chosen YAML as the preferred format for the LEWT project because it is human readable whilst still being serializable. This is important to encourage lazy enterprise, you can always edit the .yml files by hand in a text editor and any programs with or on top of LEWT (ie GUIs or whatever) will totally be able to deal with it. Please prefer YAML over other formats where possible when architecting your extensions.
+Conceptually, there are 3 different kinds of extensions: **Extractors, Processors, and Renderers<**. However for now they all inherit from the same **LEWT::Extension** base class. This class provides some convenience methods for the extensions as well as a means for them to register themselves within LEWT - specifying options such as command line flags and call handles.
 
-== Why use LEWT?
+It's pretty easy to create you own extension all you need to do is create a folder in your extensions directory with a **.rb** file in it with the same name as the parent directory. This directory will house all your extension code, the naming convention is used for initialization. Alternatively you can create a Ruby Gem and have it loaded at run time by specified it in your settings.yml config file. See the [Authoring LEWT Extensions](https://github.com/jdwije/LEWT/wiki/3-Creating-Extensions-for-LEWT) for more information.
 
-Because its esoteric and arcane, and if your anything like me it's still faster than PayPal or other similar systems even with my simplistic core extensions. You can also include LEWT as a drop in library as well as using it on the command line - all extensions are available in both environments making LEWT and all its extensions generally more useful. Everything in LEWT except for the extract, process, render cycle and a few basic command lines is customisable and designed to be that way, LEWT was made so you can automate enterprise your way.
+
+## Config
+
+LEWT (and it's extensions) want config. They want it in the form of flat YAML files which can be stored in your ```/config``` directory, see [Installation & Setup](https://github.com/jdwije/LEWT/wiki/2-Installation-&-Setup) for more on this. LEWT's default config directory is ```path/to/lewt/lib/confg/``` but you can change this if you like.
+
+## Why Use LEWT?
+
+One word - Automation. Accounting sucks, I hate it, luckily it's one of the easiest tasks to automate. If like me you operate as a contractor, LEWT can help you gain visibility over your operations again - fire your accountant, they make you do the hard work anyway! LEWT does it for you, and it's free (as in free beer) distributed under an MIT license.
+
+
+
+
 
 
 
