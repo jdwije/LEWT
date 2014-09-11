@@ -18,28 +18,43 @@ LEWT requires you have Ruby & Ruby Gems installed on your machine. Once you have
 
 ## Quick Start
 
-The LEWT program is based around a procedure I call *extract, process, render* [EPR]. Data is extracted from some source(s) and transformed into a general ledger data structure, this is then passed to the specified processor(s) which may use it to perform calculations, the processed data is then finally passed onto a renderer for outputting in a useful format.
-
-Put it all together and you can mash up some CLs.
+The LEWT program is based around a procedure I call *extract, process, render* [EPR]. Data is extracted from some source(s) and transformed into a general ledger data structure, this is then passed to the specified processor(s) which may use it to perform calculations, the processed data is then finally passed onto a renderer for outputting in a useful format. All EPR operations are handled by LEWT Extensions, thus a basic LEWT command oly involves you specify which extensions to use:
 
 ```
- # output an invoice for client ACME to the terminal in PLAIN text. Extract time sheet data and work expenses from the last week for this (default)
- lewt -x expenses,calendar -p invoice -o liquid -t ACME
+# -e = extractor, -p = processor, -o = renderer. Outputs an invoice for client ACME
+lewt -x calendar -p invoice -t ACME
+```
 
+You can also extract from multiple sources at once and feed it into a processor:
 
- # output an invoice for specified client as a html, save a pdf simultaneously.
- lewt -x expenses,calendar -p invoice -o liquid -t ACME --method pdf, html --save-file acme-invoice.pdf
+```
+# extract timesheet data, expenses, and milstone data for client named 'ACME' and
+# feed data into reporting processor.
+lewt -x expenses,calendar,milestones -p report -t ACME
+```
 
- # mash up a bunch of extraction sources and process it as a report.
- lewt -x expenses,calendar,milestones -p report -o liquid --method text,pdf --save-file business_report.pdf
+LEWT's default liquid rendering extension supports multiple output formats, it can even use WebKit to render a PDF from one of your templates:
 
- # Persist an invoice using the store extensions
- lewt -p invoice -o store >> invoice.yml
+```
+# output an invoice for specified client as a html, save a pdf simultaneously.
+lewt -x expenses,calendar -p invoice -o liquid -t ACME --method pdf, html --save-file acme-invoice.pdf
+```
 
- # reuse it and output in plain text
- cat invoice.yml | lewt pipe process -p invoice -m text
+LEWT does not use a database, persisting data is done on the file system:
 
- # Generate and outputs PearsonR & Descriptive stats for metatag 'happiness'
+```
+# Persist some processed data in YAML format using the store extension
+lewt -p invoice -o store >> invoice.yml
+
+# reuse it and output it in plain text
+cat invoice.yml | lewt pipe process -p invoice -m text
+```
+
+LEWT can even help you generate statistics on the fly:
+
+```
+# Generate and outputs PearsonR & Descriptive stats for metatag 'happiness'. You can assign
+# a value for happiness in your extract sources as follows '#happiness=X/10'
 lewt -x calendar -p metastat --metatag happiness -t ACME
 
 ```
