@@ -1,13 +1,13 @@
 require "test/unit"
 
 require_relative "../lib/lewtopts.rb"
-require_relative "../lib/extensions/billing.rb"
+require_relative "../lib/extensions/simple-invoices.rb"
 
 class TestLewtOpts < Test::Unit::TestCase
 
   def  test_initialize
     extensions = [
-                  LEWT::Billing.new
+                  LEWT::SimpleInvoices.new
                  ]
 
     simulated_options = {

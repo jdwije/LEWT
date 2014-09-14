@@ -5,6 +5,7 @@ You have recived a new invoice from Jason Wijegooneratne
 *******
 
 Date Created: {{ date_created }}
+ID: {{ id }}
 
 INVOICED TO:
 {{ billed_to.name }},
@@ -20,7 +21,6 @@ INVOICED FROM:
 {{ billed_from.address.postal }}, {{ billed_from.address.state }},
 {{ billed_from.address.country }},
 abn {{ billed_to.business_number }}.
-
 
 ITEMS:
 {% for item in items %}--

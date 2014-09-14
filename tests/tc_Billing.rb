@@ -10,12 +10,12 @@
 require "test/unit"
 
 require_relative "../lib/extension.rb"
-require_relative "../lib/extensions/billing.rb"
+require_relative "../lib/extensions/simple-invoices.rb"
  
 class TestBilling < Test::Unit::TestCase
 
   def  test_initialize
-    billing = LEWT::Billing.new
+    billing = LEWT::SimpleInvoices.new
     assert_kind_of( Array || Hash , billing.customers, "@clients is not an *Array*")
     assert_kind_of( Hash, billing.enterprise, "@company not a *Hash*")
   end

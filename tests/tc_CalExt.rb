@@ -17,7 +17,7 @@ class TestCalendarTimekeeping < Test::Unit::TestCase
   def  test_initialize
     caltime = LEWT::CalendarTimekeeping.new
     assert_instance_of( LEWT::CalendarTimekeeping, caltime, "Extension CalandarTimekeeping not initialising properly." )
-    calext = CalendarExtractors::CalExtractor.new( (DateTime.now - 8)::to_s, DateTime.now::to_s,"ACME")
+    calext = CalendarExtractors::CalExtractor.new( (DateTime.now - 8).to_s, DateTime.now.to_s, "ACME" )
     assert_instance_of( CalendarExtractors::CalExtractor, calext, "Extension CalandarTimekeeping sub-module CalExtractor not initialising properly." )
   end
 

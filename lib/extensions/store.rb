@@ -58,7 +58,7 @@ module LEWT
       @processData = data.to_yaml
       name = options[:store_filename]
       yml = options[:store_hook] == "extract" ? @extractData : @processData
-      name != nil ? store(yml, name) : [yml]
+      name != nil ? store(yml, name ) : [yml]
     end
 
     protected

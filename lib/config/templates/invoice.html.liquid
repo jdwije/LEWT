@@ -1,16 +1,16 @@
 <html>
 <head>
-  <link rel="stylesheet" type="text/css" href="lib/templates/style.css" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <body>
 <hr />
 
 <p>
   <b>Date Created:</b> {{ date_created }} <br />
+  <b>ID:</b> {{ id }} <br />
 </p>
 
-
-<h2>INVOICED TO:</h2>
+<h3>INVOICED TO:</h3>
 <address>
   {{ billed_to.name }},<br />
   {{ billed_to.address.lines }},<br />
@@ -19,7 +19,7 @@
   abn: {{ billed_to.business_number }}.
 </address>
 
-<h2>INVOICED FROM:</h2>
+<h3>INVOICED FROM:</h3>
 <address>
   {{ billed_from.name }},<br />
   {{ billed_from.address.lines }},<br />
@@ -27,7 +27,6 @@
   {{ billed_from.address.country }},<br />
   abn: {{ billed_from.business_number }}.
 </address>
-
 
 <h2>ITEMS:</h2>
 <ul class="unstyled invoice-items">
@@ -41,7 +40,7 @@
 	 <td><strong>Duration:</strong> {{ item.duration }}</td> 
 	 <td><strong>Total:</strong> ${{ item.total }}</td>
        </tr>
-	 <tr>
+	 <tr class="invoice-item-description">
 	   <td colspan="5">
 	     {{ item.description }}
 	   </td>

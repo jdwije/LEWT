@@ -40,17 +40,18 @@ module LEWT
     MATCH_SINGLE_META_REGEX = /[#](\S*)/
     MATCH_MULTIPLE_META_REGEX = /#\S*/
 
-    def  initialize ( date_start, date_end, category, entity, description, quantity, unit_cost, sub_total = nil, gst = nil, total = nil  )
-      self[:date_start] = date_start
-      self[:date_end] = date_end
-      self[:category] = category
-      self[:entity] = entity
-      self[:description] = description
-      self[:quantity] = quantity
-      self[:unit_cost] = unit_cost
-      self[:sub_total] = sub_total || quantity * unit_cost
-      self[:gst] = gst || 0
-      self[:total] = total || ( self[:sub_total] + self[:gst] )
+    def  initialize (args)
+      raise ArgumentError, "#{self.class.name} was not instantized with valid parameters" if valid?(args) == false
+      self[:date_start] = args[:date_start]
+      self[:date_end] = args[:date_end]
+      self[:category] = args[:category]
+      self[:entity] = args[:entity]
+      self[:description] = args[:description]
+      self[:quantity] = args[:quantity]
+      self[:unit_cost] = args[:unit_cost]
+      self[:sub_total] = self[:sub_total] || self[:quantity] * self[:unit_cost]
+      self[:gst] = args[:gst] || 0
+      self[:total] = args[:total] || ( self[:sub_total] + self[:gst] )
       @metatags = parse_meta_tags(:description)
       strip_readable_meta if @metatags != nil
     end
@@ -123,8 +124,24 @@ module LEWT
       if m != nil
         value = Rational m[0]
       end
-      
       return value
+    end    
+    
+    # validates the arguments this object is initialised with.
+    # args [Hash]:: The argument hash passed to this class on initialize
+    def valid?(args)
+      raise TypeError, "#{self.class.name} must be initialised with a hash" if not args.kind_of?(Hash)
+      args.each { |k,v|
+        case k
+        when :date_start, :date_end
+          raise TypeError, "Expected Time type" unless v.kind_of? Time
+        when :category, :entity, :description
+          raise TypeError, "Expected a string" unless v.kind_of? String
+        when :quantity, :unit_cost, :sub_total, :gst, :total
+          raise TypeError, "Expected a number" unless v.kind_of? Numeric
+        end
+      }
+      return true
     end
 
   end

@@ -17,7 +17,7 @@ module CalendarExtractors
     # dateStart [String]:: a human readable date as a string for the start time period
     # dateEnd [String]:: a human readable date as a string for the end time period
     # targets [Hash]:: a hash containing all the targets returned by the LewtExtension.loadClientMatchData() method
-    def initialize( dateStart, dateEnd, targets ) 
+    def initialize( dateStart, dateEnd, targets )
       @data = LEWT::LEWTBook.new
       @dateStart  = dateStart.to_date 
       @dateEnd = dateEnd.to_date
@@ -28,6 +28,7 @@ module CalendarExtractors
     
     # Returns the extracted calendar data. Must be implimented by subclasses.
     def extractCalendarData
+      
     end
     
     # Matches a search string against customer names/aliases

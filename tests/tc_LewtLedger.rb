@@ -5,8 +5,8 @@ class TestLewtExtension < Test::Unit::TestCase
 
   def  test_lewt_ledger
     row = create_row
-    assert_instance_of(DateTime, row[:date_start], "#{row.class.name} not storing start DateTime properly.")
-    assert_instance_of(DateTime, row[:date_end], "#{row.class.name} not storing end DateTime properly.")
+    assert_instance_of(Time, row[:date_start], "#{row.class.name} not storing start Time properly.")
+    assert_instance_of(Time, row[:date_end], "#{row.class.name} not storing end Time properly.")
     assert_instance_of(String, row[:category], "#{row.class.name} not storing category properly.")
     assert_instance_of(String, row[:entity], "#{row.class.name} not storing entity  properly.")
     assert_instance_of(String, row[:description], "#{row.class.name} not storing descriptions  properly.")
@@ -25,7 +25,14 @@ class TestLewtExtension < Test::Unit::TestCase
 
 
   def create_row
-    return LEWT::LEWTLedger.new( DateTime.now - 8, DateTime.now, "Expenses", "ACME", "Paid for softwware license", 1, 40.00, 40.00)    
+    return LEWT::LEWTLedger.new({
+                                  :date_start => Time.now - 8, 
+                                  :date_end => Time.now, 
+                                  :category => "Expenses", 
+                                  :entity => "ACME", 
+                                  :description => "Paid for softwware license",
+                                  :quantity => 1, 
+                                  :unit_cost => 40.00})
   end
 
 end

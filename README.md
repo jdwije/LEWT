@@ -128,10 +128,13 @@ This will generate a folder ```/docs``` with the  documentation in it as a HTML 
 Finally go browse through the source code, there is only ~1500 lines of ruby including comments with which I have tried to be liberal.
 
 
+## Disclaimer
+
+LEWT is very much beta-ware. I don't fully use it myself in my contracting operations [I still use my old system in tandem], however I'm starting to find it's features useful especially reporting so I thought I'd release it as is. If you find any bugs I'd love to hear about them!
+
 ## License
 
 LEWT is distributed under the terms and conditions of the MIT license, see LICENSE.md for more information.
-
 
 
 

@@ -1,55 +1,5 @@
 ---
 -
-  name: Media Dynamics
-  business_number: 51 123 24 123
-  address:
-   lines: |
-      Unit 4,
-      178 Albion Rd
-   city    : Windsor
-   state   : QLD
-   postal  : 4030
-   country: Australia
-  contact:
-   name: 
-    first: Christopher
-    last: Beck
-   email: test@jwije.com
-  alias: MD
-  rate: 35
--
- name: TipTop Select
- business_number: 45 443 23 123
- address:
-   lines: 2 Witham Road
-   city    : Maleny
-   state   : QLD
-   postal  : 4552
-   country: Australia
- contact:
-  name: 
-   first: Rafaela
-   last: Giebler
-  email: test@jwije.com
- alias: TTS
- rate: 35
--
- name: Performax International
- business_number: 45 443 23 123
- address:
-   lines: 2 Witham Road
-   city    : Maleny
-   state   : QLD
-   postal  : 4552
-   country: Australia
- contact:
-  name: 
-   first: Sandy
-   last: Wheeler
-  email: test@jwije.com
- alias: Performax
- rate: 60
--
  name: ACME
  business_number: 45 443 23 123
  address:
@@ -62,6 +12,22 @@
   name: 
    first: Wiley
    last: Coyote
-  email: test@jwije.com
+  email: wiley@acme.com
  alias: AC
- rate: 60
+ rate: 100
+-
+ name: Wayne Corp
+ business_number: 45 443 23 123
+ address:
+   lines: 2 Wayne Street
+   city    : Gotham City
+   state   : Gotham
+   postal  : 90210
+   country: Cartoon Land
+ contact:
+  name: 
+   first: Bruce
+   last: Wayne
+  email: bruce@waynecorp.com
+ alias: WCorp
+ rate: 150

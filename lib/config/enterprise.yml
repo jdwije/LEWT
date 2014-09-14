@@ -1,19 +1,18 @@
 ---
-name: JWIJE'S WWW
+name: Your Trading Name
 business_number: 123456
 address:
- lines:	13 Brighton Road
- city    : Highgate Hill
- state   : QLD
- postal  : 4101
- country: Australia
+ lines:	13 Your Street
+ city    : O-town
+ state   : O-state
+ postal  : 0000
+ country: O-stralia
 contact:
- name: Jason Wijegooneratne
- email: admin@jwije.com
-alias: JDW
-rate: 40
+ name: Your Name
+ email: your@email.com
+alias: YTN
+rate: 50
 invoice-tax: 0.10
-invoice_directory: /Applications/MAMP/htdocs/LEWT/test/
 tax_levees:
  -
    applies_to: income

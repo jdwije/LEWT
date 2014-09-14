@@ -43,19 +43,27 @@ module LEWT
       # ROWS:
       # [0]Id [1]Date [2]Description [3]Context [4]Amount
       count = 0
-      data = LEWTBook.new
+      data = LEWT::LEWTBook.new
 
       CSV.foreach(filepath) do |row|
         if count > 0
           id = row[0]
-          date = DateTime.parse( row[1] )
+          date = Time.parse( row[1] )
           desc = row[2]
           context = row[3]
           amount = row[4].to_f
 
           if self.isTargetDate?( date ) == true && self.isTargetContext?(context) == true
             # create ledger entry and append to books
-            row_data = LEWTLedger.new( date, date, @category, context, desc, 1, amount )
+            row_data = LEWT::LEWTLedger.new({
+                                         :date_start => date, 
+                                         :date_end => date, 
+                                         :category => @category, 
+                                         :entity => context,
+                                         :description => desc,
+                                         :quantity => 1, 
+                                         :unit_cost => amount,
+                                       })
             data.push(row_data)
           end
         end

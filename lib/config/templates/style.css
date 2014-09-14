@@ -412,6 +412,16 @@ ul.invoice-items li table {
     font-size: 14px;
 }
 
+ul.invoice-items td {
+    border : none;
+    outline : none;
+}
+
+ul.invoice-items .invoice-item-description {
+    padding-bottom: 15px;
+    border: 1px dashed #ccc;
+}
+
 .invoice-items .full-row {
     width: 100%;
 }
@@ -440,4 +450,12 @@ h3 {
 
 h4 {
     font-size: 14px;
+}
+
+#logo {
+    width : 100px;
+    height : auto;
+    position : absolute;
+    top: 0;
+    right: 0;
 }

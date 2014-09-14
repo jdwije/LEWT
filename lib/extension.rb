@@ -50,8 +50,6 @@ module LEWT
           client_match = [ client["alias"], client["name"] ].join("|")
           if suppress == nil or client_match.match(suppress.gsub(Lewt::OPTION_DELIMITER_REGEX,"|")) == nil
             requestedClients.push(client)
-          else
-            puts "ignored #{client["name"]}"
           end
         end
       else
@@ -88,7 +86,32 @@ module LEWT
       load_lewt_settings() # reload settings vars
       return settings
     end
+
+
     
+    # Formats the --save-name parameter if specified as a template into a string for usage with a File.write method.
+    # options [Hash]:: The options hash passed to this function by the Lewt program.
+    # i [Integer]:: The current data array index to match the :targets option against
+    def format_save_name(o, i)
+      match_client = /\#alias/
+      match_date = /\#date/
+      t = o[:save_file].dup
+      c = t.match match_client
+      d = t.match match_date
+
+      if c != nil
+        clients = loadClientMatchData(options[:target])
+        client_alias = clients[i]["alias"]
+        t.gsub! match_client, client_alias
+      end
+
+      if d != nil
+        t.gsub! match_date, Date.today.to_s
+      end
+      
+      return t
+    end
+
     # Loads the specified settings file
     # property:: The variable you would like to assign the loaded YAML to
     # file [String]:: The settings file to load from lewt stash.

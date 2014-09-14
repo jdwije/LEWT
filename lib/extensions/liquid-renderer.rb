@@ -41,7 +41,7 @@ module LEWT
     
     # Loads the plaint-text, html, & (optionally) pdf template files of the given template name and parses it with the Liquid class
     # template [String]:: The name of the template to load.
-    def loadTemplates ( template )
+    def load_templates ( template )
       @textTemplate = Liquid::Template::parse( File.open( File.expand_path( lewt_stash  + "/templates/#{template}.text.liquid", __FILE__) ).read )
       @htmlTemplate = Liquid::Template::parse( File.open( File.expand_path( lewt_stash + "/templates/#{template}.html.liquid", __FILE__) ).read )
       @stylesheet = File.expand_path( lewt_stash + '/templates/style.css', __FILE__)
@@ -54,33 +54,40 @@ module LEWT
       output = Array.new
       # template name is always the same as processor name
       template = options[:liquid_template] != nil ? options[:liquid_template] : options[:process]
-      loadTemplates( template )
+      load_templates( template )
 
-      if options[:output_method].match "text"
-        data.each do |d|
-          output <<  textTemplate.render(d)
-        end
-      end
-      
-      if options[:output_method].match "html"
-        data.each do |d|
-          output <<  htmlTemplate.render(d)
-        end
-      end
-      
-      if options[:output_method].match "pdf"
-        if options[:save_file] == nil then raise "--save-file flag for #{self.class.name} must be specified when PDF output requested" end
+      data.each_with_index do |d, i|
+        save_name = format_save_name( options, i )
 
-        data.each do |d|
+        if options[:output_method].match "text"
+          r = textTemplate.render(d)
+          if options[:save_file]
+            File.open( save_name, 'w') {|f| f.write r }
+            output << save_name
+          else
+            output << r
+          end
+        end
+        
+        if options[:output_method].match "html"
+          r = htmlTemplate.render(d)
+          if options[:save_file]
+            File.open( save_name, 'w') {|f| f.write r }
+            output << save_name
+          else
+            output << r
+          end
+        end
+        
+        if options[:output_method].match "pdf"
+          raise ArgumentError,"--save-file flag must be specified for PDF output in #{self.class.name}" if !options[:save_file]
           html = htmlTemplate.render(d)
           kit = PDFKit.new(html, :page_size => 'A4')
           kit.stylesheets << @stylesheet
-          savename = options[:save_file] || 'test.pdf'
-          file = kit.to_file( savename )
-          output << savename
+          file = kit.to_file( save_name )
+          output << save_name
         end
       end
-
       # if options[:dump_output] != false
       #   output.each do |r|
       #     puts r
@@ -91,7 +98,7 @@ module LEWT
     end
     
     protected
-
+    
   end
 
 end

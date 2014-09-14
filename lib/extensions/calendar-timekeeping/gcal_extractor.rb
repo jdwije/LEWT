@@ -20,7 +20,7 @@ module CalendarExtractors
   class GCalExtractor < CalExtractor
 
     # Sets up this extension
-    def initialize ( dStart, dEnd, targets, lewt_settings, suppressTargets )
+    def initialize ( dStart, dEnd, targetCustomers, lewt_settings, suppressTargets )
       uname = lewt_settings["gmail_username"]
       pass = lewt_settings["gmail_password"]
       app = lewt_settings["google_app_name"]
@@ -29,7 +29,7 @@ module CalendarExtractors
                                              :password => pass,
                                              :app_name => app
                                              )
-      super( dStart, dEnd, targets )
+      super( dStart, dEnd, targetCustomers )
     end
     
     # This method does the actual google calender extract, comparing events to the requested paramters.
@@ -39,10 +39,18 @@ module CalendarExtractors
       @googleCalender.find_events_in_range(@dateStart, @dateEnd + 1, gConf).each do |e|
         eStart = Time.parse( e.start_time )
         eEnd = Time.parse( e.end_time )
-        timeDiff = (eEnd - eStart) / 60 / 60
+        timeDiff = (eEnd - eStart)/60/60
         target = self.isTargetCustomer?(e.title)
         if  self.isTargetDate?( eStart ) == true && target != false
-          row = LEWT::LEWTLedger.new( eStart, eEnd, @category, target["name"], e.content, timeDiff, target["rate"] )
+          row = LEWT::LEWTLedger.new({
+                                       :date_start => eStart, 
+                                       :date_end => eEnd, 
+                                       :category => @category, 
+                                       :entity => target["name"], 
+                                       :description => e.content, 
+                                       :quantity => timeDiff, 
+                                       :unit_cost => target["rate"]
+                                     })
           @data.push(row)
         end
       end

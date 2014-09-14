@@ -120,7 +120,7 @@ module LEWT
         hook_process("process", extracted_data)
       when "process"
         processed_data = fireHooks("process",@options,data)
-        hook_process("render",@options,processed_data)
+        hook_process("render",processed_data)
       when "render"
         render_data = fireHooks("render",@options,data)
       else
@@ -153,8 +153,7 @@ module LEWT
           when "process"
             algamation.concat e.process(options, *data)
           when "render"
-            rendered = e.render(options, *data)
-            algamation.concat rendered
+            algamation.concat e.render(options, *data)
             # dump render output to console of option specified.
             puts algamation if options[:dump_output] == true
           end

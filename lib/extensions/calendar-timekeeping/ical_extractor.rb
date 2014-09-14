@@ -28,8 +28,17 @@ module CalendarExtractors
         calendar.events.each do |e|
           target = self.isTargetCustomer?( e.summary )
           if  self.isTargetDate?(e.dtstart) == true &&  target != false
-            timeDiff = (e.dtstart - e.dtend) / 60 / 60
-            row = LEWT::LEWTLedger.new(e.dtstart, e.dtend, @category, target["name"], e.description, timeDiff, target["rate"])
+            timeDiff = ((e.dtstart - e.dtend) / 60 / 60).to_i
+            row = LEWT::LEWTLedger.new({
+                                         :date_start => e.dtstart, 
+                                         :date_end => dtend, 
+                                         :category => @category, 
+                                         :entity => target["name"], 
+                                         :description => e.description,
+                                         :quantity => timeDiff, 
+                                         :unit_cost => target["rate"]
+                                       })
+
             @data.push( row )
           end
         end
