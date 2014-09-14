@@ -43,7 +43,7 @@ module LEWT
     # This method mathes customers wth query strings provided by users in the CLI
     # query [String]:: A search string to query against.
     # suppress [String]:: A list of clients to exclude. Defaults to nil ie: none.
-    def loadClientMatchData( query, suppress = nil )
+    def get_matched_customers( query, suppress = nil )
       requestedClients = Array.new
       if query == nil
         @customers.each do |client|
@@ -100,7 +100,7 @@ module LEWT
       d = t.match match_date
 
       if c != nil
-        clients = loadClientMatchData(options[:target])
+        clients = get_matched_customers(options[:target])
         client_alias = clients[i]["alias"]
         t.gsub! match_client, client_alias
       end

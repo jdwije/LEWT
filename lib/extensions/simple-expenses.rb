@@ -28,7 +28,7 @@ module LEWT
     # Extracts data from the expenses CSV file.
     # options [Hash]:: The options hash passed to this function by the Lewt program.
     def extract( options )
-      @targets = loadClientMatchData( options[:target] )
+      @targets = get_matched_customers( options[:target] )
       @dStart =  options[:start]
       @dEnd = options[:end]
       @category = 'Expenses'

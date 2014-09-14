@@ -22,7 +22,7 @@ class TestCalendarTimekeeping < Test::Unit::TestCase
   end
 
   def test_filtering_methods
-    calext = CalendarExtractors::CalExtractor.new( (DateTime.now - 8)::to_s, DateTime.now::to_s, LEWT::Extension.new::loadClientMatchData("ACME") )
+    calext = CalendarExtractors::CalExtractor.new( (DateTime.now - 8)::to_s, DateTime.now::to_s, LEWT::Extension.new::get_matched_customers("ACME") )
     assert_instance_of(Hash, calext.isTargetCustomer?("ACME"), "#{calext.class.name} not matching customer names properly.")
     assert_instance_of(Hash, calext.isTargetCustomer?("ACME doing some stuff"), "#{calext.class.name} not matching customer names properly.")
     assert_instance_of(Hash, calext.isTargetCustomer?("making thing! ACME"), "#{calext.class.name} not matching customer names properly.")

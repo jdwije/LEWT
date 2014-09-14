@@ -1,0 +1,10 @@
+Meta Log not yet fully implemented.
+-----------------------------------
+
+Client                            Metatag              Count
+
+{% for client in client_table %}
+   {% for stat in client %}
+{{ client[0] }}  	 {% for s in stat %} {{ s[0] }}        {{ s[1] }} {% endfor %} 
+   {% endfor %}
+{% endfor %}

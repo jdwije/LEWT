@@ -46,10 +46,10 @@ module LEWT
     # options [Hash]:: The options hash passed to this function by the Lewt program.
     # returns:: LEWTBook
     def extract( options )
-      targetCustomers = self.loadClientMatchData( options[:target], options[:suppress] )
+      targetCustomers = self.get_matched_customers( options[:target], options[:suppress] )
       dStart =  options[:start]
       dEnd = options[:end]
-      suppressTargets = options[:suppress] == nil ? nil : self.loadClientMatchData(options[:suppress])
+      suppressTargets = options[:suppress] == nil ? nil : self.get_matched_customers(options[:suppress])
       if options[:ext_method] == "iCal"
         extract = CalendarExtractors::ICalExtractor.new( dStart, dEnd, targetCustomers, lewt_settings, suppressTargets )
       elsif options[:ext_method] == "gCal"

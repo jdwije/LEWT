@@ -71,7 +71,7 @@ module LEWT
         row.metatags.each { |k, v|
           next unless meta.gsub(Lewt::OPTION_SYMBOL_REGEX,"_").to_sym == k
           # found match operate on it
-          client = loadClientMatchData(row[:entity])[0]
+          client = get_matched_customers(row[:entity])[0]
           # case our value
           case v
           when !!v == v
