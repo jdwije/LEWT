@@ -5,6 +5,7 @@
 - ADDED: Dummy iCal data file for testing things out with
 - FIXED: settings load paths on fresh install
 - FIXED: extension load paths on fresh install
+- FIXED: Persisting lewt settings between updates, now supports ~/.lewt_settings config file
 
 ## 0.5.10
 - IMPROVED: metastat now does correlations

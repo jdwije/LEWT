@@ -7,4 +7,4 @@ require 'lewt'
 lewt = LEWT::Lewt.new
 
 # invoke the logic loop
-lewt.run_logic_loop
+lewt.run

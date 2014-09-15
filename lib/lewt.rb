@@ -67,10 +67,10 @@ module LEWT
     end
 
     # Runs the extract render process loop
-    def run_logic_loop
-      extract = fireHooks("extract", @options)
-      process = fireHooks("process", @options, extract )
-      render = fireHooks("render", @options, process )
+    def run
+      extract = fire_hooks("extract", @options)
+      process = fire_hooks("process", @options, extract )
+      render = fire_hooks("render", @options, process )
     end
     
 
@@ -78,7 +78,7 @@ module LEWT
     # A REGEXP query can be passed to this object i.e. "ACME|NovaCorp|..."
     # to match multiple customers.
     # query [String]:: The query to search against.
-    def getClient( query ) 
+    def get_client( query ) 
       client = nil
       @customers.each do |c|
         buildQ = [ c["name"], c["alias"] ].join("|")
@@ -116,17 +116,17 @@ module LEWT
     
     # Fire the logic loop from the specified hook onwards. Used when piping data in from CL
     # hook [Sting]:: extract, process, or render
-    # data:: The data to pass to fireHooks
+    # data:: The data to pass to fire_hooks
     def hook_process (hook, data)
       case hook
       when "extract"
-        extracted_data = fireHooks("extract",@options,data)
+        extracted_data = fire_hooks("extract",@options,data)
         hook_process("process", extracted_data)
       when "process"
-        processed_data = fireHooks("process",@options,data)
+        processed_data = fire_hooks("process",@options,data)
         hook_process("render",processed_data)
       when "render"
-        render_data = fireHooks("render",@options,data)
+        render_data = fire_hooks("render",@options,data)
       else
         raise ArugmentError, "#{self.class.name}.hook_process requires the start hook to be either render or process"
       end
@@ -145,7 +145,7 @@ module LEWT
     # hook [String]:: Expected hooks are 'extract', 'process', 'render'.
     # options [Hash]:: The options gathered from using LewtOpts
     # data [Mixed]:: The data to pass to the extensions.
-    def fireHooks( hook, options, *data )
+    def fire_hooks( hook, options, *data )
       algamation = Array.new
       @extensions.each { |e|
         ## filter hooks
