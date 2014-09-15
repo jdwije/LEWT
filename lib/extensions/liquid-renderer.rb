@@ -57,11 +57,11 @@ module LEWT
       load_templates( template )
 
       data.each_with_index do |d, i|
-        save_name = format_save_name( options, i )
 
         if options[:output_method].match "text"
           r = textTemplate.render(d)
           if options[:save_file]
+            save_name = format_save_name( options, i )
             File.open( save_name, 'w') {|f| f.write r }
             output << save_name
           else
@@ -72,6 +72,7 @@ module LEWT
         if options[:output_method].match "html"
           r = htmlTemplate.render(d)
           if options[:save_file]
+            save_name = format_save_name( options, i )
             File.open( save_name, 'w') {|f| f.write r }
             output << save_name
           else
@@ -81,6 +82,7 @@ module LEWT
         
         if options[:output_method].match "pdf"
           raise ArgumentError,"--save-file flag must be specified for PDF output in #{self.class.name}" if !options[:save_file]
+          save_name = format_save_name( options, i )
           html = htmlTemplate.render(d)
           kit = PDFKit.new(html, :page_size => 'A4')
           kit.stylesheets << @stylesheet

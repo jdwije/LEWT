@@ -100,7 +100,7 @@ module LEWT
       d = t.match match_date
 
       if c != nil
-        clients = get_matched_customers(options[:target])
+        clients = get_matched_customers(o[:target])
         client_alias = clients[i]["alias"]
         t.gsub! match_client, client_alias
       end

@@ -12,7 +12,7 @@ spec = Gem::Specification.new do |s|
   s.description = "A dead simple command line tool and library for enterprise management. It can currently handle invoicing, expenses, reporting, and is highly extensible"
   s.authors     = ["Jason Wijegooneratne"]
   s.email       = 'code@jwije.com'
-  s.files        = Dir.glob("{bin,lib}/**/*")
+  s.files        = [Dir.glob("{bin,lib,tests}/**/*"), 'README.md', 'LICENSE.md', 'Rakefile']
   s.executables = ["lewt"]
   s.homepage    = 'http://jwije.com/lewt'
   s.license       = 'MIT'
@@ -80,12 +80,12 @@ Rake::TestTask.new do |t|
 end
 
 
-RDoc::Task.new :rdoc do |rdoc|
+RDoc::Task.new :docs do |rdoc|
  # CLOut.new::header("Building documentation")
-  rdoc.main = "README.rdoc"
+  rdoc.main = "README.md"
   rdoc.rdoc_dir = "docs"
   rdoc.title = "LEWT"
-  rdoc.rdoc_files.include("README.rdoc", "lib/**/*.rb")
+  rdoc.rdoc_files.include("README.md", "lib/**/*.rb")
 end
 
 # build gem and move to the ./dist directory
@@ -96,7 +96,7 @@ Gem::PackageTask.new(spec) do |pkg|
 end
 
 # This is the default 'build' task. Append new items to it's task array as you create them.
-task :build => [:test, :rdoc] do
+task :build => [:test, :docs] do
   CLOut.new::header("Build Completed")
 end
 

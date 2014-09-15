@@ -1,6 +1,6 @@
 # LEWT
 
-LEWT is a command line program & library written in Ruby that can help you invoice customers, manage expenses, generate reports and much more. It is designed to encourage lazy accounting and to get more out of it. It is also designed to be extended with minimal friction making integrating it with your existing setups (or creating entirely new ones) as painless as it can get.
+LEWT is a command line program & library written in Ruby that can help you invoice customers, manage expenses, generate reports and much more. It is designed to encourage lazy accounting, to get more out of it, and to be extended with minimal friction. 
 
 **Features**
 
@@ -15,6 +15,8 @@ LEWT requires you have [Ruby](https://www.ruby-lang.org/en/) & [Ruby Gems](https
 ```
  gem install lewt
 ```
+
+LEWT ships with some dummy data and config so you can jump straight into the quick start guide.
 
 ## Quick Start
 
@@ -100,7 +102,7 @@ LEWT by itself is basically just an extension system, all the EPR operations are
 
 Conceptually, there are 3 different kinds of extensions: **Extractors, Processors, and Renderers**, however for now they all inherit from the same **LEWT::Extension** base class. This class provides some convenience methods for the extensions as well as a means for them to register themselves within LEWT.
 
-It's pretty easy to create you own extension all you need to do is create a folder in your extensions directory with a **.rb** file in it with the same name as the parent directory. This directory will house all your extension code, the naming convention is used for initialization. Alternatively you can create a Ruby Gem and have it loaded at run time by specified it in your settings.yml config file. See the [Authoring LEWT Extensions](https://github.com/jdwije/LEWT/wiki/3-Creating-Extensions-for-LEWT) for more information.
+It's pretty easy to get started creating your own extension for LEWT, see the [Authoring LEWT Extensions](https://github.com/jdwije/LEWT/wiki/3-Creating-Extensions-for-LEWT) for more information.
 
 
 ## Config
@@ -109,7 +111,7 @@ LEWT (and it's extensions) want config. They want it in the form of flat YAML fi
 
 ## Why Use LEWT?
 
-In one word - Automation. Accounting sucks, I hate it, luckily it's one of the easiest tasks to automate. If like me you operate as a contractor, LEWT can help you gain visibility over your operations again - fire your accountant, they make you do the hard work anyway! LEWT does it for you, and it's free (as in free beer) distributed under an MIT license.
+Ha! I'm not sure you really should, it is beta-ware afterall so don't player hate if something isn't working... but if you persist, you'll probably be able to setup LEWT to do most of your accounting, reporting, invoicing, and business analytics work for you out of the box as I have. LEWT is a flexible accounting system core that enables flexible access and usage of your transaction data. It's written in Ruby, and is easy to extend - this allows for trying out new ideas in the accounting space with relative ease - how many systems allow you to track your happiness over time on the job and correlate that with transaction data such as pay, hours worked, or customer ID? I built LEWT to deliver efficiency, and big data on the cheaps for the little guy (myself included), it is geared towards smaller operations but who knows... I hope it can help you earn more cash money.
 
 ## Want to learn more?
 
