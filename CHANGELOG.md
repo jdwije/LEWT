@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.11
+- IMPROVED: Types used for date calculations in calendar extractors
+- ADDED: Dummy iCal data file for testing things out with
+- FIXED: settings load paths on fresh install
+- FIXED: extension load paths on fresh install
+
 ## 0.5.10
 - IMPROVED: metastat now does correlations
 - IMPROVED: documentation has been updated to reflect the most recent changes
