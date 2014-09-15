@@ -19,8 +19,8 @@ module CalendarExtractors
     # targets [Hash]:: a hash containing all the targets returned by the LewtExtension.get_matched_customers() method
     def initialize( dateStart, dateEnd, targets )
       @data = LEWT::LEWTBook.new
-      @dateStart  = Date.parse dateStart.to_s 
-      @dateEnd = Date.parse dateEnd.to_s
+      @dateStart  = DateTime.parse dateStart.to_s 
+      @dateEnd = DateTime.parse dateEnd.to_s
       @targets = targets
       @category = "Hourly Income"
       self.extractCalendarData
