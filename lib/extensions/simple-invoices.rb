@@ -1,4 +1,5 @@
 require "yaml"
+require "securerandom"
 
 # Author::    Jason Wijegooneratne  (mailto:code@jwije.com)
 # Copyright:: Copyright (c) 2014 Jason Wijegooneratne

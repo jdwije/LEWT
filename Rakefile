@@ -26,7 +26,6 @@ spec = Gem::Specification.new do |s|
   s.add_dependency 'google_calendar', '~> 0.3.1'
   s.add_dependency 'liquid', '~> 2.5.0'
   s.add_dependency 'pdfkit', '~> 0.6.2'
-  s.add_dependency 'rinruby', '~> 2.0.3'
 end
 
 # just some output helper methods

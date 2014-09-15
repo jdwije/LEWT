@@ -41,14 +41,14 @@ module LEWT
       @extensions = LEWT::Extension.new.lewt_extensions
 
 
+      # Load core extensions
+      load_extensions( File.expand_path('../extensions', __FILE__) )
+
       if core_settings.has_key?("lewt_stash")
-        # Load core extensions
-        load_extensions( File.expand_path('../extensions', __FILE__) )
+        # load user defined extesnions
+        load_extensions
       end
 
-      # load user defined extesnions
-      load_extensions
-      
       # Stores default options returned from extensions
       # and the LEWT defaults at large
       options = {}

@@ -19,8 +19,8 @@ module CalendarExtractors
     # targets [Hash]:: a hash containing all the targets returned by the LewtExtension.get_matched_customers() method
     def initialize( dateStart, dateEnd, targets )
       @data = LEWT::LEWTBook.new
-      @dateStart  = dateStart.to_date 
-      @dateEnd = dateEnd.to_date
+      @dateStart  = Date.parse dateStart.to_s 
+      @dateEnd = Date.parse dateEnd.to_s
       @targets = targets
       @category = "Hourly Income"
       self.extractCalendarData
@@ -49,7 +49,7 @@ module CalendarExtractors
     # date [Date]:: the date to check against
     # return:: Boolean true/false operation status
     def isTargetDate? ( date ) 
-      d = date
+      d = DateTime.parse(date.to_s)
       check = false
       if d >= @dateStart && d <= @dateEnd
         check = true

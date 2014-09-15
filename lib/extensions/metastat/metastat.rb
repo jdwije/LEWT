@@ -1,4 +1,3 @@
-require "rinruby"
 require_relative "metamath.rb"
 
 # Author::    Jason Wijegooneratne  (mailto:code@jwije.com)
