@@ -28,6 +28,10 @@ module LEWT
     # ext_init [Hash]:: contains the keys <tt>:cmd</tt>, <tt>:options</tt> - which are the command name (String) and options (Hash) for the extension respectively.
     def initialize ( ext_init = { :cmd => "lewt_base_extension" } )
       core_settings = YAML.load_file( File.expand_path( '../config/settings.yml', __FILE__) )
+      if File.exists? File.expand_path( '~/.lewt_settings', __FILE__)
+        core_settings.merge! YAML.load_file( File.expand_path( '~/.lewt_settings', __FILE__) )
+      end
+
       @lewt_stash = core_settings['lewt_stash'] || File.expand_path('../', __FILE__) + "/config/"
       load_lewt_settings()
       @command_name = ext_init[:cmd]

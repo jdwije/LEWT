@@ -30,6 +30,10 @@ module LEWT
     
     def initialize( library_options = nil )
       core_settings = YAML.load_file( File.expand_path( '../config/settings.yml', __FILE__) )
+      if File.exists? File.expand_path( '~/.lewt_settings', __FILE__)
+        core_settings.merge! YAML.load_file( File.expand_path( '~/.lewt_settings', __FILE__) )
+      end
+
       @lewt_stash = core_settings['lewt_stash'] || File.expand_path('../', __FILE__) + "/config/"
       @settings = YAML.load_file( @lewt_stash + 'settings.yml' )
       

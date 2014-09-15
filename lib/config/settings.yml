@@ -1,10 +1,10 @@
 ---
 ical_filepath: tests/LEWT Schedule.ics
-osxcal_path: /path/to/osxcalender/dir/
+osxcal_path: "/path/to/osxcalender/dir/"
 gmail_username: you@google.com
 gmail_password: your_secret
 gmail_app_name: some-goggle-hash-code
-expenses_filepath: /path/to/expenses.csv
-milestones_filepath: /path/to/milestones.csv
-store_path: /path/to/store/dir/
-invoice_id_counter: 5
+expenses_filepath: "/path/to/expenses.csv"
+milestones_filepath: "/path/to/milestones.csv"
+store_path: "/path/to/store/dir/"
+invoice_id_counter: 3
