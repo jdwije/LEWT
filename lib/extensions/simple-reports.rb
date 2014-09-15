@@ -62,7 +62,7 @@ module LEWT
             # do income tax
             if report["income"] > tax["lower_threshold"]
               taxable = [ report["income"], tax["upper_threshold"]].min - tax["lower_threshold"]
-              damage = taxable * tax["rate"] + ( tax["flatrate"] || 0 )
+              damage = (taxable * tax["rate"] + ( tax["flatrate"] || 0 )).round(2)
               tax_total += damage
               report["taxes"].push({ "amount" => damage, "name" => tax["name"], "rate" => tax["rate"] })
             end
