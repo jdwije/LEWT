@@ -91,7 +91,12 @@ module LEWT
       if !@boolean_table.has_key?(c["name"])
         @boolean_table[ c["name"] ] = { k.to_s => 0 }
       end
-      @boolean_table[ c["name"] ][k.to_s] += 1
+
+      if !@boolean_table[c["name"]].has_key?(k.to_s)
+        @boolean_table[c["name"]][k.to_s] = 0;
+      end
+      
+      @boolean_table[c["name"]][k.to_s] += 1
     end
 
     # Transforms the dataset into something usable for statistical computation
@@ -143,6 +148,9 @@ module LEWT
         next if k == y_key.to_sym
         results[y_key.to_sym] = Hash.new if results[y_key.to_sym] == nil
         results[y_key.to_sym][k] = Hash.new if results[y_key.to_sym][k] == nil
+        puts k
+        puts y_key
+        puts 
 
         r = PearsonR.new( v_set, r_dataset[y_key.to_sym] )
         results[y_key.to_sym][k][:pearson_r] = r.correlate
