@@ -155,7 +155,12 @@ module LEWT
           when "extract"
             algamation.concat e.extract(options)
           when "process"
-            algamation.concat e.process(options, *data)
+            processed = e.process(options, *data)
+            if processed.kind_of? Array 
+              algamation.concat processed
+            else
+              algamation.push processed
+            end
           when "render"
             algamation.concat e.render(options, *data)
             # dump render output to console of option specified.

@@ -29,13 +29,13 @@ module LEWT
     def initialize
       # set extension options
       options = {
-        :ext_method => {
-          :default => "gCal",
-          :definition => "The calender extraction method to use, supports gCal, iCal, osx calender extraction. Defaults to gCal.",
+        :calendar => {
+          :default => "ical",
+          :definition => "The calender extraction method to use, supports 'gcal', 'ical', 'osx' calender extraction. Defaults to ical.",
           :type => String,
         },
         :suppress => {
-          :definition => "Suppresses the cost calculation for the specified targets when calulating the hourly rates on extracted calender data. This is useful if you want to use this extension for tracking non-profit activites such as open-source project work as well as when you are being paid for these hours from another means (ie: milestones) and you just want to aggregate the hourly data into a report or something.",
+          :definition => "Suppresses the cost calculation for the specified targets when calulating the hourly rates on extracted calender data.",
           :type => String
         }
       }    
@@ -50,11 +50,11 @@ module LEWT
       dStart =  options[:start]
       dEnd = options[:end]
       suppressTargets = options[:suppress] == nil ? nil : self.get_matched_customers(options[:suppress])
-      if options[:ext_method] == "iCal"
+      if options[:calendar] == "ical"
         extract = CalendarExtractors::ICalExtractor.new( dStart, dEnd, targetCustomers, lewt_settings, suppressTargets )
-      elsif options[:ext_method] == "gCal"
+      elsif options[:calendar] == "gcal"
         extract = CalendarExtractors::GCalExtractor.new(dStart, dEnd, targetCustomers, lewt_settings, suppressTargets )
-      elsif options[:ext_method] == "apple"
+      elsif options[:calendar] == "osx"
         extract = CalendarExtractors::AppleExtractor.new(dStart, dEnd, targetCustomers, lewt_settings, suppressTargets )
       end
       return extract.data

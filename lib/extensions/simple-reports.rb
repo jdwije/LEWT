@@ -18,7 +18,7 @@ module LEWT
     # data [LEWTBook]:: The data in LEWTBook format
     def process ( options, data )
       targets = get_matched_customers( options[:target] )
-      return Array.new.push(make_report(targets, data))
+      return make_report(targets, data)
     end
 
     # This method handles the bulk of the calculation required in compiling the report.
@@ -34,7 +34,7 @@ module LEWT
         "taxes" => Array.new,
         "hours" => 0
       }
-      data.each do |row|      
+      data.each do |row|
         targets.each do |t|
           # match targets for report
           if row[:entity] == t["name"]
