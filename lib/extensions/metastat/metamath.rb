@@ -56,7 +56,7 @@ module LEWT
       raise Exception "_x & _y datasets must be of equal length" if xs.length != ys.length
       @xs, @ys = xs, ys
     end
-    
+
     # Returns a Pearson Correlation R value
     # xs:: The x series array of values
     # ys:: The y series array of values
@@ -64,18 +64,15 @@ module LEWT
       raise Exception "_x & _y datasets must be of equal length" if xs.length != ys.length
       x_mean = mean(@xs)
       y_mean = mean(@ys)
-
       numerator = (0...@xs.length).reduce(0) do |sum, i|
         sum + ((@xs[i] - x_mean) * (@ys[i] - y_mean))
       end
-
       denominator = @xs.reduce(0) do |sum, x|
         sum + ((x - x_mean) ** 2)
-      end
-      
+      end      
       (numerator / Math.sqrt(denominator))
     end
-
+    
   end
 
 
