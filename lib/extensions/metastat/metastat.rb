@@ -55,7 +55,7 @@ module LEWT
       end
       @dataset[:boolean_table] = @boolean_table
       @dataset[:correlations] = compute_correlations @raw_data
-      return Array.new.push @dataset
+      return @dataset
     end
 
     protected
