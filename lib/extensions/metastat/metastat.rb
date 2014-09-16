@@ -7,7 +7,7 @@ require_relative "metamath.rb"
 
 module LEWT
 
-  # The Metastat extension handles processing meta-data added to ledger entries. It can compute statistics based of
+  # The Metastat extension [experimental] handles processing meta-data added to ledger entries. It can compute statistics based of
   # these parsed values
   #
   # ===Usage:
@@ -31,11 +31,11 @@ module LEWT
     def initialize
       options = {
         :metatags => {
-          :definition => "A comma seperated list of metatags to lookup",
+          :definition => "A comma seperated list of metatags to lookup.",
           :type => String
         },
         :y_series => {
-          :definition => "The y series to use for a simple regresion",
+          :definition => "An optional y series to use for a correlation analysis.",
           :type => String
         }
       }
@@ -53,8 +53,10 @@ module LEWT
       extract_data.each do |row|
         filter_row_values(row, options)
       end
-      @dataset[:boolean_table] = @boolean_table
-      @dataset[:correlations] = compute_correlations @raw_data
+      @dataset["frequency_table"] = @boolean_table
+      if options[:y_series]
+        @dataset["correlations"] = compute_correlations @raw_data
+      end
       return @dataset
     end
 
@@ -148,10 +150,6 @@ module LEWT
         next if k == y_key.to_sym
         results[y_key.to_sym] = Hash.new if results[y_key.to_sym] == nil
         results[y_key.to_sym][k] = Hash.new if results[y_key.to_sym][k] == nil
-        puts k
-        puts y_key
-        puts 
-
         r = PearsonR.new( v_set, r_dataset[y_key.to_sym] )
         results[y_key.to_sym][k][:pearson_r] = r.correlate
         results[y_key.to_sym][k][:descriptive_stats] = r.descriptive_stats(v_set)

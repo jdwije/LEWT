@@ -34,12 +34,12 @@ module LEWT
       @dEnd = options[:end].to_date
       @targets = self.get_matched_customers(options[:target])
       exFile = lewt_settings["milestones_filepath"]
-      return getMilestones ( exFile )
+      return get_milestones ( exFile )
     end
 
     # Read file at filepath and parses it expecting the format presented in this classes header.
     # filepath [String]:: The CSV filepath as a string.
-    def getMilestones ( filepath )
+    def get_milestones ( filepath )
       # ROWS:
       # [0]Id [1]Date [2]Description [3]Context [4]Amount
       count = 0
@@ -53,7 +53,7 @@ module LEWT
           context = row[3]
           amount = row[4].to_f
 
-          if self.isTargetDate?( date ) == true && self.isTargetContext?(context) == true
+          if self.is_target_date?( date ) == true && self.is_target_context?(context) == true
             # create ledger entry and append to books
             row_data = LEWT::LEWTLedger.new({
                                          :date_start => date, 
@@ -75,7 +75,7 @@ module LEWT
 
     # Checks if the context field in the CSV matches any of our target clients names or alias'
     # context [String]:: The context field as a string.
-    def isTargetContext?(context)
+    def is_target_context?(context)
       match = false
       @targets.each do |t|
         reg = [ t['alias'], t['name'] ]
@@ -89,7 +89,7 @@ module LEWT
     # Checks whether event date is within target range
     # date [DateTime]:: The date to check
     # returns: Boolean
-    def isTargetDate?(date) 
+    def is_target_date?(date) 
       d = date.to_date
       check = false
       if d >= @dStart && d <= @dEnd

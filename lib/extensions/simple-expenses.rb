@@ -33,13 +33,13 @@ module LEWT
       @dEnd = options[:end]
       @category = 'Expenses'
       exFile = lewt_settings["expenses_filepath"]
-      return getExpenses ( exFile )
+      return get_expenses ( exFile )
     end
 
 
     # Read file at filepath and parses it expecting the format presented in this classes header.
     # filepath [String]:: The CSV filepath as a string.
-    def getExpenses ( filepath )
+    def get_expenses ( filepath )
       # ROWS:
       # [0]Date [1]Description [2]Context [3]Cost
       count = 0
@@ -50,7 +50,7 @@ module LEWT
           desc = row[1]
           context = row[2]
           cost = row[3].to_f * -1
-          if self.isTargetDate( date ) == true && self.isTargetContext?(context) == true
+          if self.is_target_date?( date ) == true && self.is_target_context?(context) == true
             # create ledger entry and append to books
             row_data = LEWT::LEWTLedger.new({
                                          :date_start => date, 
@@ -76,7 +76,7 @@ module LEWT
     # Checks whether event date is within target range
     # date [DateTime]:: The date to check
     # returns: Boolean
-    def isTargetDate ( date ) 
+    def is_target_date? ( date ) 
       d = date.to_date
       check = false
       if d >= @dStart.to_date && d <= @dEnd.to_date
@@ -87,7 +87,7 @@ module LEWT
     
     # Checks if the context field in the CSV matches any of our target clients names or alias'
     # context [String]:: The context field as a string.
-    def isTargetContext?(context)
+    def is_target_context?(context)
       match = false
       @targets.each do |t|
         reg = [ t['alias'], t['name'] ]

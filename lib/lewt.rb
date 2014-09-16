@@ -192,10 +192,10 @@ module LEWT
         end
       end
 
-      # load GEMS
+      # load extensions packaged as GEMS
       if @settings['gem_loads'] != nil
-        @settings['gem_loads'].split(",").each do |g|
-          match = g.split("::")
+        @settings['gem_loads'].split(Lewt::OPTION_DELIMITER_REGEX).each do |g|
+          match = g.split("/")
           ext_object = initialize_gem(match[0], match[1])
         end
       end
@@ -207,7 +207,7 @@ module LEWT
     # gem_class [String]:: The gem class name for initialisation
     def initialize_gem( gem_require, gem_class )
       require gem_require
-      extension = eval("LEWT::" + gem_class + ".new")
+      extension = eval( gem_class + ".new")
       return @extensions.last
     end
 
