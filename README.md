@@ -208,7 +208,7 @@ LEWT (and it's extensions) want config. They want it in the form of flat YAML fi
 
 ## Want to learn more?
 
-Checkout the [WIKI](https://github.com/jdwije/LEWT/wiki) section for a bunch of tutorials on setting LEWT up and getting started writing extensions.
+Checkout the [WIKI](https://github.com/jdwije/LEWT/wiki) section for a bunch of tutorials on setting LEWT up and getting started writing extensions. The rDocs are available from [here](http://rubydoc.info/gems/lewt).
 
 Finally go browse through the source code, there is only ~1300 lines of ruby including comments with which I have tried to be liberal.
 
@@ -219,7 +219,7 @@ LEWT is very much beta-ware. I only just started using it myself in my contracti
 
 ## License
 
-LEWT is distributed under the terms and conditions of the MIT license, see LICENSE.md for more information.
+LEWT is distributed under the terms and conditions of the MIT license, see [LICENSE.md](https://github.com/jdwije/LEWT/blob/master/LICENSE.md) for more information.
 
 
 
