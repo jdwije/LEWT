@@ -22,7 +22,14 @@ module LEWT
     
     # Registers this extension
     def initialize
-      super({:cmd => "expenses"})
+      options = {
+        :include_own => {
+          :definition => "toggles including own business expenses from csv file",
+          :default => false,
+          :short_flag => "-i"
+        }
+      }
+      super({:cmd => "expenses", :options => options })
     end
 
     # Extracts data from the expenses CSV file.
@@ -32,6 +39,7 @@ module LEWT
       @dStart =  options[:start]
       @dEnd = options[:end]
       @category = 'Expenses'
+      @include_own_expenses = options[:include_own]
       exFile = lewt_settings["expenses_filepath"]
       return get_expenses ( exFile )
     end
@@ -91,6 +99,9 @@ module LEWT
       match = false
       @targets.each do |t|
         reg = [ t['alias'], t['name'] ]
+        if @include_own_expenses == true
+          reg.concat [ @enterprise["alias"], @enterprise["name"] ]
+        end
         regex = Regexp.new( reg.join("|"), Regexp::IGNORECASE )
         match = regex.match(context) != nil ? true : false;
         break if match != false
