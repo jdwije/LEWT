@@ -33,7 +33,7 @@ module LEWT
       @dStart =  options[:start].to_date
       @dEnd = options[:end].to_date
       @targets = self.get_matched_customers(options[:target])
-      exFile = lewt_settings["milestones_filepath"]
+      exFile = lewt_settings["milestones_filepath"] || File.expand_path(File.join(File.dirname(__FILE__), "../../../tests/milestones.csv"))
       return get_milestones ( exFile )
     end
 

@@ -40,7 +40,7 @@ module LEWT
       @dEnd = options[:end]
       @category = 'Expenses'
       @include_own_expenses = options[:include_own]
-      exFile = lewt_settings["expenses_filepath"]
+      exFile = lewt_settings["expenses_filepath"] || File.expand_path(File.join(File.dirname(__FILE__), "../../../tests/expenses.csv"))
       return get_expenses ( exFile )
     end
 

@@ -16,7 +16,8 @@ module CalendarExtractors
 
     # Initialises the object and calls the parent class' super() method.
     def initialize( dateStart, dateEnd, targets, lewt_settings, suppressTargets )
-      @calendarPath = lewt_settings["ical_filepath"]
+      @calendarPath = lewt_settings["ical_filepath"] || File.expand_path(File.join(File.dirname(__FILE__), "../../../tests/LEWT Schedule.ics"))
+
       super( dateStart, dateEnd, targets )
     end
     
