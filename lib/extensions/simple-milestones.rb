@@ -62,7 +62,7 @@ module LEWT
                                          :entity => context,
                                          :description => desc,
                                          :quantity => 1, 
-                                         :unit_cost => amount,
+                                         :unit_cost => amount
                                        })
             data.push(row_data)
           end

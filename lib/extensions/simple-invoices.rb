@@ -70,7 +70,7 @@ module LEWT
             "description" => row[:description],
             "duration" => row[:quantity],
             "rate" => row[:unit_cost],
-            "total" => row[:total],
+            "total" => row[:total] < 0 ? row[:total] * -1 : row[:total],
             "start" => row[:date_start].strftime("%d/%m/%y %l:%M%P"),
             "end" => row[:date_end].strftime("%d/%m/%y %l:%M%P")
           }

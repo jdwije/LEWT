@@ -58,9 +58,9 @@ module LEWT
 
       data.each_with_index do |d, i|
 
-        if options[:output_method].match "text"
+        if options[:method].match "text"
           r = textTemplate.render(d)
-          if options[:save_file]
+          if options[:save_path]
             save_name = format_save_name( options, i )
             File.open( save_name, 'w') {|f| f.write r }
             output << save_name
@@ -69,9 +69,9 @@ module LEWT
           end
         end
         
-        if options[:output_method].match "html"
+        if options[:method].match "html"
           r = htmlTemplate.render(d)
-          if options[:save_file]
+          if options[:save_path]
             save_name = format_save_name( options, i )
             File.open( save_name, 'w') {|f| f.write r }
             output << save_name
@@ -80,8 +80,8 @@ module LEWT
           end
         end
         
-        if options[:output_method].match "pdf"
-          raise ArgumentError,"--save-file flag must be specified for PDF output in #{self.class.name}" if !options[:save_file]
+        if options[:method].match "pdf"
+          raise ArgumentError,"--save-file flag must be specified for PDF output in #{self.class.name}" if !options[:save_path]
           save_name = format_save_name( options, i )
           html = htmlTemplate.render(d)
           kit = PDFKit.new(html, :page_size => 'A4')
