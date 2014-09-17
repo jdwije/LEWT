@@ -2,17 +2,18 @@ require 'rubygems'
 require 'rake/testtask'
 require 'rubygems/package_task' 
 require 'rdoc/task'
+require_relative "lib/lewt.rb"
 
 # setup
 spec = Gem::Specification.new do |s|
   s.name        = 'lewt'
-  s.version     = '0.5.12'
+  s.version     = LEWT::VERSION
   s.date        = '2014-08-24'
   s.summary     = "Lazy Enterprise for hackers Without Time"
   s.description = "A dead simple command line tool and library for enterprise management. It can currently handle invoicing, expenses, reporting, and is highly extensible"
   s.authors     = ["Jason Wijegooneratne"]
   s.email       = 'code@jwije.com'
-  s.files        = [Dir.glob("{bin,lib}/**/*"), 'README.md', 'LICENSE.md']
+  s.files        = [Dir.glob("{bin,lib,tests}/**/*"), 'README.md', 'LICENSE.md']
   s.executables = ["lewt"]
   s.homepage    = 'http://jwije.com/lewt'
   s.license       = 'MIT'

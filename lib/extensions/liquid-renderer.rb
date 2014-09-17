@@ -19,13 +19,13 @@ module LEWT
     # Sets up this extension and registers its run-time options.
     def initialize ()
       options = {
-        :output_method => {
+        :method => {
           :definition => "Specify html, text, pdf, or any combination of the three to define output method",
           :default => "text",
           :short_flag => "-m",
           :type => String
         },
-        :save_file => {
+        :save_path => {
           :definition => "Specify where to save the output file (required for PDFs)",
           :type => String
         },

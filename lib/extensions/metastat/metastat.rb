@@ -30,7 +30,7 @@ module LEWT
     # Sets up this extension and registers its options
     def initialize
       options = {
-        :metatags => {
+        :tags => {
           :definition => "A comma seperated list of metatags to lookup.",
           :type => String
         },

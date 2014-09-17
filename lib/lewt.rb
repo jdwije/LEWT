@@ -16,6 +16,8 @@ require_relative 'lewt_ledger.rb'
 # This module acts as a container for the LEWT namespace
 module LEWT
   
+  VERSION = "0.5.12"
+
   # The Lewt class contains the major functionality of this program.
   # It handles loading all extensions, gathering the results and passing options ariound the place.
   # It also works quite closely with the LewtExtension and LewtOpts classes.
@@ -66,7 +68,7 @@ module LEWT
       parse_internal_commands
     end
 
-    # Runs the extract render process loop
+    # Runs extract, process, render hooks.
     def run
       extract = fire_hooks("extract", @options)
       process = fire_hooks("process", @options, extract )
@@ -90,29 +92,6 @@ module LEWT
       return client
     end
     
-    protected 
-
-    # Parses lewsts intenral commands. If none have been invoked it simple returns.
-    def parse_internal_commands
-      return if @command == nil
-      # raise argument error if command invoked without argument
-      if @argument == nil and @command != nil
-        puts @command
-        raise ArgumentError, "Class #{self.class.name} requires an argument t be supplied with a command" 
-      end
-      
-      if @command.match(/pipe/)
-        # pipe stdin into fire_hook(@argument) event
-        data = Psych.load(read_stdin)
-        if data != nil
-          hook_process(@argument, data)
-        else
-          raise ArgumentError, "could not parse STDIN pipe as YAML data."
-        end
-        exit
-      end
-
-    end
     
     # Fire the logic loop from the specified hook onwards. Used when piping data in from CL
     # hook [Sting]:: extract, process, or render
@@ -130,15 +109,6 @@ module LEWT
       else
         raise ArugmentError, "#{self.class.name}.hook_process requires the start hook to be either render or process"
       end
-    end
-
-    # reads input from standard INPUT
-    def read_stdin
-      data = ""
-      while line = $stdin.gets
-        data += line
-      end
-      return data
     end
     
     # Fire a hook with the given options and overloaded parameters.
@@ -169,6 +139,40 @@ module LEWT
         end
       }
       return algamation;
+    end
+
+
+    protected 
+
+    # reads input from standard INPUT
+    def read_stdin
+      data = ""
+      while line = $stdin.gets
+        data += line
+      end
+      return data
+    end
+
+    # Parses lewsts intenral commands. If none have been invoked it simple returns.
+    def parse_internal_commands
+      return if @command == nil
+      # raise argument error if command invoked without argument
+      if @argument == nil and @command != nil
+        puts @command
+        raise ArgumentError, "Class #{self.class.name} requires an argument t be supplied with a command" 
+      end
+      
+      if @command.match(/pipe/)
+        # pipe stdin into fire_hook(@argument) event
+        data = Psych.load(read_stdin)
+        if data != nil
+          hook_process(@argument, data)
+        else
+          raise ArgumentError, "could not parse STDIN pipe as YAML data."
+        end
+        exit
+      end
+
     end
 
     # Loads all installed LEWT extensions by checking the ext_dir setting variable for available ruby files.

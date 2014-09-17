@@ -1,10 +1,10 @@
 # Change Log
 
-
 ## 0.5.12
 - FIXED: GEM extension loading
 - ADDED: ability to generate frequeny table without correlations in metastat, party due to the later being incomplete
 - IMPROVED: naming conventions used for functions throughout extensions
+- ADDED: Version flag to CL and linked it to the LEWT module
 
 ## 0.5.11
 - IMPROVED: Types used for date calculations in calendar extractors

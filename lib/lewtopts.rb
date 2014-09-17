@@ -125,6 +125,7 @@ module LEWT
         end
         
         opts.banner = "Usage: lewt -x EXTRACTOR -p PROCESSOR -o RENDERER"
+        opts.version = LEWT::VERSION
         
       end.parse!(ARGV)
       
