@@ -8,14 +8,14 @@ require_relative "lib/lewt.rb"
 spec = Gem::Specification.new do |s|
   s.name        = 'lewt'
   s.version     = LEWT::VERSION
-  s.date        = '2014-08-24'
+  s.date        = '2014-09-17'
   s.summary     = "Lazy Enterprise for hackers Without Time"
-  s.description = "A dead simple command line tool and library for enterprise management. It can currently handle invoicing, expenses, reporting, and is highly extensible"
+  s.description = "A simple command line tool and library for enterprise management. It can currently handle invoicing, expenses, reporting, and is very extensible."
   s.authors     = ["Jason Wijegooneratne"]
   s.email       = 'code@jwije.com'
   s.files        = [Dir.glob("{bin,lib,tests}/**/*"), 'README.md', 'LICENSE.md']
   s.executables = ["lewt"]
-  s.homepage    = 'http://jwije.com/lewt'
+  s.homepage    = 'http://www.jwije.com/LEWT'
   s.license       = 'MIT'
 
   # required LEWT gems
