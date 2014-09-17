@@ -117,10 +117,10 @@ LEWT's default liquid template rendering extension supports multiple output form
 
 ```
 # output an invoice for specified customer as text, save a pdf simultaneously.
-lewt -x expenses,calendar -p invoice -o liquid -t ACME --method pdf,text --save-path acme-invoice.pdf
+lewt -x expenses,calendar -p invoice -o liquid -t WCorp -s 01-09-2014 --method pdf,text --save-path wcorp-invoice.pdf
 
 # create separate pdf invoices for all customers using some naming templates
-lewt -x expenses,calendar -p invoice -o liquid --method pdf --save-path "#date #alias.pdf"
+lewt -x expenses,calendar -p invoice -o liquid --method pdf -s 01-09-2014 --save-path "#date #alias.pdf"
 
 ...
 
