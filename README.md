@@ -139,7 +139,7 @@ lewt it ACME -p invoice -o store >> invoice.yml
 cat invoice.yml | lewt pipe process -p invoice -m text
 ```
 
-LEWT can even help you generate statistics on the fly and supports embedded [metatags](#) in your extraction sources:
+LEWT can even help you generate statistics on the fly and supports embedded [metatags](https://github.com/jdwije/LEWT/wiki/Metatags) in your extraction sources:
 
 ```
 # output a frequency table of hash tags #good-day, #bad-day by customer. use
