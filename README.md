@@ -1,4 +1,4 @@
-# LEWT v0.5.13
+# LEWT v0.5.15
 
 LEWT is a command line program & library written in Ruby that can help you invoice customers, manage expenses, generate reports and much more. It is designed to encourage lazy accounting, to get more out of it, and to be extended with minimal friction. 
 

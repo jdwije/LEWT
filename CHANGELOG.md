@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.5.13 - 0.5.15
+- FIXED: Path loads for test data when installing from ruby gems (took a couple of tries)
+
 ## 0.5.12
 - FIXED: GEM extension loading
 - ADDED: ability to generate frequency table without correlations in metastat, party due to the later being incomplete
