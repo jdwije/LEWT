@@ -2,16 +2,17 @@
 
 ## 0.5.12
 - FIXED: GEM extension loading
-- ADDED: ability to generate frequeny table without correlations in metastat, party due to the later being incomplete
-- IMPROVED: naming conventions used for functions throughout extensions
+- ADDED: ability to generate frequency table without correlations in metastat, party due to the later being incomplete
+- REFACTORED: naming conventions used for functions throughout extensions
 - ADDED: Version flag to CL and linked it to the LEWT module
+- ADDED: test data for milestones and expenses extractors
 
 ## 0.5.11
 - IMPROVED: Types used for date calculations in calendar extractors
 - ADDED: Dummy iCal data file for testing things out with
 - FIXED: settings load paths on fresh install
 - FIXED: extension load paths on fresh install
-- FIXED: Persisting lewt settings between updates, now supports ~/.lewt_settings config file
+- FIXED: Persisting LEWT settings between updates, now supports ~/.lewt_settings config file
 
 ## 0.5.10
 - IMPROVED: metastat now does correlations
@@ -22,7 +23,7 @@
 - FIXED: Invoice monetary rounding issue
 - IMPROVED: Default template styles for HTML & PDF output in liquid render extension
 - IMPROVED: Invoice ID algorithm, it now includes a short hex string to make for easier file system indexing.
-- ADDED: Added recursive file saving ablity to store and liquid render.
+- ADDED: Added recursive file saving ability to store and liquid render.
 
 ## 0.5.9
 - IMPROVED: metastats extension. now does better tallying and some statistics.
