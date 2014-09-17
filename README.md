@@ -133,13 +133,13 @@ LEWT does not use a database, persisting data is done on a file system:
 
 ```
 # Persist some processed data in YAML format using the store extension
-lewt it ACME -p invoice -o store >> invoice.yml
+lewt -t ACME -p invoice -o store >> invoice.yml
 
 # reuse it and output it in plain text
-cat invoice.yml | lewt pipe process -p invoice -m text
+cat invoice.yml | lewt pipe render -p invoice -m text
 ```
 
-LEWT can even help you generate statistics on the fly and supports embedded [metatags](https://github.com/jdwije/LEWT/wiki/Metatags) in your extraction sources:
+LEWT can even help you generate basic statistics on the fly and supports embedded [metatags](https://github.com/jdwije/LEWT/wiki/Metatags) in your extraction sources:
 
 ```
 # output a frequency table of hash tags #good-day, #bad-day by customer. use
@@ -215,7 +215,7 @@ Finally go browse through the source code, there is only ~1300 lines of ruby inc
 
 ## Disclaimer
 
-LEWT is very much beta-ware. I only just started using it myself in my contracting operations, however it's making thing's easier for me so I thought I'd release it as is - if (when) you find any bugs I'd love to hear about them!
+LEWT is very much beta-ware. I only just started using it myself in my contracting operations, however it's making thing's easier for me so I thought I'd release it as is - when you find those bugs I would love to hear about them!
 
 ## License
 
