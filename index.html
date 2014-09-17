@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>Lewt by jdwije</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Lewt</h1>
+        <h2>Lazy Enterprise for hackers Without Time</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/jdwije/LEWT/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/jdwije/LEWT/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/jdwije/LEWT" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a name="lewt-v0512" class="anchor" href="#lewt-v0512"><span class="octicon octicon-link"></span></a>LEWT v0.5.12</h1>
+
+<p>LEWT is a command line program &amp; library written in Ruby that can help you invoice customers, manage expenses, generate reports and much more. It is designed to encourage lazy accounting, to get more out of it, and to be extended with minimal friction. </p>
+
+<p><strong>Features</strong></p>
+
+<ul>
+<li>Can operate in a terminal or as a drop in library for your Ruby programs.</li>
+<li>Simple &amp; concise architecture. Less than 1300 lines of ruby code including the bundled core extensions and tests.</li>
+<li>A nifty extension system that plays well with Ruby Gems.</li>
+</ul><h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>LEWT requires you have <a href="https://www.ruby-lang.org/en/">Ruby</a> &amp; <a href="https://rubygems.org">Ruby Gems</a> installed on your machine. Once you have that sorted:</p>
+
+<pre><code> gem install lewt
+</code></pre>
+
+<p>then test with:</p>
+
+<pre><code># output lewt's version number
+lewt --version
+</code></pre>
+
+<p>LEWT ships with some dummy data and config so you can jump straight into the quick start guide.</p>
+
+<h2>
+<a name="quick-start" class="anchor" href="#quick-start"><span class="octicon octicon-link"></span></a>Quick Start</h2>
+
+<p>The LEWT program is based around a procedure I call <em>extract, process, render</em> [EPR]. Data is extracted from some source(s) and transformed into a general ledger data structure, this is then passed to the specified processor(s) which may use it to perform calculations, the processed data is then finally passed onto a renderer for outputting in a useful format. All EPR operations are handled by LEWT Extensions, thus a basic LEWT command only involves you specify which extensions to use for the EPR procedure:</p>
+
+<pre><code># -e = extractor, -p = processor, -o = renderer. Outputs an invoice for target customer Wayne Corp [alias: WCorp] since 1 sep 2014
+lewt -x calendar -p invoice -o liquid -t WCorp -s 01-09-2014
+
+...
+
+# sample text output
+*******
+Dear Bruce Wayne,
+
+You have recived a new invoice from Jason Wijegooneratne
+
+*******
+
+Date Created: 17/09/14
+ID: 12-4d7d2c79
+
+INVOICED TO:
+Wayne Corp,
+2 Wayne Street
+90210, Gotham,
+Cartoon Land,
+abn: 45 443 23 123.
+
+
+INVOICED FROM:
+Your Trading Name,
+13 Your Street,
+0, O-state,
+O-stralia,
+abn 45 443 23 123.
+
+ITEMS:
+--
+ 03/09/14  7:00pm &gt;&gt;&gt; 04/09/14  5:45am
+ $150 * 10.75 hrs = $1612.5
+ Hacking on the bat mobile in secrecy. 
+--
+ 10/09/14  7:00pm &gt;&gt;&gt; 11/09/14  3:00am
+ $150 * 8.0 hrs = $1200.0
+ Hacking on the bat mobile in secrecy. 
+
+
+---------------------------
+SUB-TOTAL: 2812.5
+TAX [gst]: 281.25
+---------------------------
+TOTAL: 3093.75
+
+*******
+
+</code></pre>
+
+<p>You can also extract from multiple sources at once:</p>
+
+<pre><code># extract time sheet data, expenses, and milestone data for all customers since begining of year and mash it up into a report.
+lewt -x expenses,calendar,milestones -s 01-01-2014 -p report -o liquid
+
+...
+
+# sample text output
+*******
+
+Date Created: 17/09/14
+Included:
+ ACME
+ Wayne Corp
+
+Revenue: 63737.5
+Expenses: -740.0
+Tax-Levees:
+ income tax[0.0]: 0.0
+ income tax[0.19]: 3609.81
+ income tax[0.325]: 12020.86
+ GST[0.1]: 6373.75
+
+Bottom Line: 40993.08
+-----------------------------------
+Hours Worked: 311.0
+*******
+
+</code></pre>
+
+<p>LEWT's default liquid template rendering extension supports multiple output formats, it can even use WebKit to render a PDF from one of your templates complete with CSS stylesheets support!</p>
+
+<pre><code># output an invoice for specified customer as text, save a pdf simultaneously.
+lewt -x expenses,calendar -p invoice -o liquid -t ACME --method pdf,text --save-path acme-invoice.pdf
+
+# create separate pdf invoices for all customers using some naming templates
+lewt -x expenses,calendar -p invoice -o liquid --method pdf --save-path "#date #alias.pdf"
+
+...
+
+# sample output. files will be written to FS.
+20XX-MM-DD ACME.pdf
+20XX-MM-DD WCorp.pdf
+</code></pre>
+
+<p>LEWT does not use a database, persisting data is done on a file system:</p>
+
+<pre><code># Persist some processed data in YAML format using the store extension
+lewt -t ACME -p invoice -o store &gt;&gt; invoice.yml
+
+# reuse it and output it in plain text
+cat invoice.yml | lewt pipe render -p invoice -m text
+</code></pre>
+
+<p>LEWT can even help you generate basic statistics on the fly and supports embedded <a href="https://github.com/jdwije/LEWT/wiki/Metatags">metatags</a> in your extraction sources:</p>
+
+<pre><code># output a frequency table of hash tags #good-day, #bad-day by customer. use
+# store for output as liquid template is dodgy.
+lewt -x calendar -p metastat --tags good-day,bad-day -s 01-01-2014 -o store
+
+...
+
+# sample YAML output
+---
+- frequency_table:
+    ACME:
+      bad_day: 10
+      good_day: 5
+    Wayne Corp:
+      good_day: 5
+      bad_day: 4
+</code></pre>
+
+<p>For a list of options available run:</p>
+
+<pre><code>lewt --help
+</code></pre>
+
+<p>You can perform all of the above using LEWT as a library in your projects as well.</p>
+
+<pre><code>require "LEWT"
+
+
+options = {
+    :extract =&gt; 'calendar',
+    :process =&gt; 'invoice',
+    :render =&gt; 'liquid',
+    :target =&gt; 'ACME',
+    :dump_output =&gt; false
+}
+
+# returns a hash containing the invoice data for further use
+lewt_invoice = LEWT::Lewt.new( options ).run 
+
+</code></pre>
+
+<h2>
+<a name="lewt-extensions" class="anchor" href="#lewt-extensions"><span class="octicon octicon-link"></span></a>LEWT Extensions</h2>
+
+<p>LEWT by itself is basically just an extension system, all the EPR operations are performed by extensions making LEWT very customisable. Being a beta version of this software, I have shipped LEWT with some basic extension which I find useful in my day to day contracting operations but I'm hoping others will replace them with better versions in time :) these <em>core extensions</em> as I will call them for now are:</p>
+
+<ol>
+<li>Calendar Timekeeping: Extract Time sheet data from iCal, OSX Calendar, and Google Calender sources and transform it for further processing.</li>
+<li>Simple Invoices: Process extract data as an invoice.</li>
+<li>Simple Reports: Process extract data as a report.</li>
+<li>Liquid Renderer: Liquid template rendering with support for text, html, and PDF tempting.</li>
+<li>Simple Expenses: Manage expenses with in simple CSV file and extract it into LEWT.</li>
+<li>Simple Milestones: Manage milestone payments in a CSV file and extract it into LEWT.</li>
+<li>Store: Persist lewt data as YAML formatted files. Re-use this data later.</li>
+<li>Metastat: Generate simple statistics from your data sources using embedded metatags.</li>
+</ol><p>Conceptually, there are 3 different kinds of extensions: <strong>Extractors, Processors, and Renderers</strong>, however for now they all inherit from the same <strong>LEWT::Extension</strong> base class. This class provides some convenience methods for the extensions as well as a means for them to register themselves within LEWT.</p>
+
+<p>It's pretty easy to get started creating your own extension for LEWT, see the <a href="https://github.com/jdwije/LEWT/wiki/3-Creating-Extensions-for-LEWT">Authoring LEWT Extensions</a> for more information.</p>
+
+<h2>
+<a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h2>
+
+<p>LEWT (and it's extensions) want config. They want it in the form of flat YAML files which can be stored in your <code>/config</code> directory, see <a href="https://github.com/jdwije/LEWT/wiki/2-Installation-&amp;-Setup">Installation &amp; Setup</a> for more on this. LEWT's default config directory is <code>path/to/lewt/lib/config/</code> but you can change this if you like.</p>
+
+<h2>
+<a name="want-to-learn-more" class="anchor" href="#want-to-learn-more"><span class="octicon octicon-link"></span></a>Want to learn more?</h2>
+
+<p>Checkout the <a href="https://github.com/jdwije/LEWT/wiki">WIKI</a> section for a bunch of tutorials on setting LEWT up and getting started writing extensions.</p>
+
+<p>Finally go browse through the source code, there is only ~1300 lines of ruby including comments with which I have tried to be liberal.</p>
+
+<h2>
+<a name="disclaimer" class="anchor" href="#disclaimer"><span class="octicon octicon-link"></span></a>Disclaimer</h2>
+
+<p>LEWT is very much beta-ware. I only just started using it myself in my contracting operations, however it's making thing's easier for me so I thought I'd release it as is - when you find those bugs I would love to hear about them!</p>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>LEWT is distributed under the terms and conditions of the MIT license, see LICENSE.md for more information.</p>
+      </section>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-33140721-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
