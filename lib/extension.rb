@@ -70,7 +70,7 @@ module LEWT
     end
 
     protected
-    
+
     # This method loads the core LEWT settings files
     def load_lewt_settings 
       @lewt_settings = load_settings( "settings.yml")

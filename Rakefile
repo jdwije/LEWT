@@ -12,11 +12,10 @@ spec = Gem::Specification.new do |s|
   s.description = "A dead simple command line tool and library for enterprise management. It can currently handle invoicing, expenses, reporting, and is highly extensible"
   s.authors     = ["Jason Wijegooneratne"]
   s.email       = 'code@jwije.com'
-  s.files        = [Dir.glob("{bin,lib,tests}/**/*"), 'README.md', 'LICENSE.md', 'Rakefile']
+  s.files        = [Dir.glob("{bin,lib}/**/*"), 'README.md', 'LICENSE.md']
   s.executables = ["lewt"]
   s.homepage    = 'http://jwije.com/lewt'
   s.license       = 'MIT'
-  
 
   # required LEWT gems
   s.add_dependency 'safe_yaml', '~> 1.0.0'

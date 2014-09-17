@@ -46,7 +46,7 @@ LEWT does not use a database, persisting data is done on the file system:
 
 ```
 # Persist some processed data in YAML format using the store extension
-lewt -p invoice -o store >> invoice.yml
+lewt it ACME -p invoice -o store >> invoice.yml
 
 # reuse it and output it in plain text
 cat invoice.yml | lewt pipe process -p invoice -m text
@@ -55,15 +55,13 @@ cat invoice.yml | lewt pipe process -p invoice -m text
 LEWT can even help you generate statistics on the fly:
 
 ```
-# Generate and outputs PearsonR & Descriptive stats for metatag 'happiness'. You can assign
-# a value for happiness in your extract sources as follows '#happiness=X/10'
-lewt -x calendar -p metastat --metatag happiness -t ACME
+# output a frequency table of hash tags #good-day, #bad-day by client
+lewt -x calendar -p metastat --metatag good-day,bad-day
 
 ```
 
-The neat thing about LEWT is that extractors must all return there data in a pre-specified format, thus a universal compatibility can be maintained between extractors and any processor. You can therefor mash up extraction sources to your hearts content.
-
 For a list of options available from the CL run:
+
 
 ```
 lewt --help
@@ -83,13 +81,13 @@ options = {
 l = LEWT::lewt.new( options )
 
 # do
-l.run_logic_loop
+l.run
 
 ```
 
 ## LEWT Extensions
 
-LEWT by itself is basically just an extension system, all the EPR operations are performed by extensions making LEWT very customisable. Being a beta version of this software, I have shipped LEWT with some basic extension which I find useful in my day to day contracting operations. These *core extensions* as I will call them for now are:
+LEWT by itself is basically just an extension system, all the EPR operations are performed by extensions making LEWT very customisable. Being a beta version of this software, I have shipped LEWT with some basic extension which I find useful in my day to day contracting operations but I'm hoping you all will replace them with better versions in time :) these *core extensions* as I will call them for now are:
 
 1. Calendar Timekeeping: Extract Time sheet data from iCal, OSX Calendar, and Google Calender sources and transform it for further processing.
 2. Simple Invoices: Process extract data as an invoice.
