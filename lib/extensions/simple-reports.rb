@@ -34,21 +34,16 @@ module LEWT
         "taxes" => Array.new,
         "hours" => 0
       }
-      data.each do |row|
-        targets.each do |t|
-          # match targets for report
-          if row[:entity] == t["name"]
-            if row[:category].downcase.match /income/
-              report["revenue"] += row[:total]
-              # check if category Hourly Income. If so add quantity to our 'hours' counter.
-              if row[:category].downcase.match /hourly/
-                report["hours"] += row[:quantity]
-              end
-            elsif row[:category].downcase.match /expense/
-              report["expenses"] += row[:total]
-            end
+      data.each do |row|        
+        if row[:category].downcase.match /income/
+          report["revenue"] += row[:total]
+          # check if category Hourly Income. If so add quantity to our 'hours' counter.
+          if row[:category].downcase.match /hourly/
+            report["hours"] += row[:quantity]
           end
-        end
+        elsif row[:category].downcase.match /expense/
+          report["expenses"] += row[:total]
+        end 
       end
       
       # remember expenses is a negative amount to begin with so don't subtract it!

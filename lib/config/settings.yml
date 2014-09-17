@@ -7,4 +7,4 @@ gmail_app_name: some-goggle-hash-code
 expenses_filepath: tests/expenses.csv
 milestones_filepath: tests/milestones.csv
 store_path: /path/to/store/dir/
-invoice_id_counter: 2
+invoice_id_counter: 12

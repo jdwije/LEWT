@@ -30,25 +30,103 @@ LEWT ships with some dummy data and config so you can jump straight into the qui
 The LEWT program is based around a procedure I call *extract, process, render* [EPR]. Data is extracted from some source(s) and transformed into a general ledger data structure, this is then passed to the specified processor(s) which may use it to perform calculations, the processed data is then finally passed onto a renderer for outputting in a useful format. All EPR operations are handled by LEWT Extensions, thus a basic LEWT command only involves you specify which extensions to use for the EPR procedure:
 
 ```
-# -e = extractor, -p = processor, -o = renderer. Outputs an invoice for target customer ACME
-lewt -x calendar -p invoice -o liquid -t ACME
+# -e = extractor, -p = processor, -o = renderer. Outputs an invoice for target customer Wayne Corp [alias: WCorp] since 1 sep 2014
+lewt -x calendar -p invoice -o liquid -t WCorp -s 01-09-2014
+
+...
+
+# sample text output
+*******
+Dear Bruce Wayne,
+
+You have recived a new invoice from Jason Wijegooneratne
+
+*******
+
+Date Created: 17/09/14
+ID: 12-4d7d2c79
+
+INVOICED TO:
+Wayne Corp,
+2 Wayne Street
+90210, Gotham,
+Cartoon Land,
+abn: 45 443 23 123.
+
+
+INVOICED FROM:
+Your Trading Name,
+13 Your Street,
+0, O-state,
+O-stralia,
+abn 45 443 23 123.
+
+ITEMS:
+--
+ 03/09/14  7:00pm >>> 04/09/14  5:45am
+ $150 * 10.75 hrs = $1612.5
+ Hacking on the bat mobile in secrecy. 
+--
+ 10/09/14  7:00pm >>> 11/09/14  3:00am
+ $150 * 8.0 hrs = $1200.0
+ Hacking on the bat mobile in secrecy. 
+
+
+---------------------------
+SUB-TOTAL: 2812.5
+TAX [gst]: 281.25
+---------------------------
+TOTAL: 3093.75
+
+*******
+
 ```
 
 You can also extract from multiple sources at once:
 
 ```
-# extract time sheet data, expenses, and milestone data for all customers and mash it up into a report
-lewt -x expenses,calendar,milestones -p report -o liquid
+# extract time sheet data, expenses, and milestone data for all customers since begining of year and mash it up into a report.
+lewt -x expenses,calendar,milestones -s 01-01-2014 -p report -o liquid
+
+...
+
+# sample text output
+*******
+
+Date Created: 17/09/14
+Included:
+ ACME
+ Wayne Corp
+         
+Revenue: 63737.5
+Expenses: -740.0
+Tax-Levees:
+ income tax[0.0]: 0.0
+ income tax[0.19]: 3609.81
+ income tax[0.325]: 12020.86
+ GST[0.1]: 6373.75
+
+Bottom Line: 40993.08
+-----------------------------------
+Hours Worked: 311.0
+*******
+
 ```
 
 LEWT's default liquid template rendering extension supports multiple output formats, it can even use WebKit to render a PDF from one of your templates complete with CSS stylesheets support!
 
 ```
 # output an invoice for specified customer as text, save a pdf simultaneously.
-lewt -x expenses,calendar -p invoice -o liquid -t ACME --method pdf, text --save-path acme-invoice.pdf
+lewt -x expenses,calendar -p invoice -o liquid -t ACME --method pdf,text --save-path acme-invoice.pdf
 
 # create separate pdf invoices for all customers using some naming templates
-lewt -x expenses,calendar -p invoice -o liquid --method pdf, html --save-path "#alias #date.pdf"
+lewt -x expenses,calendar -p invoice -o liquid --method pdf --save-path "#date #alias.pdf"
+
+...
+
+# sample output. files will be written to FS.
+20XX-MM-DD ACME.pdf
+20XX-MM-DD WCorp.pdf
 ```
 
 LEWT does not use a database, persisting data is done on a file system:
@@ -64,9 +142,21 @@ cat invoice.yml | lewt pipe process -p invoice -m text
 LEWT can even help you generate statistics on the fly and supports embedded [metatags](#) in your extraction sources:
 
 ```
-# output a frequency table of hash tags #good-day, #bad-day by customer
-lewt -x calendar -p metastat --tags good-day,bad-day
+# output a frequency table of hash tags #good-day, #bad-day by customer. use
+# store for output as liquid template is dodgy.
+lewt -x calendar -p metastat --tags good-day,bad-day -s 01-01-2014 -o store
 
+...
+
+# sample YAML output
+---
+- frequency_table:
+    ACME:
+      bad_day: 10
+      good_day: 5
+    Wayne Corp:
+      good_day: 5
+      bad_day: 4
 ```
 
 For a list of options available run:

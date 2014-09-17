@@ -68,7 +68,7 @@ module LEWT
     def filter_row_values (row, options)
       return if row.metatags == nil
       # match tags requested via options
-      options[:metatags].split(Lewt::OPTION_DELIMITER_REGEX).each do |meta|
+      options[:tags].split(Lewt::OPTION_DELIMITER_REGEX).each do |meta|
         row.metatags.each { |k, v|
           next unless meta.gsub(Lewt::OPTION_SYMBOL_REGEX,"_").to_sym == k
           # found match operate on it

@@ -69,7 +69,6 @@ module LEWT
                                          :quantity => 1, 
                                          :unit_cost => cost
                                        })
-
             data.push(row_data)       
           end
         end
