@@ -90,8 +90,8 @@ end
 # build gem and move to the ./dist directory
 Gem::PackageTask.new(spec) do |pkg|
   #CLOut.new::header("Packaging")
-  pkg.need_zip = true
-  pkg.need_tar = true
+  pkg.need_zip = false
+  pkg.need_tar = false
 end
 
 # This is the default 'build' task. Append new items to it's task array as you create them.
