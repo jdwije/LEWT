@@ -99,7 +99,7 @@ module LEWT
     def format_save_name(o, i)
       match_client = /\#alias/
       match_date = /\#date/
-      t = o[:save_file].dup
+      t = o[:save_path].dup
       c = t.match match_client
       d = t.match match_date
 
