@@ -1,6 +1,9 @@
 # Change Log
 
-## 0.5.13 - 0.5.1
+## 0.5.16
+- FIXED: formating save name on pdf render
+
+## 0.5.13 - 0.5.15
 - FIXED: Path loads for test data when installing from ruby gems (took a couple of tries)
 
 ## 0.5.12
