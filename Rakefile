@@ -18,14 +18,15 @@ spec = Gem::Specification.new do |s|
   s.homepage    = 'http://www.jwije.com/LEWT'
   s.license       = 'MIT'
 
+
   # required LEWT gems
-  s.add_dependency 'safe_yaml', '~> 1.0.0'
+  #  s.add_dependency 'safe_yaml', '~> 1.0.0'
   
   # required core extension gems
-  s.add_dependency 'icalendar', '~> 2.0.0'
-  s.add_dependency 'google_calendar', '~> 0.3.1'
-  s.add_dependency 'liquid', '~> 2.5.0'
-  s.add_dependency 'pdfkit', '~> 0.6.2'
+  # s.add_dependency 'icalendar', '~> 2.0.0'
+  # s.add_dependency 'google_calendar', '~> 0.3.1'
+  # s.add_dependency 'liquid', '~> 2.5.0'
+  # s.add_dependency 'pdfkit', '~> 0.6.2'
 end
 
 # just some output helper methods

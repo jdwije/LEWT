@@ -34,10 +34,8 @@ module LEWT
           :type => String
         }
       }
-
       super({:cmd => "liquid_render", :options => options })
     end
-
     
     # Loads the plaint-text, html, & (optionally) pdf template files of the given template name and parses it with the Liquid class
     # template [String]:: The name of the template to load.
