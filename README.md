@@ -1,4 +1,4 @@
-# LEWT v0.5.16
+# LEWT v0.5.17
 
 LEWT is a command line program & library written in Ruby that can help you invoice customers, manage expenses, generate reports and much more. It is designed to encourage lazy accounting, to get more out of it, and to be extended with minimal friction. 
 
@@ -188,7 +188,7 @@ lewt_invoice = LEWT::Lewt.new( options ).run
 
 LEWT by itself is basically just an extension system, all the EPR operations are performed by extensions making LEWT very customisable. Being a beta version of this software, I have shipped LEWT with some basic extension which I find useful in my day to day contracting operations but I'm hoping others will replace them with better versions in time :) these *core extensions* as I will call them for now are:
 
-1. Calendar Timekeeping: Extract Time sheet data from iCal, OSX Calendar, and Google Calender sources and transform it for further processing.
+1. Calendar Timekeeping: Extract Time sheet data from iCal, and OSX Calendar sources and transform it for further processing.
 2. Simple Invoices: Process extract data as an invoice.
 3. Simple Reports: Process extract data as a report.
 4. Liquid Renderer: Liquid template rendering with support for text, html, and PDF tempting.
