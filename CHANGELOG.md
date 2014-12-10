@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.6.0
+- UPGRADED: LEWT now uses the Bundler gem for managing dependencies
+
 ## 0.5.16
 - FIXED: formating save name on pdf render
 
