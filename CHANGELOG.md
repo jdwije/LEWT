@@ -4,6 +4,7 @@
 - IMPROVED: LEWT now uses the Bundler gem for managing dependencies
 - FIXED: ical extraction type errors and updated dependencies to the latest stable versions
 - REMOVED: calendar extract Google Calendar integration
+- IMPROVED: invoice ID generation now spits out a clean short uid
 
 ## 0.5.16
 - FIXED: formating save name on pdf render
