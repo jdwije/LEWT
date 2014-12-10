@@ -1,7 +1,9 @@
 # Change Log
 
-## 0.6.0
-- UPGRADED: LEWT now uses the Bundler gem for managing dependencies
+## 0.5.17
+- IMPROVED: LEWT now uses the Bundler gem for managing dependencies
+- FIXED: ical extraction type errors and updated dependencies to the latest stable versions
+- REMOVED: calendar extract Google Calendar integration
 
 ## 0.5.16
 - FIXED: formating save name on pdf render

@@ -1,5 +1,5 @@
 require "yaml"
-require "securerandom"
+require 'digest/sha1'
 
 # Author::    Jason Wijegooneratne  (mailto:code@jwije.com)
 # Copyright:: Copyright (c) 2014 Jason Wijegooneratne
@@ -35,13 +35,15 @@ module LEWT
     protected 
     
     # Generates a UID for this invoice based of the customer it is being sent to
-    def generate_id
+    def generate_id(client)
       if !lewt_settings.has_key?("invoice_id_counter")
         self.write_settings("settings.yml", "invoice_id_counter", 0)
       end
       id = lewt_settings["invoice_id_counter"].to_i + 1
+      seed = "--#{rand(10000)}--#{Time.now}--"
+      uid = Digest::SHA1.hexdigest(seed)[0,4]
       self.write_settings("settings.yml", "invoice_id_counter", id)
-      return "#{id.to_s}-" + SecureRandom.hex(4)
+      return "#{id.to_s}#{uid}"
     end
 
     # Generates a bill for the given client.
@@ -51,7 +53,7 @@ module LEWT
     def generateBill(client, data)
       bill = {
         "date_created" => DateTime.now.strftime("%d/%m/%y"),
-        "id" => generate_id,
+        "id" => generate_id(client),
         # "date_begin"=> @events.dateBegin.strftime("%d/%m/%y"),
         # "date_end"=> @events.dateEnd.strftime("%d/%m/%y"),
         "billed_to" => client,

@@ -1,5 +1,4 @@
 load File.expand_path('../extractor.rb', __FILE__)
-load File.expand_path('../gcal_extractor.rb', __FILE__)
 load File.expand_path('../ical_extractor.rb', __FILE__)
 load File.expand_path('../apple_extractor.rb', __FILE__)
 
@@ -31,7 +30,7 @@ module LEWT
       options = {
         :calendar => {
           :default => "ical",
-          :definition => "The calender extraction method to use, supports 'gcal', 'ical', 'osx' calender extraction. Defaults to ical.",
+          :definition => "The calender extraction method to use, supports 'ical', 'osx' calender extraction. Defaults to ical.",
           :type => String,
         },
         :suppress => {
@@ -52,8 +51,6 @@ module LEWT
       suppressTargets = options[:suppress] == nil ? nil : self.get_matched_customers(options[:suppress])
       if options[:calendar] == "ical"
         extract = CalendarExtractors::ICalExtractor.new( dStart, dEnd, targetCustomers, lewt_settings, suppressTargets )
-      elsif options[:calendar] == "gcal"
-        extract = CalendarExtractors::GCalExtractor.new(dStart, dEnd, targetCustomers, lewt_settings, suppressTargets )
       elsif options[:calendar] == "osx"
         extract = CalendarExtractors::AppleExtractor.new(dStart, dEnd, targetCustomers, lewt_settings, suppressTargets )
       end

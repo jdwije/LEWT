@@ -44,8 +44,8 @@ module CalendarExtractors
           if  self.isTargetDate?(dstart) == true &&  target != false
             timeDiff = (dend - dstart) /60/60
             row = LEWT::LEWTLedger.new({
-                                         :date_start => e.dtstart, 
-                                         :date_end => e.dtend, 
+                                         :date_start => e.dtstart.to_time, 
+                                         :date_end => e.dtend.to_time, 
                                          :category => @category, 
                                          :entity => target["name"], 
                                          :description => e.description.to_s,
