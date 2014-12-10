@@ -17,7 +17,7 @@ require_relative 'lewt_ledger.rb'
 # This module acts as a container for the LEWT namespace
 module LEWT
   
-  VERSION = "0.5.16"
+  VERSION = "0.5.17"
 
   # The Lewt class contains the major functionality of this program.
   # It handles loading all extensions, gathering the results and passing options ariound the place.

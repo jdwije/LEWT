@@ -24,7 +24,6 @@ module CalendarExtractors
     # Open iCalender file, parses it, then check events with the regular CalExtractor methods.
     # Sets the data property of this object if match data is found.
     def extractCalendarData
-      puts @calendarPath
       calendars = Icalendar.parse( File.open( @calendarPath ) )
       calendars.each do |calendar|
         calendar.events.each do |e|
